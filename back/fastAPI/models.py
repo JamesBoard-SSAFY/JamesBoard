@@ -1,16 +1,40 @@
-from sqlalchemy import Column, Integer, Float, DateTime
+from sqlalchemy import Column, Integer, Float, DateTime, String, Text, BigInteger, ForeignKey, JSON
+from sqlalchemy.orm import relationship
 from config import Base
+import enum
+from datetime import datetime
 
-class ContentRecommendation(Base):
-    __tablename__ = "content_recommendations"
+class Game(Base):
+    __tablename__ = "game"
 
-    id = Column(Integer, primary_key=True, index=True)
-    source_item_id = Column(Integer)  # 기준이 되는 아이템 ID
-    target_item_id = Column(Integer)  # 추천되는 아이템 ID
-    similarity_score = Column(Float)  # 유사도 점수
-    game_rank = Column(Integer)  # 추천 순위
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    game_id = Column(BigInteger, primary_key=True, autoincrement=True)
+    game_rank = Column(Integer)
+    game_title = Column(String(255), nullable=False)
+    game_description = Column(Text)
+    big_thumbnail = Column(String(255))
+    small_thumbnail = Column(String(255))
+    game_image = Column(String(255))
+    game_year = Column(Integer)
+    min_player = Column(Integer)
+    max_player = Column(Integer)
+    game_play_time = Column(Integer)
+    game_min_age = Column(Integer)
+    game_publisher = Column(String(255))
+    game_difficulty = Column(Integer)
+    game_avg_rating = Column(Float)
+    game_review_count = Column(Integer)
+    # game_created_at = Column(DateTime, default=datetime.now)
+    # game_updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     def __repr__(self):
-        return f"<ContentRecommendation {self.source_item_id}->{self.target_item_id}: {self.similarity_score}>" 
+        return f"<Game {self.game_title}>"
+
+class GameRecommendation(Base):
+    __tablename__ = "game_recommendations"
+    
+    recommend_id = Column(BigInteger, primary_key=True, autoincrement=True)
+    game_id = Column(BigInteger, ForeignKey("game.game_id"))
+    recommended_game_id = Column(BigInteger, ForeignKey("game.game_id"))
+    similarity_score = Column(Float)
+    recommend_rank = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now) 
