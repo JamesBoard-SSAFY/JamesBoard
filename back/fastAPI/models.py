@@ -23,18 +23,29 @@ class Game(Base):
     game_difficulty = Column(Integer)
     game_avg_rating = Column(Float)
     game_review_count = Column(Integer)
-    # game_created_at = Column(DateTime, default=datetime.now)
-    # game_updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     def __repr__(self):
         return f"<Game {self.game_title}>"
 
-class GameRecommendation(Base):
-    __tablename__ = "game_recommendations"
+class Recommend(Base):
+    __tablename__ = "recommend"
     
     recommend_id = Column(BigInteger, primary_key=True, autoincrement=True)
-    game_id = Column(BigInteger, ForeignKey("game.game_id"))
-    recommended_game_id = Column(BigInteger, ForeignKey("game.game_id"))
-    similarity_score = Column(Float)
+    recommend_at = Column(DateTime(6))
     recommend_rank = Column(Integer)
-    created_at = Column(DateTime, default=datetime.now) 
+    game_id = Column(BigInteger, ForeignKey("game.game_id"))
+    user_id = Column(BigInteger)
+
+    def __repr__(self):
+        return f"<Recommend {self.recommend_id}>"
+
+class RecommendContent(Base):
+    __tablename__ = "recommend_content"
+    
+    recommend_content_id = Column(BigInteger, primary_key=True, autoincrement=True)
+    game_id = Column(BigInteger)
+    recommend_game_id = Column(BigInteger)
+    recommend_content_rank = Column(BigInteger)
+
+    def __repr__(self):
+        return f"<RecommendContent {self.recommend_content_id}>" 
