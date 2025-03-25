@@ -10,6 +10,9 @@ import com.board.jamesboard.domain.onboard.dto.PreferGameRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +45,16 @@ public class OnBoardServiceImpl implements OnBoardService {
     }
 
     @Override
-    public Long updateUserPreferGame(long userId, PreferGameRequestDto preferGameRequestDto) {
+    public Long updateUserPreferGame(Long userId, PreferGameRequestDto preferGameRequestDto) {
+
+        // JWT 현재 userId 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Long jwtUserId = Long.parseLong(authentication.getName());
+
+        if(!jwtUserId.equals(userId)) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
