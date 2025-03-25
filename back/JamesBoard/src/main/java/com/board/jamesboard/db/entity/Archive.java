@@ -1,13 +1,11 @@
 package com.board.jamesboard.db.entity;
 
-import com.board.jamesboard.domain.archive.dto.ArchiveRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,7 @@ public class Archive {
     private LocalDateTime createdAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     //Archive 삭제시 image도 삭제되어야한다.
     @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)

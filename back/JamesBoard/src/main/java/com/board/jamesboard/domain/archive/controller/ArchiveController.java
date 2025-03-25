@@ -6,6 +6,7 @@ import com.board.jamesboard.domain.archive.dto.ArchiveResponseDto;
 import com.board.jamesboard.domain.archive.service.ArchiveService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/archives")
 @CrossOrigin("*")
 @RequiredArgsConstructor
+@Slf4j
 public class ArchiveController {
     private final ArchiveService archiveService;
 
@@ -40,5 +42,11 @@ public class ArchiveController {
     @Operation(summary = "아카이브 수정")
     public ResponseEntity<Long> updateArchive(@PathVariable Long archiveId, @RequestBody ArchiveRequestDto archiveRequestDto) {
         return ResponseEntity.ok(archiveService.updateArchive(archiveId, archiveRequestDto));
+    }
+
+    @DeleteMapping("/{archiveId}")
+    @Operation(summary = "아카이브 삭제")
+    public ResponseEntity<Long> deleteArchive(@PathVariable Long archiveId) {
+        return ResponseEntity.ok(archiveService.deleteArchive(archiveId));
     }
 }

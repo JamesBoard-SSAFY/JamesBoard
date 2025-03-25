@@ -14,4 +14,6 @@ public interface ArchiveService {
     Long createArchive(ArchiveRequestDto archiveRequestDto);
 
     Long updateArchive(Long archiveId, ArchiveRequestDto archiveRequestDto);
+
+    Long deleteArchive(Long archiveId);
 }

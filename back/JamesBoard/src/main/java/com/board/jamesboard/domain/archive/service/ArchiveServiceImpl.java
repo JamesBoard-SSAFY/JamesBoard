@@ -9,6 +9,7 @@ import com.board.jamesboard.domain.archive.dto.ArchiveResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,14 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Override
     public List<ArchiveResponseDto> getArchivesImage() {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         // 1. 아카이브 전체 조회
         List<Archive> archiveList = archiveRepository.findAll();
+        log.debug("✅ Archive 조회 성공. count: {}", archiveList.size());
+
+
+        log.debug("archiveList");
 
         // 2. 조회한 아카이브를 통해 이미지 조회
         List<ArchiveImage> images = archiveImageRepository.findAllByArchiveIn(archiveList);
@@ -160,7 +167,15 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Override
     public Long updateArchive(Long archiveId, ArchiveRequestDto archiveRequestDto) {
 
+        // 현재 JWT 유저 ID
+        Long currentUserId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
         Archive archive = archiveRepository.findByArchiveId(archiveId);
+
+        // 요청 보내는 사용자와 작성한 사용자가 다르면 에러
+        if (!archive.getUser().getUserId().equals(currentUserId)) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
 
         Game newGame = gameRepository.findById(archiveRequestDto.getGameId())
                 .orElseThrow(() -> new RuntimeException("해당 게임이 존재하지 않습니다."));
@@ -212,7 +227,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
         archiveImageRepository.saveAll(archiveImages);
 
-        // 아카이브 내용 업데이트
+        //  아카이브 내용 업데이트
         archive.updateArchive(
                 archiveRequestDto.getArchiveContent(),
                 archiveRequestDto.getArchiveGamePlayTime(),
@@ -222,5 +237,36 @@ public class ArchiveServiceImpl implements ArchiveService {
 
         return archive.getArchiveId();
     }
+
+    @Override
+    public Long deleteArchive(Long archiveId) {
+
+        // 현재 JWT 유저 ID
+        Long currentUserId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        Archive archive = archiveRepository.findById(archiveId)
+                .orElseThrow(() -> new RuntimeException("해당 아카이브가 존재하지 않습니다."));
+
+        if (!archive.getUser().getUserId().equals(currentUserId)) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+
+        // 아카이브 정보 추출
+        User user = archive.getUser();
+        Game game = archive.getGame();
+        int playTime = archive.getArchiveGamePlayTime();
+
+        // userActivity 갱신
+        userActivityRepository.findByUserAndGame(user, game)
+                .ifPresent(activity -> {
+                    activity.subtractPlayTime(playTime);
+                    userActivityRepository.save(activity);
+                });
+
+        Long deletedArchiveId = archive.getArchiveId();
+        archiveRepository.deleteById(archiveId);
+        return deletedArchiveId;
+    }
+
 
 }
