@@ -10,5 +10,5 @@ public interface GameRepository extends JpaRepository<Game,Long> {
     List<Game> findTop30ByGameIdInOrderByGameRank(List<Long> gameIds);
 
     // 게임 ID로 게임정보 조회
-    Optional<Game> findByGameID(Long gameId);
+    Optional<Game> findByGameId(Long gameId);
 }

@@ -21,8 +21,9 @@ public interface ArchiveImageRepository extends JpaRepository<ArchiveImage, Long
     List<ArchiveImage> findByArchiveArchiveId(Long archiveId);
 
     // 아카이브 ID로 첫번쨰 이미지 조회
-    @Query("SELECT ai.archiveImageUrl FROM ArchiveImage ai " +
+    @Query(value = "SELECT ai.archiveImageUrl FROM ArchiveImage ai " +
             "WHERE ai.archive.archiveId = :archiveId " +
-            "ORDER BY ai.archiveImageId ASC LIMIT 1")
+            "ORDER BY ai.archiveImageId ASC LIMIT 1"
+                ,nativeQuery = true)
     Optional<String> findFirstImageUrlByArchiveId(@Param("archiveID") Long archiveID);
 }

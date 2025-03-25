@@ -1,9 +1,6 @@
 package com.board.jamesboard.domain.mypage.service;
 
-import com.board.jamesboard.domain.mypage.dto.UserGameResponseDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileResponseDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateRequestDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateResponseDto;
+import com.board.jamesboard.domain.mypage.dto.*;
 
 import java.util.List;
 
@@ -17,4 +14,7 @@ public interface UserService {
 
     //프로필 게임 목록 조회ㅐ
     List<UserGameResponseDto> getUserGames(Long userId);
+
+    // 사용자 아카이미 목록 조회 (딴일)
+    UserGameArchiveResponseDto getUserGameArchive(Long userId, Long gameId);
 }

@@ -4,12 +4,10 @@ import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.error.ErrorResponse;
 import com.board.jamesboard.core.exception.CustomException;
 import com.board.jamesboard.domain.auth.controller.AuthController;
-import com.board.jamesboard.domain.mypage.dto.UserGameResponseDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileResponseDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateRequestDto;
-import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateResponseDto;
+import com.board.jamesboard.domain.mypage.dto.*;
 import com.board.jamesboard.domain.mypage.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -138,6 +136,46 @@ public class UserController {
                     .body(new ErrorResponse(e.getErrorCode().getHttpStatus(), e.getMessage()));
         } catch (Exception e) {
             log.error("사용자 게임 목록 조회 중 오류 발생 : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다"));
+        }
+
+
+    }
+
+    @Operation(summary = "사용자의 특정 게임 아카이브 조회", description = "사용자가 특정 게임에 대해 작성한 아카이브 목록과 게임 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "아카이브 조회 성공",
+                    content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 요청입니다. (JWT 토큰 누락 또는 유효하지 않을 시)"),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없습니다. (요청된 사용자 ID와 토큰의 사용자 ID가 일치하지 않을 시)"),
+            @ApiResponse(responseCode = "404", description = "해당 게임을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 오류가 발생했습니다.")
+    })
+    @GetMapping("/{userId}/archives")
+    public ResponseEntity<?> getUserGameArchives(
+            @PathVariable Long userId,
+            @Parameter(description = "게임 ID", required = true, example = "1")
+            @RequestParam Long gameId) {
+        try {
+            // 사용자 ID 추출
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Long currentUserId = Long.parseLong(authentication.getName());
+
+            // 일치 여부
+            if (!userId.equals(currentUserId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse(HttpStatus.FORBIDDEN, "접근 권한이 없습니다"));
+            }
+
+            UserGameArchiveResponseDto response = userService.getUserGameArchive(userId, gameId);
+            return ResponseEntity.ok(response);
+        } catch (CustomException e) {
+            log.error("아카이브 조회 실패: {}", e.getMessage());
+            return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                    .body(new ErrorResponse(e.getErrorCode().getHttpStatus(), e.getMessage()));
+        } catch (Exception e) {
+            log.error("아카이브 조회 중 오류 발생: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다"));
         }
