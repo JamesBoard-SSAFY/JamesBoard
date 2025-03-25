@@ -90,4 +90,12 @@ public class Game {
 
     @OneToMany(mappedBy = "game")
     private List<UserActivity> userActivities = new ArrayList<>();
+
+    // 사용자가 선호한 게임
+    @OneToMany(mappedBy = "game")
+    private List<RecommendContent> recommendContents = new ArrayList<>();
+    
+    // 추천된 게임
+    @OneToMany(mappedBy = "recommendGame")
+    private List<RecommendContent> recommendedContent = new ArrayList<>();
 }
