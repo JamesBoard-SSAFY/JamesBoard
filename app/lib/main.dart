@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jamesboard/feature/boardgame/screen/AddArchieveScreenEx.dart';
-import 'package:jamesboard/feature/boardgame/screen/HomeScreenEx.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListArchieveScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/MyPageScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/RecommGameScreenEx.dart';
@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        splashColor: Colors.transparent, // 클릭 시 원형 퍼지는 효과 제거
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -62,7 +63,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
-    HomeScreenEx(),
+    BoardGameHomeScreen(),
     RecommGameScreenEx(),
     AddArchiveScreenEx(),
     ListArchieveScreenEx(),
