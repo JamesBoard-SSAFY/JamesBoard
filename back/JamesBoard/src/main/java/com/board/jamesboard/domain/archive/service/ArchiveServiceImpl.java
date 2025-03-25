@@ -33,15 +33,8 @@ public class ArchiveServiceImpl implements ArchiveService {
 
     @Override
     public List<ArchiveResponseDto> getArchivesImage() {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         // 1. 아카이브 전체 조회
         List<Archive> archiveList = archiveRepository.findAll();
-        log.debug("✅ Archive 조회 성공. count: {}", archiveList.size());
-
-
-        log.debug("archiveList");
 
         // 2. 조회한 아카이브를 통해 이미지 조회
         List<ArchiveImage> images = archiveImageRepository.findAllByArchiveIn(archiveList);
