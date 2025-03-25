@@ -46,7 +46,7 @@ public class Archive {
     private LocalDateTime createdAt;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
     //Archive 삭제시 image도 삭제되어야한다.
     @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, orphanRemoval = true)
