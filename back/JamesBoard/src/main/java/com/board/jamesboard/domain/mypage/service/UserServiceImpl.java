@@ -2,8 +2,11 @@ package com.board.jamesboard.domain.mypage.service;
 
 import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.exception.CustomException;
+import com.board.jamesboard.db.entity.Game;
 import com.board.jamesboard.db.entity.User;
+import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
+import com.board.jamesboard.domain.mypage.dto.UserGameResponseDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileResponseDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateRequestDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateResponseDto;
@@ -12,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserActivityRepository userActivityRepository;
 
     // 내 정보 조회
     @Override
@@ -59,6 +66,34 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public List<UserGameResponseDto> getUserGames(Long userId) {
+        try {
+            // 사용자 존재 여부 확인
+            if (!userRepository.existsById(userId)) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+
+            // 사용자 플레이 게임 목록 조회
+            List<Game> games = userActivityRepository.findDistinctGameByUserUserId(userId);
+
+            // 게임 목록 반환
+            return games.stream()
+                    .map(game -> UserGameResponseDto.builder()
+                            .gameId(game.getGameId())
+                            .gameImage(game.getGameImage())
+                            .build())
+                    .collect(Collectors.toList());
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("사용자 게임 목록 조회 실패 : {}", e.getMessage());
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 }

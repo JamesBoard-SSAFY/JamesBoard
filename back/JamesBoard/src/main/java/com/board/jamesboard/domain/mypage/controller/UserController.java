@@ -4,6 +4,7 @@ import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.error.ErrorResponse;
 import com.board.jamesboard.core.exception.CustomException;
 import com.board.jamesboard.domain.auth.controller.AuthController;
+import com.board.jamesboard.domain.mypage.dto.UserGameResponseDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileResponseDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateRequestDto;
 import com.board.jamesboard.domain.mypage.dto.UserProfileUpdateResponseDto;
@@ -22,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "Mypage", description = "마이페이지 API")
@@ -102,6 +105,43 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다)"));
         }
+
+    }
+    @Operation(summary = "사용자 플레이 게임 목록 조회", description = "사용자가 플레이한 게임 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게임 목록 조회 성공",
+                    content = @Content(schema = @Schema(implementation = UserGameResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 요청입니다. (JWT 토큰 누락 또는 유효하지 않을 시)"),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없습니다. (요청된 사용자 ID와 토큰의 사용자 ID가 일치하지 않을 시)"),
+            @ApiResponse(responseCode = "404", description = "해당 유저를 찾을 수 없습니다. (회원 ID가 존재하지 않을 시)"),
+            @ApiResponse(responseCode = "500", description = "서버 오류가 발생했습니다.")
+    })
+    @GetMapping("/{userId}/archives/games")
+    public ResponseEntity<?> getUserGames(@PathVariable Long userId) {
+        try {
+            // 사용자 ID 추출
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Long currentUserId = Long.parseLong(authentication.getName());
+
+            // 일치 여부
+            if (!userId.equals(currentUserId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse(HttpStatus.FORBIDDEN, "접근 권한이 없습니다"));
+            }
+
+            // 사용자 플레이 게임 목록 조회
+            List<UserGameResponseDto> response = userService.getUserGames(userId);
+            return ResponseEntity.ok(response);
+        } catch (CustomException e) {
+            log.error("사용자 게임 목록 조회 실패: {}", e.getMessage());
+            return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                    .body(new ErrorResponse(e.getErrorCode().getHttpStatus(), e.getMessage()));
+        } catch (Exception e) {
+            log.error("사용자 게임 목록 조회 중 오류 발생 : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다"));
+        }
+
 
     }
 
