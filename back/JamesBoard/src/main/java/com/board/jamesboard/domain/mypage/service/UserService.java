@@ -17,4 +17,7 @@ public interface UserService {
 
     // 사용자 아카이미 목록 조회 (딴일)
     UserGameArchiveResponseDto getUserGameArchive(Long userId, Long gameId);
+
+    // 사용자 보드게임 통계 및 순위 정보 조회
+    UserStatsResponseDto getUserGameStats(Long userId);
 }
