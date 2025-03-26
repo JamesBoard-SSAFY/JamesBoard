@@ -11,6 +11,7 @@ import com.board.jamesboard.db.repository.UserRepository;
 import com.nimbusds.jwt.JWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,27 +31,44 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     @Transactional
     public RefreshToken saveRefreshToken(Long userId, String token) {
+        try {
+            //사용자 조회
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        //사용자 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+            //기존 refresh 확인 및 삭제
+            refreshTokenRepository.deleteByUserUserId(userId);
+            refreshTokenRepository.flush(); // DB에 즉시 반영
 
-        //기존 refresh 확인
-        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUserUserId(userId);
 
-        if (existingToken.isPresent()) {
-            //기존 토큰 삭제
-            refreshTokenRepository.delete(existingToken.get());
+            // 새 토큰 생성 및 저장
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .user(user)
+                    .token(token)
+                    .createdAt(Instant.now())
+                    .modifiedAt(Instant.now())
+                    .build();
+            return refreshTokenRepository.save(refreshToken);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("리프레시 토큰 저장 중 무결성 제약 조건 위반 발생 : {}", e.getMessage());
+
+            // 동시성 이슈 발생 시 재시도
+            refreshTokenRepository.deleteByUserUserId(userId);
+            refreshTokenRepository.flush(); // DB에 즉시 반영
+
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+            // 새 토큰 생성 및 저장
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .user(user)
+                    .token(token)
+                    .createdAt(Instant.now())
+                    .modifiedAt(Instant.now())
+                    .build();
+            return refreshTokenRepository.save(refreshToken);
         }
 
-        // 새 토큰 생성 및 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .user(user)
-                .token(token)
-                .createdAt(Instant.now())
-                .modifiedAt(Instant.now())
-                .build();
-        return refreshTokenRepository.save(refreshToken);
 
     }
 
