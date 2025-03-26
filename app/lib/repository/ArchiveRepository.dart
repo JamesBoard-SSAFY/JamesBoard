@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:jamesboard/datasource/api/ArchiveService.dart';
+import 'package:jamesboard/main.dart';
 
 import '../datasource/model/request/ArchiveEditRequest.dart';
 import '../datasource/model/response/ArchiveDetailResponse.dart';
@@ -15,7 +16,7 @@ class ArchiveRepository {
       baseUrl: 'https://j12d205.p.ssafy.io/',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization' : 'Bearer 우리 토큰' // 여기에 jwt를 넣으면 될 듯
+        'Authorization': 'Bearer $accessToken' // 여기에 accessToken을 넣으면 될 듯
       },
     ));
 
