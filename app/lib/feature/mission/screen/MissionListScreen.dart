@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/mission/widget/ImageItemMissionList.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
-class MissionList extends StatelessWidget {
+class MissionListScreen extends StatelessWidget {
   final String title;
   final List<String> imageUrls = [
     'assets/image/mission1.png',
@@ -32,7 +32,7 @@ class MissionList extends StatelessWidget {
     'assets/image/mission8.png',
   ];
 
-  MissionList({super.key, required this.title});
+  MissionListScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
