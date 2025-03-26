@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional, Dict
 import pandas as pd
 import models
+import bigdata
 from config import engine, get_db, test_mysql_connection, test_sqlalchemy_connection
 from bigdata import RecommendationEngine
 from pydantic import BaseModel
@@ -10,14 +11,10 @@ from datetime import datetime
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from sqlalchemy.sql import text
 
-# 데이터베이스 테이블 생성
-try:
-    models.Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully")
-except Exception as e:
-    print(f"Error creating database tables: {str(e)}")
-    raise
+# 전역 RecommendationEngine 인스턴스
+recommendation_engine = None
 
 app = FastAPI(title="보드게임 추천 시스템 API")
 
@@ -41,117 +38,52 @@ class RecommendResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# 전역 변수로 recommendation_engine 선언
-recommendation_engine = None
-
-def generate_recommendations_job(db: Session):
-    """새벽 3시에 실행될 추천 생성 작업"""
+def generate_recommendations_job():
+    """스케줄된 추천 생성 작업"""
     try:
-        print("Starting SBERT-based recommendation generation job...")
-        start_time = time.time()
+        if recommendation_engine is None:
+            print("RecommendationEngine이 초기화되지 않았습니다.")
+            return
+            
+        print("Starting scheduled recommendation generation...")
+        success = recommendation_engine.generate_hybrid_recommendations()
         
-        # RecommendationEngine 초기화 (SBERT 모델 로드)
-        engine = RecommendationEngine(db)
-        
-        # 모든 게임 ID 가져오기
-        games = db.query(models.Game.game_id).all()
-        game_ids = [game.game_id for game in games]
-        
-        total_games = len(game_ids)
-        processed_games = 0
-        failed_games = []
-        
-        print(f"Found {total_games} games to process")
-        
-        for source_game_id in game_ids:
-            try:
-                print(f"\nProcessing game_id: {source_game_id} ({processed_games + 1}/{total_games})")
-                
-                # SBERT를 사용하여 유사한 게임 찾기
-                recommendations = engine.calculate_content_recommendations(source_game_id)
-                
-                if not recommendations:
-                    print(f"No recommendations generated for game_id: {source_game_id}")
-                    failed_games.append(source_game_id)
-                    continue
-                
-                print(f"Generated {len(recommendations)} recommendations")
-                
-                # 추천 데이터 저장
-                engine.save_recommendations(recommendations, source_game_id)
-                
-                processed_games += 1
-                if processed_games % 10 == 0:
-                    print(f"\nProgress: {processed_games}/{total_games} games ({(processed_games/total_games)*100:.2f}%)")
-                    db.commit()  # 중간 커밋
-                
-            except Exception as e:
-                print(f"Error processing game_id {source_game_id}: {str(e)}")
-                failed_games.append(source_game_id)
-                continue
-        
-        # 최종 커밋
-        db.commit()
-        
-        end_time = time.time()
-        processing_time = end_time - start_time
-        
-        print("\n=== Recommendation Generation Summary ===")
-        print(f"Total processing time: {processing_time:.2f} seconds")
-        print(f"Successfully processed: {processed_games}/{total_games} games")
-        print(f"Failed games: {len(failed_games)}")
-        if failed_games:
-            print("Failed game IDs:", failed_games)
-        
-        return {
-            "status": "success",
-            "processed_games": processed_games,
-            "total_games": total_games,
-            "failed_games": failed_games,
-            "processing_time": processing_time
-        }
-        
+        if success:
+            print("Scheduled recommendation generation completed successfully")
+        else:
+            print("Scheduled recommendation generation failed")
+            
     except Exception as e:
-        print(f"Critical error in recommendation generation job: {str(e)}")
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to generate recommendations: {str(e)}"
-        )
+        print(f"Error in scheduled recommendation generation: {e}")
 
 @app.on_event("startup")
 async def startup_event():
+    """서버 시작 시 RecommendationEngine 초기화"""
+    global recommendation_engine
     try:
-        print("Testing database connections...")
-        # MySQL 연결 테스트
+        # 데이터베이스 연결 테스트
         if not test_mysql_connection():
-            raise Exception("MySQL connection failed during startup")
-        
-        # SQLAlchemy 연결 테스트
+            raise Exception("MySQL 연결 실패")
         if not test_sqlalchemy_connection():
-            raise Exception("SQLAlchemy connection failed during startup")
-            
-        print("Database connections successful")
-            
-        # 스케줄러 초기화 및 시작
-        scheduler = BackgroundScheduler()
-        db = next(get_db())
+            raise Exception("SQLAlchemy 연결 실패")
         
-        # 매일 새벽 3시에 실행되도록 설정
+        # RecommendationEngine 초기화
+        db = next(get_db())
+        recommendation_engine = RecommendationEngine(db)
+        print("RecommendationEngine initialized successfully")
+        
+        # 스케줄러 설정
+        scheduler = BackgroundScheduler()
         scheduler.add_job(
             generate_recommendations_job,
-            trigger=CronTrigger(hour=3),
-            args=[db],
-            id='generate_recommendations',
-            name='Generate SBERT-based game recommendations daily at 3 AM',
-            replace_existing=True
+            CronTrigger(hour=3, minute=0),  # 매일 오전 3시에 실행
+            id='generate_recommendations_job'
         )
-        
         scheduler.start()
-        print("Scheduler started - SBERT-based recommendations will be generated at 3 AM daily")
+        print("Scheduler started successfully")
         
     except Exception as e:
-        print(f"Error during startup: {str(e)}")
+        print(f"Error during startup: {e}")
         raise
 
 @app.get("/")
@@ -164,8 +96,10 @@ def get_content_recommendations(game_id: int, db: Session = Depends(get_db)):
     특정 게임에 대한 콘텐츠 기반 추천을 반환합니다.
     """
     try:
-        engine = RecommendationEngine(db)
-        recommendations = engine.get_content_recommendations(game_id)
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        recommendations = recommendation_engine.get_content_recommendations(game_id)
         if not recommendations:
             raise HTTPException(
                 status_code=404,
@@ -182,12 +116,14 @@ def get_hybrid_recommendations(game_id: int, user_id: int, db: Session = Depends
     특정 게임에 대한 하이브리드 추천을 반환합니다.
     """
     try:
-        engine = RecommendationEngine(db)
-        recommendations = engine.get_hybrid_recommendations(game_id, user_id)
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        recommendations = recommendation_engine.get_hybrid_recommendations(game_id, user_id)
         if not recommendations:
             raise HTTPException(
                 status_code=404,
-                detail="하이브리드 추천 데이터가 아직 구현되지 않았습니다."
+                detail="추천 데이터가 없습니다. 새벽 3시에 생성되거나 수동으로 생성해주세요."
             )
         return recommendations
     except Exception as e:
@@ -205,23 +141,231 @@ def get_content_recommendations_by_rank(
     특정 게임에 대한 콘텐츠 기반 추천을 지정된 순위 범위로 반환합니다.
     """
     try:
-        engine = RecommendationEngine(db)
-        recommendations = engine.get_recommendations_by_rank(game_id, start_rank, end_rank)
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        recommendations = recommendation_engine.get_recommendations_by_rank(game_id, start_rank, end_rank)
         return recommendations
     except Exception as e:
         print(f"Error in get_content_recommendations_by_rank: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.put("/trigger-recommendations")
-def trigger_recommendations(db: Session = Depends(get_db)):
-    """
-    수동으로 SBERT 기반 추천 생성 작업을 트리거합니다.
-    """
+@app.post("/trigger-recommendations")
+async def trigger_recommendations(db: Session = Depends(get_db)):
+    """수동으로 추천 생성을 트리거합니다."""
     try:
-        generate_recommendations_job(db)
-        return {"message": "SBERT-based recommendation generation triggered successfully"}
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+        
+        success = recommendation_engine.generate_hybrid_recommendations()
+        
+        if success:
+            return {"message": "추천 생성이 완료되었습니다."}
+        else:
+            raise HTTPException(status_code=500, detail="추천 생성 중 오류가 발생했습니다.")
+            
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/trigger-hybrid-recommendations/{user_id}")
+def trigger_hybrid_recommendations(user_id: int, db: Session = Depends(get_db)):
+    """
+    특정 사용자에 대한 하이브리드 추천을 수동으로 생성합니다.
+    """
+    try:
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        # 기존 추천 데이터 삭제
+        db.execute(text(f"DELETE FROM recommend WHERE user_id = {user_id}"))
+        db.commit()
+        
+        success = recommendation_engine.generate_hybrid_recommendations()
+        
+        if success:
+            return {"message": "하이브리드 추천 생성이 완료되었습니다."}
+        else:
+            raise HTTPException(status_code=500, detail="하이브리드 추천 생성 중 오류가 발생했습니다.")
+            
+    except Exception as e:
+        print(f"Error in trigger_hybrid_recommendations: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/initialize-clusters")
+def initialize_clusters(n_clusters: int = 10, batch_size: int = 100, db: Session = Depends(get_db)):
+    """
+    클러스터링을 초기화합니다.
+    """
+    try:
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        success = recommendation_engine._initialize_clusters(n_clusters, batch_size)
+        
+        if success:
+            return {"message": "클러스터링이 초기화되었습니다."}
+        else:
+            raise HTTPException(status_code=500, detail="클러스터링 초기화 중 오류가 발생했습니다.")
+            
+    except Exception as e:
+        print(f"Error in initialize_clusters: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/cluster-stats")
+def get_cluster_stats(db: Session = Depends(get_db)):
+    """
+    클러스터 통계를 반환합니다.
+    """
+    try:
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        stats = recommendation_engine.analyze_cluster_stats()
+        
+        if isinstance(stats, str):
+            raise HTTPException(status_code=404, detail=stats)
+            
+        return stats
+        
+    except Exception as e:
+        print(f"Error in get_cluster_stats: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/generate-all-hybrid-recommendations")
+async def generate_all_hybrid_recommendations():
+    try:
+        success = recommendation_engine.generate_all_hybrid_recommendations()
+        return {"message": "Successfully generated hybrid recommendations"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/generate-recommendations")
+async def generate_recommendations():
+    try:
+        success = recommendation_engine.generate_all_hybrid_recommendations()
+        return {"message": "Successfully generated recommendations"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/generate-recommendations-job")
+async def generate_recommendations_job():
+    try:
+        success = recommendation_engine.generate_all_hybrid_recommendations()
+        return {"message": "Successfully generated recommendations"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/generate-recommendations-scheduler")
+async def generate_recommendations_scheduler():
+    try:
+        success = recommendation_engine.generate_all_hybrid_recommendations()
+        return {"message": "Successfully generated recommendations"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/recommendations/{user_id}")
+def get_recommendations(user_id: int, limit: int = 30, db: Session = Depends(get_db)):
+    """
+    특정 사용자의 추천 목록을 반환합니다.
+    """
+    try:
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        recommendations = recommendation_engine.get_recommendations_for_user(user_id, limit)
+        
+        if not recommendations:
+            raise HTTPException(
+                status_code=404,
+                detail="추천 데이터가 없습니다. 새벽 3시에 생성되거나 수동으로 생성해주세요."
+            )
+            
+        return recommendations
+        
+    except Exception as e:
+        print(f"Error in get_recommendations: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/trigger-content-recommendations")
+async def trigger_content_recommendations(db: Session = Depends(get_db)):
+    """콘텐츠 기반 추천을 수동으로 생성합니다."""
+    try:
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        start_time = time.time()
+        print("Starting content-based recommendation generation...")
+        
+        # 기존 추천 데이터 삭제
+        db.execute(text("TRUNCATE TABLE recommend_content"))
+        db.commit()
+        
+        # 모든 게임 ID 가져오기
+        games = db.query(models.Game.game_id).all()
+        game_ids = [game.game_id for game in games]
+        
+        total_games = len(game_ids)
+        processed_games = 0
+        failed_games = []
+        
+        print(f"Found {total_games} games to process")
+        
+        for source_game_id in game_ids:
+            try:
+                print(f"\nProcessing game_id: {source_game_id} ({processed_games + 1}/{total_games})")
+                
+                # 콘텐츠 기반 추천 생성
+                recommendations = recommendation_engine.calculate_content_recommendations(source_game_id)
+                
+                if not recommendations:
+                    print(f"No recommendations generated for game_id: {source_game_id}")
+                    failed_games.append(source_game_id)
+                    continue
+                
+                print(f"Generated {len(recommendations)} recommendations")
+                
+                # 추천 데이터 저장
+                recommendation_engine.save_recommendations(recommendations, source_game_id)
+                
+                processed_games += 1
+                if processed_games % 10 == 0:
+                    print(f"\nProgress: {processed_games}/{total_games} games ({(processed_games/total_games)*100:.2f}%)")
+                    db.commit()  # 중간 커밋
+                
+            except Exception as e:
+                print(f"Error processing game_id {source_game_id}: {str(e)}")
+                failed_games.append(source_game_id)
+                continue
+        
+        # 최종 커밋
+        db.commit()
+        
+        end_time = time.time()
+        processing_time = end_time - start_time
+        
+        print("\n=== Content Recommendation Generation Summary ===")
+        print(f"Total processing time: {processing_time:.2f} seconds")
+        print(f"Successfully processed: {processed_games}/{total_games} games")
+        print(f"Failed games: {len(failed_games)}")
+        if failed_games:
+            print("Failed game IDs:", failed_games)
+        
+        return {
+            "status": "success",
+            "message": "Content-based recommendations generated successfully",
+            "processed_games": processed_games,
+            "total_games": total_games,
+            "failed_games": failed_games,
+            "processing_time": processing_time
+        }
+            
+    except Exception as e:
+        print(f"Critical error in content recommendation generation: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate content recommendations: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn
