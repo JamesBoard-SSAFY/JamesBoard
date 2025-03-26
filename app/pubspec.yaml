@@ -21,6 +21,9 @@ dependencies:
   # logger:
   logger: ^2.5.0
 
+  #date_format
+  intl: ^0.18.0
+
   # loading_indicator:
   smooth_page_indicator: ^1.1.0
 
