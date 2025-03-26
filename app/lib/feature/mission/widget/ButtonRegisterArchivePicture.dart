@@ -20,19 +20,21 @@ class ButtonRegisterArchivePicture extends StatelessWidget {
 
         return GestureDetector(
           onTap: onTap,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: secondaryBlack,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                icon,
-                width: size * 0.3,
-                height: size * 0.3,
-                color: mainGrey,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: secondaryBlack,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  icon,
+                  width: size,
+                  height: size,
+                  color: mainGrey,
+                ),
               ),
             ),
           ),

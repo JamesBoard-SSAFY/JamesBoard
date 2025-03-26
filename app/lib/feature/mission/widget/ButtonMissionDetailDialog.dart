@@ -25,7 +25,11 @@ class ButtonMissionDetailDialog extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              color: mainGold, fontSize: 16, fontFamily: 'PretendardSemiBold'),
+            color: mainGold,
+            fontSize: 16,
+            fontFamily: 'PretendardSemiBold',
+            decoration: TextDecoration.none,
+          ),
         ),
       ),
     );

@@ -21,8 +21,14 @@ dependencies:
   # logger:
   logger: ^2.5.0
 
-  #flutter_charts 
-  syncfusion_flutter_charts: ^28.2.12
+  # loading_indicator:
+  smooth_page_indicator: ^1.1.0
+
+  # 갤러리 이미지
+  image_picker: ^1.1.2
+
+  # 이미지 자르기
+  image_cropper: ^9.0.0
 
 
 dev_dependencies:
