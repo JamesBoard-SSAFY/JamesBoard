@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -150,6 +151,67 @@ public class UserServiceImpl implements UserService {
             log.error("사용자 게임 아카이브 조회 실패: {}", e.getMessage());
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //사용자 보드게임 통계 및 순위 정보 조회
+    @Override
+    public UserStatsResponseDto getUserGameStats(Long userId) {
+        try {
+            // 사용자 존재 여부 검증
+            if (!userRepository.existsById(userId)) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+
+            // 총 플레이 횟수 조회
+            Integer totalPlayed = archiveRepository.getTotalPlayByUserId(userId);
+
+            // 가장 많이 플레이한 게임 목록 조회
+            List<Object[]> topPlayedGamesData = archiveRepository.getTopPlayGamesByUserId(userId);
+
+            List<UserStatsResponseDto.TopPlayedGame> topPlayedGames = topPlayedGamesData.stream()
+                    .map(data -> UserStatsResponseDto.TopPlayedGame.builder()
+                            .gameId(((Number) data[0]).longValue())
+                            .gameTitle((String) data[1])
+                            .gameImage((String) data[2])
+                            .totalPlayCount(((Number) data[3]).intValue())
+                            .build())
+                    .collect(Collectors.toList());
+            // 카테고리별 통계조회
+            List<Object[]> genreStatsData = archiveRepository.getGenreStatsByUserId(userId);
+
+            List<UserStatsResponseDto.GenreStats> genres = new ArrayList<>();
+
+            if (totalPlayed > 0) {
+                genres = genreStatsData.stream()
+                        .map(data -> {
+                            Long categoryId = ((Number) data[0]).longValue();
+                            String categoryName = (String) data[1];
+                            Integer count = ((Number) data[2]).intValue();
+                            // 소수점 1자리 까지 계산
+                            Double percentage = Math.round((double) count / totalPlayed * 1000) / 10.0;
+
+                            return UserStatsResponseDto.GenreStats.builder()
+                                    .gameCategoryId(categoryId)
+                                    .gameCategoryName(categoryName)
+                                    .count(count)
+                                    .percentage(percentage)
+                                    .build();
+                        })
+                        .collect(Collectors.toList());
+            }
+            return UserStatsResponseDto.builder()
+                    .totalPlayed(totalPlayed)
+                    .genreStats(genres)
+                    .topPlayedGames(topPlayedGames)
+                    .build();
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("사용자 게임 통계 및 순위 조회 실패 : {}", e.getMessage());
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
