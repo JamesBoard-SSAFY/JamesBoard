@@ -1,69 +1,43 @@
-/// YApi QuickType插件生成，具体参考文档:https://plugins.jetbrains.com/plugin/18847-yapi-quicktype/documentation
+import 'package:json_annotation/json_annotation.dart';
 
-import 'dart:convert';
+part 'ArchiveDetailResponse.g.dart';
 
-ArchiveDetailResponse archiveDetailResponseFromJson(String str) =>
-    ArchiveDetailResponse.fromJson(json.decode(str));
-
-String archiveDetailResponseToJson(ArchiveDetailResponse data) =>
-    json.encode(data.toJson());
-
+@JsonSerializable()
 class ArchiveDetailResponse {
+  final int archiveId;
+  final String userNickName;
+  final String userProfile;
+  final String archiveContent;
+  final String gameTitle;
+  final int archiveGamePlayTime;
+  final List<ArchiveImageList> archiveImageList;
+
   ArchiveDetailResponse({
-    required this.archiveImageList,
+    required this.archiveId,
+    required this.userNickName,
+    required this.userProfile,
     required this.archiveContent,
     required this.gameTitle,
-    required this.userNickName,
-    required this.archiveId,
-    required this.userProfile,
     required this.archiveGamePlayTime,
+    required this.archiveImageList,
   });
 
-  List<ArchiveImageList> archiveImageList;
-  String archiveContent;
-  String gameTitle;
-  String userNickName;
-  int archiveId;
-  String userProfile;
-  int archiveGamePlayTime;
+  factory ArchiveDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveDetailResponseFromJson(json);
 
-  factory ArchiveDetailResponse.fromJson(Map<dynamic, dynamic> json) =>
-      ArchiveDetailResponse(
-        archiveImageList: List<ArchiveImageList>.from(
-            json["archiveImageList"].map((x) => ArchiveImageList.fromJson(x))),
-        archiveContent: json["archiveContent"],
-        gameTitle: json["gameTitle"],
-        userNickName: json["userNickName"],
-        archiveId: json["archiveId"],
-        userProfile: json["userProfile"],
-        archiveGamePlayTime: json["archiveGamePlayTime"],
-      );
-
-  Map<dynamic, dynamic> toJson() => {
-        "archiveImageList":
-            List<dynamic>.from(archiveImageList.map((x) => x.toJson())),
-        "archiveContent": archiveContent,
-        "gameTitle": gameTitle,
-        "userNickName": userNickName,
-        "archiveId": archiveId,
-        "userProfile": userProfile,
-        "archiveGamePlayTime": archiveGamePlayTime,
-      };
+  Map<String, dynamic> toJson() => _$ArchiveDetailResponseToJson(this);
 }
 
+@JsonSerializable()
 class ArchiveImageList {
+  final String archiveImageUrl;
+
   ArchiveImageList({
     required this.archiveImageUrl,
   });
 
-  String archiveImageUrl;
+  factory ArchiveImageList.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveImageListFromJson(json);
 
-  factory ArchiveImageList.fromJson(Map<dynamic, dynamic> json) =>
-      ArchiveImageList(
-        archiveImageUrl: json["archiveImageUrl"],
-      );
-
-  Map<dynamic, dynamic> toJson() => {
-        "archiveImageUrl": archiveImageUrl,
-      };
+  Map<String, dynamic> toJson() => _$ArchiveImageListToJson(this);
 }
