@@ -16,19 +16,19 @@ import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
-class MissionEdit extends StatefulWidget {
+class MissionEditScreen extends StatefulWidget {
   final String title;
 
-  const MissionEdit({
+  const MissionEditScreen({
     super.key,
     required this.title,
   });
 
   @override
-  State<MissionEdit> createState() => _MissionEditState();
+  State<MissionEditScreen> createState() => _MissionEditScreenState();
 }
 
-class _MissionEditState extends State<MissionEdit> {
+class _MissionEditScreenState extends State<MissionEditScreen> {
   final TextEditingController _gameController = TextEditingController();
   final TextEditingController _countController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
