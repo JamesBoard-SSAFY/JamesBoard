@@ -34,7 +34,7 @@ public class ArchiveController {
 
     @PostMapping("")
     @Operation(summary = "아카이브 추가, 추가 시 UserActivity 테이블 갱신")
-    public ResponseEntity<Long> getArchiveTest(@RequestBody ArchiveRequestDto archiveRequestDto) {
+    public ResponseEntity<Long> createArchive(@RequestBody ArchiveRequestDto archiveRequestDto) {
         return ResponseEntity.ok(archiveService.createArchive(archiveRequestDto));
     }
 

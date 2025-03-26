@@ -2,6 +2,8 @@ package com.board.jamesboard.db.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -31,6 +33,8 @@ public class UserActivity {
     @Column(name = "user_activity_rating")
     private Float userActivityRating;
 
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @CreationTimestamp
     @Column(name = "created_at")
     private Instant createdAt;
 

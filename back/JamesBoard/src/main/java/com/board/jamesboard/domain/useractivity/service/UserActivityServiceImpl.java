@@ -6,6 +6,7 @@ import com.board.jamesboard.db.entity.UserActivity;
 import com.board.jamesboard.db.repository.GameRepository;
 import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
+import com.board.jamesboard.domain.useractivity.dto.RatingRequestDto;
 import com.board.jamesboard.domain.useractivity.dto.UserActivityResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -55,5 +56,35 @@ public class UserActivityServiceImpl implements UserActivityService {
                         activity.getUserActivityId()
                 ))
                 .toList();
+    }
+
+    @Override
+    public Long updateUserActivityRating(Long userActivityId, RatingRequestDto ratingRequestDto) {
+        return 0L;
+    }
+
+    @Override
+    public Long createUserActivityRating(RatingRequestDto ratingRequestDto) {
+
+        // JWT 현재 userId 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Long userId = Long.parseLong(authentication.getName());
+
+        Game game = gameRepository.findById(ratingRequestDto.getGameId())
+                .orElseThrow(() -> new RuntimeException("해당 게임이 존재하지 않습니다."));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
+
+        UserActivity userActivity = UserActivity.builder()
+                .userActivityRating(ratingRequestDto.getRating())
+                .game(game)
+                .user(user)
+                .build();
+
+        UserActivity savedUserActivity = userActivityRepository.save(userActivity);
+
+        return savedUserActivity.getUserActivityId();
     }
 }
