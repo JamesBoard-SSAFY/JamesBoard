@@ -15,4 +15,7 @@ public interface UserActivityRepository extends JpaRepository<UserActivity, Long
     @Query("SELECT DISTINCT ua.game FROM UserActivity ua WHERE ua.user.userId = :userId")
     List<Game> findDistinctGameByUserUserId(Long userId);
 
+    List<UserActivity> findAllByUserAndGame(User user, Game game);
+
+    UserActivity findByUserActivityId(long userActivityId);
 }

@@ -52,7 +52,7 @@ public class ArchiveServiceImpl implements ArchiveService {
                 .map(archive -> {
                     String firstImage = archiveImageMap.getOrDefault(archive.getArchiveId(), null);
                     return new ArchiveResponseDto(
-                            String.valueOf(archive.getArchiveId()),
+                            archive.getArchiveId(),
                             firstImage
                     );
                 })
@@ -147,8 +147,6 @@ public class ArchiveServiceImpl implements ArchiveService {
                                     .game(game)
                                     .userActivityTime(playTime)
                                     .userActivityRating(null)
-                                    .createdAt(now)
-                                    .modifiedAt(now)
                                     .build();
                             userActivityRepository.save(newActivity);
                         }
@@ -198,8 +196,6 @@ public class ArchiveServiceImpl implements ArchiveService {
                                     .game(newGame)
                                     .userActivityTime(newPlayTime)
                                     .userActivityRating(null)
-                                    .createdAt(now)
-                                    .modifiedAt(now)
                                     .build();
                             userActivityRepository.save(newActivity);
                         }

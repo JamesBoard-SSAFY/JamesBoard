@@ -1,4 +1,4 @@
-package com.board.jamesboard.domain.archive.dto;
+package com.board.jamesboard.domain.useractivity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArchiveResponseDto {
-    private Long archiveId;
-    private String archiveImage;
+public class UserActivityResponseDto {
+    private Long userActivityId;
 }

@@ -1,9 +1,14 @@
 package com.board.jamesboard.db.entity;
 
+import com.board.jamesboard.domain.useractivity.dto.RatingPatchRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_activity")
@@ -31,22 +36,29 @@ public class UserActivity {
     @Column(name = "user_activity_rating")
     private Float userActivityRating;
 
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @CreationTimestamp
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "modified_at")
-    private Instant modifiedAt;
+    @UpdateTimestamp
+    private LocalDateTime modifiedAt;
 
     public void addPlayTime(int playTime) {
         if (this.userActivityTime == null) this.userActivityTime = 0;
         this.userActivityTime += playTime;
-        this.modifiedAt = Instant.now();
+        this.modifiedAt = LocalDateTime.now();
     }
 
     public void subtractPlayTime(int playTime) {
         if (this.userActivityTime == null) this.userActivityTime = 0;
         this.userActivityTime = Math.max(0, this.userActivityTime - playTime); // 음수 방지
-        this.modifiedAt = Instant.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void updateUserActivityRating(Float rating) {
+        this.userActivityRating = rating;
     }
 
 
