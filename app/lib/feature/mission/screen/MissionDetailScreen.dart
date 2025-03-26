@@ -8,7 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
-class MissionDetail extends StatefulWidget {
+class MissionDetailScreen extends StatefulWidget {
   final String title;
   final String profileImageUrl;
   final String userName;
@@ -18,7 +18,7 @@ class MissionDetail extends StatefulWidget {
   final int playCount;
   final int gamePlayTime;
 
-  const MissionDetail({
+  const MissionDetailScreen({
     super.key,
     required this.title,
     required this.missionImageUrls,
@@ -31,10 +31,10 @@ class MissionDetail extends StatefulWidget {
   });
 
   @override
-  State<MissionDetail> createState() => _MissionDetailState();
+  State<MissionDetailScreen> createState() => _MissionDetailScreenState();
 }
 
-class _MissionDetailState extends State<MissionDetail> {
+class _MissionDetailScreenState extends State<MissionDetailScreen> {
   final PageController _pageController = PageController();
 
   String _getFormattedPlayTime(int averagePlayTime, int playCount) {
