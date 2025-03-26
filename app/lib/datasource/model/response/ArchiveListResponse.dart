@@ -1,30 +1,19 @@
-/// YApi QuickType插件生成，具体参考文档:https://plugins.jetbrains.com/plugin/18847-yapi-quicktype/documentation
+import 'package:json_annotation/json_annotation.dart';
 
-import 'dart:convert';
+part 'ArchiveListResponse.g.dart';
 
-ArchiveListResponse archiveListResponseFromJson(String str) =>
-    ArchiveListResponse.fromJson(json.decode(str));
-
-String archiveListResponseToJson(ArchiveListResponse data) =>
-    json.encode(data.toJson());
-
+@JsonSerializable()
 class ArchiveListResponse {
+  final int archiveId;
+  final String archiveImage;
+
   ArchiveListResponse({
     required this.archiveId,
     required this.archiveImage,
   });
 
-  int archiveId;
-  String archiveImage;
+  factory ArchiveListResponse.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveListResponseFromJson(json);
 
-  factory ArchiveListResponse.fromJson(Map<dynamic, dynamic> json) =>
-      ArchiveListResponse(
-        archiveId: json["archiveId"],
-        archiveImage: json["archiveImage"],
-      );
-
-  Map<dynamic, dynamic> toJson() => {
-        "archiveId": archiveId,
-        "archiveImage": archiveImage,
-      };
+  Map<String, dynamic> toJson() => _$ArchiveListResponseToJson(this);
 }
