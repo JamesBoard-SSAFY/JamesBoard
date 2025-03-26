@@ -52,7 +52,7 @@ public class ArchiveServiceImpl implements ArchiveService {
                 .map(archive -> {
                     String firstImage = archiveImageMap.getOrDefault(archive.getArchiveId(), null);
                     return new ArchiveResponseDto(
-                            String.valueOf(archive.getArchiveId()),
+                            archive.getArchiveId(),
                             firstImage
                     );
                 })
