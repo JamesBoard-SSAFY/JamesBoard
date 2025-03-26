@@ -1,6 +1,7 @@
 package com.board.jamesboard.domain.useractivity.controller;
 
-import com.board.jamesboard.domain.useractivity.dto.RatingRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingPatchRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingPostRequestDto;
 import com.board.jamesboard.domain.useractivity.dto.UserActivityResponseDto;
 import com.board.jamesboard.domain.useractivity.service.UserActivityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +28,14 @@ public class UserActivityController {
 
     @PostMapping("")
     @Operation(summary = "유저 활동에 평점 추가")
-    public ResponseEntity<Long> createUserRating(@RequestBody RatingRequestDto ratingRequestDto) {
-        return ResponseEntity.ok(userActivityService.createUserActivityRating(ratingRequestDto));
+    public ResponseEntity<Long> createUserRating(@RequestBody RatingPostRequestDto ratingPostRequestDto) {
+        return ResponseEntity.ok(userActivityService.createUserActivityRating(ratingPostRequestDto));
+    }
+
+    @PatchMapping("/{userActivityId}")
+    @Operation(summary = "유저 활동 평점 수정")
+    public ResponseEntity<Long> updateUserRating(@PathVariable Long userActivityId, @RequestBody RatingPatchRequestDto ratingPatchRequestDto) {
+        return ResponseEntity.ok(userActivityService.updateUserActivityRating(userActivityId, ratingPatchRequestDto));
     }
 
 }

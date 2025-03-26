@@ -1,5 +1,8 @@
 package com.board.jamesboard.domain.useractivity.dto;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +12,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RatingRequestDto {
-    private Long gameId;
+public class RatingPatchRequestDto {
+
+    @NotNull
+    @DecimalMin("0.5")
+    @DecimalMax("5.0")
     private Float rating;
 }

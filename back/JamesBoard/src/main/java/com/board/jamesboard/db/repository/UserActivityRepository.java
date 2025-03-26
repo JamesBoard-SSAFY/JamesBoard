@@ -17,4 +17,5 @@ public interface UserActivityRepository extends JpaRepository<UserActivity, Long
 
     List<UserActivity> findAllByUserAndGame(User user, Game game);
 
+    UserActivity findByUserActivityId(long userActivityId);
 }

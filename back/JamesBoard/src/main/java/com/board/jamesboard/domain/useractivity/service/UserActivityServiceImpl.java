@@ -6,11 +6,11 @@ import com.board.jamesboard.db.entity.UserActivity;
 import com.board.jamesboard.db.repository.GameRepository;
 import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
-import com.board.jamesboard.domain.useractivity.dto.RatingRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingPatchRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingPostRequestDto;
 import com.board.jamesboard.domain.useractivity.dto.UserActivityResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -59,26 +58,45 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public Long updateUserActivityRating(Long userActivityId, RatingRequestDto ratingRequestDto) {
-        return 0L;
+    public Long updateUserActivityRating(Long userActivityId, RatingPatchRequestDto ratingPatchRequestDto) {
+        Long currentUserId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        UserActivity userActivity = userActivityRepository.findByUserActivityId(userActivityId);
+
+        // 요청 보내는 사용자와 작성한 사용자가 다르면 에러
+        if (!userActivity.getUser().getUserId().equals(currentUserId)) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+
+        if (ratingPatchRequestDto.getRating() < 0.5 || ratingPatchRequestDto.getRating() > 5.0) {
+            throw new IllegalArgumentException("평점은 0.5 이상 5.0 이하만 가능합니다.");
+        }
+
+        userActivity.updateUserActivityRating(ratingPatchRequestDto.getRating());
+
+        return userActivity.getUserActivityId();
     }
 
     @Override
-    public Long createUserActivityRating(RatingRequestDto ratingRequestDto) {
+    public Long createUserActivityRating(RatingPostRequestDto ratingPostRequestDto) {
 
         // JWT 현재 userId 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Long userId = Long.parseLong(authentication.getName());
 
-        Game game = gameRepository.findById(ratingRequestDto.getGameId())
+        if (ratingPostRequestDto.getRating() < 0.5 || ratingPostRequestDto.getRating() > 5.0) {
+            throw new IllegalArgumentException("평점은 0.5 이상 5.0 이하만 가능합니다.");
+        }
+
+        Game game = gameRepository.findById(ratingPostRequestDto.getGameId())
                 .orElseThrow(() -> new RuntimeException("해당 게임이 존재하지 않습니다."));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
 
         UserActivity userActivity = UserActivity.builder()
-                .userActivityRating(ratingRequestDto.getRating())
+                .userActivityRating(ratingPostRequestDto.getRating())
                 .game(game)
                 .user(user)
                 .build();
