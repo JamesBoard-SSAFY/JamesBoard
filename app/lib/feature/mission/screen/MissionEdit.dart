@@ -14,7 +14,7 @@ import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 
-import '../../../widget/toolbar/DefaultCommonAppBar.dart';
+import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionEdit extends StatefulWidget {
   final String title;

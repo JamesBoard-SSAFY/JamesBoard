@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/mission/widget/HashTagMissionDetail.dart';
 import 'package:jamesboard/feature/mission/widget/ProfileMissionDetail.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/widget/toolbar/DefaultCommonAppBar.dart';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionDetail extends StatefulWidget {
   final String title;
