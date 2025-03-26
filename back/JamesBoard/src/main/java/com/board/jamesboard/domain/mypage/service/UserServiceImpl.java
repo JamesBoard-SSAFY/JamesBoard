@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
             List<String> categories = gameCategoryRepository.findCategoryNamesByGameId(gameId);
 
             // 사용자 작성 게임 아카이브 조회
-            List<Archive> archives = archiveRepository.findByUserIdAndGameIdOrderByCreatedAtDesc(userId, gameId);
+            List<Archive> archives = archiveRepository.findByUserUserIdAndGameGameIdOrderByCreatedAtDesc(userId, gameId);
 
             // 아카이브 상세정보
             List<UserGameArchiveResponseDto.ArchiveDetailDto> archiveDetail = archives.stream()

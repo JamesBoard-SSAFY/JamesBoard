@@ -24,6 +24,6 @@ public interface ArchiveImageRepository extends JpaRepository<ArchiveImage, Long
     @Query(value = "SELECT ai.archiveImageUrl FROM ArchiveImage ai " +
             "WHERE ai.archive.archiveId = :archiveId " +
             "ORDER BY ai.archiveImageId ASC LIMIT 1"
-                ,nativeQuery = true)
-    Optional<String> findFirstImageUrlByArchiveId(@Param("archiveID") Long archiveID);
+                )
+    Optional<String> findFirstImageUrlByArchiveId(@Param("archiveId") Long archiveId);
 }
