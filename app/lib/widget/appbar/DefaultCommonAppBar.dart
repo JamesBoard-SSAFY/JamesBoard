@@ -14,6 +14,7 @@ class DefaultCommonAppBar extends StatelessWidget implements PreferredSizeWidget
       title: Text(
         title,
         style: TextStyle(
+          fontSize: 22,
           color: mainWhite,
           fontFamily: 'PretendardSemiBold'
         )
@@ -22,6 +23,7 @@ class DefaultCommonAppBar extends StatelessWidget implements PreferredSizeWidget
       leading: IconButton(
         icon: Icon(
           Icons.chevron_left,
+          size: 24,
           color: mainWhite,
         ),
         onPressed: null

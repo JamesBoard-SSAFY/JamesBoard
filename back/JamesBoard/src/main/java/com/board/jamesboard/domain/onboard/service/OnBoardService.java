@@ -8,5 +8,5 @@ import java.util.List;
 public interface OnBoardService {
     List<OnBoardResponseDto> getOnBoardGames(String category);
 
-    Long updateUserPreferGame(long userId, PreferGameRequestDto preferGameRequestDto);
+    Long updateUserPreferGame(Long userId, PreferGameRequestDto preferGameRequestDto);
 }

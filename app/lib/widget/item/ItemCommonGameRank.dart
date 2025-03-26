@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ItemCommonGameRank extends StatelessWidget {
@@ -7,7 +8,7 @@ class ItemCommonGameRank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 1),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: secondaryBlack,
         borderRadius: BorderRadius.circular(4),
@@ -28,20 +29,24 @@ class ItemCommonGameRank extends StatelessWidget {
               "부루마블",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontFamily: 'PretendardSemiBold',
                 color: mainWhite, // mainWhite 색상 적용
               ),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.access_time),
+                SvgPicture.asset(
+                  'assets/image/icon_time.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 SizedBox(width: 8),
                 Text(
                   "35분",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'PretendardSemiBold',
                     color: mainWhite, // mainWhite 색상 적용
                   ),
                 ),
@@ -49,33 +54,36 @@ class ItemCommonGameRank extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 0,
+            left: -10, // 부모 컨테이너의 padding 값을 고려하여 조정
             bottom: -20,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // 테두리 색상을 주는 텍스트
-                Text(
-                  '100',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontFamily: 'PretendardSemiBold',
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 3
-                      ..color = mainGold
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // 테두리 효과
+                  Text(
+                    '100',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontFamily: 'PretendardSemiBold',
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 3
+                        ..color = mainGold,
+                    ),
                   ),
-                ),
-                // 안쪽 텍스트 색상
-                Text(
-                  '100',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontFamily: 'PretendardSemiBold',
-                    color: mainRed, // 텍스트 색상
+                  // 안쪽 텍스트 색상
+                  Text(
+                    '100',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontFamily: 'PretendardSemiBold',
+                      color: mainRed,
+                    ),
                   ),
-                ),
-              ]
+                ],
+              ),
             ),
           ),
         ],

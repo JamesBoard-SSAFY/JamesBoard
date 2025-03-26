@@ -16,7 +16,7 @@ class TextFieldCommonGameRound extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly], // 숫자만 입력 가능
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: mainWhite),
       decoration: InputDecoration(
         hintStyle: TextStyle(
           color: mainGrey
@@ -25,7 +25,7 @@ class TextFieldCommonGameRound extends StatelessWidget {
         fillColor: secondaryBlack,
         filled: true, // 배경색 활성화
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4.0), // 둥근 테두리 설정
+          borderRadius: BorderRadius.circular(10.0), // 둥근 테두리 설정
           borderSide: BorderSide.none, // 테두리 색상 없애기
         ),
       ),

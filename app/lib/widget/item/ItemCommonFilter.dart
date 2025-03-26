@@ -30,17 +30,19 @@ class ItemCommonFilter extends StatelessWidget {
           title: Text(
             title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               fontFamily: 'PretendardSemiBold',
               color: isSelected ? mainGold : mainGrey,
             ),
           ),
-          trailing: SvgPicture.asset(
+          trailing: isSelected
+              ? SvgPicture.asset(
             checkIconPath, // SVG 체크 아이콘
-            width: 18,
-            height: 18,
-            colorFilter: ColorFilter.mode(isSelected ? mainGold : mainGrey, BlendMode.srcIn),
-          ),
+            width: 24,
+            height: 24,
+            colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
+          )
+          : null,
         ),
       ),
     );

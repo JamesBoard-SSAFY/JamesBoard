@@ -24,6 +24,7 @@ class _ButtonCommonFilterState extends State<ButtonCommonFilter> {
         });
       },
       style: ButtonStyle(
+        padding: MaterialStateProperty.all(EdgeInsets.all(10)),
         foregroundColor: MaterialStateProperty.all(
             isSelected ? Colors.yellow : Colors.white),
         side: MaterialStateProperty.all(
@@ -35,7 +36,13 @@ class _ButtonCommonFilterState extends State<ButtonCommonFilter> {
           ),
         ),
       ),
-      child: Text(widget.text),
+      child: Text(
+        widget.text,
+        style: TextStyle(
+          fontSize: 16,
+          fontFamily: 'PretendardMedium',
+        ),
+      ),
     );
   }
 }

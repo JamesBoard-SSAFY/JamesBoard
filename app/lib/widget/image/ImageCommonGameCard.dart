@@ -12,12 +12,12 @@ class ImageCommonGameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double width = constraints.maxWidth; // 부모의 최대 너비
+        double width = 120; // 부모의 최대 너비
         double height = width * (4 / 3); // 3:4 비율 적용
 
         return ClipRRect(
-          borderRadius: BorderRadius.circular(4.0),
-          child: Image.asset(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Image.network(
             imageUrl,
             width: width,
             height: height,

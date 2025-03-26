@@ -7,25 +7,30 @@ class ButtonCommonPrimaryBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        // 버튼 클릭 시 동작
-      },
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        backgroundColor: secondaryBlack
-      ),
-      child: SizedBox(
-        width: double.infinity, // 너비를 최대한 확장
-        height: 50, // 원하는 높이 설정
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: mainWhite,
-              fontFamily: 'PretendardSemiBold'
+    return SizedBox(
+      width: double.infinity, // 버튼 너비를 꽉 차게 설정
+      child: IntrinsicHeight( // 버튼 높이를 내부 컨텐츠 크기에 맞게 조정
+        child: ElevatedButton(
+          onPressed: () {
+            // 버튼 클릭 시 동작
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: secondaryBlack,
+            padding: EdgeInsets.zero, // 기본 패딩 제거
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 기본 높이 제한 해제
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 22.5), // 내부 여백 조정
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 16,
+                color: mainWhite,
+                fontFamily: 'PretendardSemiBold',
+              ),
             ),
-          )
+          ),
         ),
       ),
     );

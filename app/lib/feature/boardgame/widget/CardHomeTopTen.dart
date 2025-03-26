@@ -16,7 +16,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double width = constraints.maxWidth;
+        double width = 160;
         double height = width * (4 / 3); // 3:4 비율 적용
 
         return SizedBox(

@@ -8,7 +8,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "user_activity")
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserActivity {
@@ -36,5 +36,18 @@ public class UserActivity {
 
     @Column(name = "modified_at")
     private Instant modifiedAt;
+
+    public void addPlayTime(int playTime) {
+        if (this.userActivityTime == null) this.userActivityTime = 0;
+        this.userActivityTime += playTime;
+        this.modifiedAt = Instant.now();
+    }
+
+    public void subtractPlayTime(int playTime) {
+        if (this.userActivityTime == null) this.userActivityTime = 0;
+        this.userActivityTime = Math.max(0, this.userActivityTime - playTime); // 음수 방지
+        this.modifiedAt = Instant.now();
+    }
+
 
 }

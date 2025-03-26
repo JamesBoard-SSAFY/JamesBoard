@@ -62,4 +62,11 @@ public class User {
     public void updatePreferGame(Game preferGame) {
         this.preferGame = preferGame;
     }
+
+    // 유저 프로필 정보 업데이트
+        public void updateProfile(String userProfile, String userNickname) {
+            this.userProfile = userProfile;
+            this.userNickname = userNickname;
+        }
+
 }

@@ -8,18 +8,18 @@ class ButtonCommonGameTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       decoration: BoxDecoration(
         color: secondaryBlack, // 배경색
-        borderRadius: BorderRadius.circular(4), // 둥근 모서리
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: mainGold, // 텍스트 색상
-          fontSize: 16, // 텍스트 크기
+          color: mainGold,
+          fontSize: 16,
           fontFamily: 'PretendardSemiBold',
-          backgroundColor: secondaryBlack, // 배경색
+          backgroundColor: secondaryBlack,
         ),
       ),
     );

@@ -9,8 +9,8 @@ class ImageCommonUserCircle extends StatelessWidget {
     return ClipOval( // ClipOval을 이용해 원형으로 만듦
       child: Image.asset(
         imageUrl,
-        width: 30,
-        height: 30,
+        width: 36,
+        height: 36,
         fit: BoxFit.cover, // 이미지 비율 유지
       ),
     );

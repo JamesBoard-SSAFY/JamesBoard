@@ -19,6 +19,18 @@ spring:
     show-sql: true
     open-in-view: false
 
+  cloud:
+    aws:
+      credentials:
+        accessKey: ${AWS_S3_ACCESSKEY}
+        secretKey: ${AWS_S3_SECRETKEY}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      region:
+        static: ${AWS_REGION}
+      stack:
+        auto: false
+
   security:
     oauth2:
       client:

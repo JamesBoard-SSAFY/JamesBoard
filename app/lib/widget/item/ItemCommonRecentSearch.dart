@@ -21,7 +21,7 @@ class _ItemCommonRecentSearchState extends State<ItemCommonRecentSearch> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 1),
+      padding: EdgeInsets.symmetric(vertical: 5.5),
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
@@ -29,15 +29,15 @@ class _ItemCommonRecentSearchState extends State<ItemCommonRecentSearch> {
         title: Text(
           widget.title,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 18,
             fontFamily: 'PretendardSemiBold',
             color: mainWhite
           ),
         ),
         trailing: SvgPicture.asset(
           widget.iconPath, // SVG 체크 아이콘
-          width: 18,
-          height: 18,
+          width: 24,
+          height: 24,
           colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn),
         ),
       ),

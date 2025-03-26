@@ -60,6 +60,14 @@ dependencies {
 
     // 의존성검증
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // aws s3 연동
+    implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.3.0'
+
+    implementation 'software.amazon.awssdk:s3:2.30.11'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 sonar {
