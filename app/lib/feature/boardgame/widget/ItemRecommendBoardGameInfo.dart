@@ -72,7 +72,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
+            child: Image.network(
               imageUrl,
               height: 180,
               width: double.infinity,

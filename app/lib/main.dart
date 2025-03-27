@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jamesboard/feature/boardgame/screen/AddArchieveScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
-import 'package:jamesboard/feature/boardgame/screen/ListArchieveScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/MyPageScreenEx.dart';
-import 'package:jamesboard/feature/boardgame/screen/RecommGameScreenEx.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
+
+import 'feature/boardgame/screen/RecommendGameScreen.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
@@ -66,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
-    RecommGameScreenEx(),
+    RecommendGameScreen(),
     MissionEditScreen(title: '임무 보고'),
     MissionListScreen(title: "임무 보고 아카이브"),
     MyPageScreenEx()
