@@ -135,8 +135,7 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
                         textAlign: TextAlign.left,
                       ),
                       SizedBox(height: 20),
-                      Expanded(
-                        // 가능한 최대 공간 사용
+                      Flexible(
                         child: Image.asset(
                           images[actualIndex],
                           width: width,
