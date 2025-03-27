@@ -36,27 +36,23 @@ public class ArchiveServiceImpl implements ArchiveService {
         // 1. 아카이브 전체 조회
         List<Archive> archiveList = archiveRepository.findAll();
 
-        // 2. 조회한 아카이브를 통해 이미지 조회
-        List<ArchiveImage> images = archiveImageRepository.findAllByArchiveIn(archiveList);
+        // 아카이브를 이미지와 함께 조회해서 N + 1 해결
+        List<Archive> archiveListWithImages = archiveRepository.findAllArchiveWithImage();
 
-        // 3. 아카이브별 첫 번째 이미지 매핑
-        Map<Long, String> archiveImageMap = images.stream()
-                .collect(Collectors.toMap(
-                        img -> img.getArchive().getArchiveId(), // key: archiveId
-                        ArchiveImage::getArchiveImageUrl,       // value: 이미지 URL
-                        (existing, replacement) -> existing      // 여러 이미지 중 첫 번째만 유지
-                ));
+        archiveListWithImages.forEach(archive -> {
+            log.debug("Archive ID: {}", archive.getArchiveId());
+            archive.getArchiveImages().forEach(image ->
+                    log.debug("  → Image ID: {}, URL: {}", image.getArchiveImageId(), image.getArchiveImageUrl())
+            );
+        });
 
-        // 4. DTO로 변환
-        return archiveList.stream()
-                .map(archive -> {
-                    String firstImage = archiveImageMap.getOrDefault(archive.getArchiveId(), null);
-                    return new ArchiveResponseDto(
-                            archive.getArchiveId(),
-                            firstImage
-                    );
-                })
+        return archiveListWithImages.stream()
+                .map(archive -> new ArchiveResponseDto(
+                        archive.getArchiveId(),
+                        archive.getArchiveImages().get(0).getArchiveImageUrl()
+                ))
                 .toList();
+
     }
 
     @Override
