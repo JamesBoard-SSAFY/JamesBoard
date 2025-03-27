@@ -36,31 +36,18 @@ class MissionListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainBlack,
-      appBar: AppBar(
-        backgroundColor: mainBlack,
-        foregroundColor: mainWhite,
-        elevation: 0,
-        title: Text(
-          title,
-          style: TextStyle(
-              fontFamily: 'PretendardBold', fontSize: 22, color: mainWhite),
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 2.0,
+          mainAxisSpacing: 2.0,
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 4.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 2.0,
-            mainAxisSpacing: 2.0,
-          ),
-          itemCount: imageUrls.length,
-          itemBuilder: (context, index) {
-            return ImageItemMissionList(imageUrl: imageUrls[index]);
-          },
-        ),
+        itemCount: imageUrls.length,
+        itemBuilder: (context, index) {
+          return ImageItemMissionList(imageUrl: imageUrls[index]);
+        },
       ),
     );
   }
