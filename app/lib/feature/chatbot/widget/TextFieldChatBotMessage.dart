@@ -5,7 +5,9 @@ import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
 
 class TextFieldChatBotMessage extends StatefulWidget {
-  const TextFieldChatBotMessage({super.key});
+  final void Function(String message) onSend;
+
+  const TextFieldChatBotMessage({super.key, required this.onSend});
 
   @override
   _TextFieldChatBotMessageState createState() =>
@@ -31,13 +33,7 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
 
       FocusScope.of(context).unfocus();
 
-      // SnackBar 표시
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('메시지 전송: $message'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      widget.onSend(message);
 
       _controller.clear();
     } else {
@@ -75,11 +71,14 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
               controller: _controller,
               decoration: const InputDecoration(
                 hintText: '메시지 입력',
+                hintStyle: TextStyle(
+                  color: mainGrey,
+                ),
                 border: InputBorder.none,
                 counterText: '',
               ),
               style: TextStyle(
-                color: mainGrey,
+                color: mainWhite,
                 fontSize: 16,
               ),
               onEditingComplete: _onSend, // 키패드 완료 버튼
