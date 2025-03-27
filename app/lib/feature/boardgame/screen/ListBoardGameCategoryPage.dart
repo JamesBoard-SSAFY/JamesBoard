@@ -13,6 +13,20 @@ class ListBoardGameCategoryPage extends StatefulWidget {
 }
 
 class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
+  final Map<String, String> filterDisplayMap = {
+    // 인원 변환
+    'Solo: 1인': '1인',
+    'Duo: 2인': '2인',
+    'Team: 3~4인': '3~4인',
+    'Assemble: 5인 이상': '5인 이상',
+
+    // 평균 게임 시간 변환
+    '초신속 임무 (0 ~ 30분)': '0 ~ 30분',
+    '정밀 작전 (60 ~ 120분)': '60 ~ 120분',
+    '장기 작전 (120 ~ 240분)': '120 ~ 240분',
+    '마스터 작전 (240분 이상)': '240분 이상',
+  };
+
   Map<String, String> selectedFilters = {
     '장르': '장르',
     '인원': '인원',
@@ -72,7 +86,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
     if (result != null) {
       setState(() {
-        selectedFilters[filterType] = result;
+        selectedFilters[filterType] = result == '상관없음' ? filterType : result;
       });
     }
   }
@@ -93,7 +107,8 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                     return Container(
                       margin: EdgeInsets.only(right: 16),
                       child: ButtonCommonFilter(
-                        text: selectedFilters[filterType]!,
+                        text: filterDisplayMap[selectedFilters[filterType]] ??
+                            selectedFilters[filterType]!,
                         isSelected: selectedFilters[filterType] != filterType,
                         onTap: () => _showFilterBottomSheet(filterType),
                       ),
@@ -102,7 +117,6 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        // 모든 필터를 기본값(키 값)으로 초기화
                         selectedFilters.updateAll((key, value) => key);
                       });
                     },
