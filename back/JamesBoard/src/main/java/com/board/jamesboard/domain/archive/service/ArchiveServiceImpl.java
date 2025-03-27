@@ -79,10 +79,10 @@ public class ArchiveServiceImpl implements ArchiveService {
                         .toList()
         );
 
-        // 이미지 리스트 DTO 변환
-        List<ArchiveImageDto> archiveImageDtoList = archiveImageList.stream()
-                .map(img -> new ArchiveImageDto(img.getArchiveImageUrl()))
+        List<String> archiveImageUrlList = archiveImageList.stream()
+                .map(ArchiveImage::getArchiveImageUrl)
                 .toList();
+
 
         return new ArchiveDetailResponseDto(
                 archive.getArchiveId(),
@@ -91,7 +91,7 @@ public class ArchiveServiceImpl implements ArchiveService {
                 archive.getArchiveContent(),
                 playedGame.getGameTitle(),
                 archive.getArchiveGamePlayTime(),
-                archiveImageDtoList
+                archiveImageUrlList
         );
 
     }
@@ -119,11 +119,11 @@ public class ArchiveServiceImpl implements ArchiveService {
                 .build();
 
 
-        List<ArchiveImageDto> archiveImageList = archiveRequestDto.getArchiveImageList();
+        List<String> archiveImageList = archiveRequestDto.getArchiveImageList();
 
         List<ArchiveImage> archiveImages = archiveImageList.stream()
-                .map(dto -> ArchiveImage.builder()
-                        .archiveImageUrl(dto.getArchiveImageUrl())
+                .map(imageUrl -> ArchiveImage.builder()
+                        .archiveImageUrl(imageUrl)
                         .archive(archive)
                         .build())
                 .toList();
@@ -205,11 +205,11 @@ public class ArchiveServiceImpl implements ArchiveService {
         archiveImageRepository.deleteArchiveImageByArchive(archive);
 
         // DTO 포함된 이미지 등록
-        List<ArchiveImageDto> requestImageList = archiveRequestDto.getArchiveImageList();
+        List<String> requestImageList = archiveRequestDto.getArchiveImageList();
 
         List<ArchiveImage> archiveImages = requestImageList.stream()
                 .map(images -> ArchiveImage.builder()
-                        .archiveImageUrl(images.getArchiveImageUrl())
+                        .archiveImageUrl(images)
                         .archive(archive)
                         .build())
                 .toList();
