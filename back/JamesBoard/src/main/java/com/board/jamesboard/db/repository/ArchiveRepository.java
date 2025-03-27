@@ -11,6 +11,9 @@ import java.util.Optional;
 public interface ArchiveRepository extends JpaRepository<Archive, Long> {
     Archive findByArchiveId(Long archiveId);
 
+    @Query("select distinct a from Archive a join fetch a.archiveImages")
+    List<Archive> findAllArchiveWithImage();
+
     // 사용자 ID와 게임 ID로 아카이브 목록 조회
     List<Archive> findByUserUserIdAndGameGameIdOrderByCreatedAtDesc(Long userId, Long gameId);
 
