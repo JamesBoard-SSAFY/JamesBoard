@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private final ArchiveImageRepository archiveImageRepository;
 
     // 날짜 포맷터
-    private static  final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     // 내 정보 조회
     @Override
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
     }
+
     // 프로필 수정
     @Override
     @Transactional
@@ -214,7 +216,16 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public Long getUserPreferGame(Long userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        Game preferGame = user.getPreferGame();
 
+        return (preferGame != null && preferGame.getGameId() != null)
+                ? preferGame.getGameId()
+                : -1L;
+    }
 }
