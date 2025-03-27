@@ -5,7 +5,17 @@ import '../../../widget/bottomsheet/BottomSheetCommonFilter.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
 
 class ListBoardGameCategoryPage extends StatefulWidget {
-  const ListBoardGameCategoryPage({super.key});
+  final Function(String, String) updateFilter;
+  final String title;
+  final String updateCategory;
+  final Map<String, String> selectedFilters;
+
+  const ListBoardGameCategoryPage(
+      {super.key,
+      required this.title,
+      required this.updateFilter,
+      required this.updateCategory,
+      required this.selectedFilters});
 
   @override
   State<ListBoardGameCategoryPage> createState() =>
@@ -25,13 +35,6 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     '정밀 작전 (60 ~ 120분)': '60 ~ 120분',
     '장기 작전 (120 ~ 240분)': '120 ~ 240분',
     '마스터 작전 (240분 이상)': '240분 이상',
-  };
-
-  Map<String, String> selectedFilters = {
-    '장르': '장르',
-    '인원': '인원',
-    '난이도': '난이도',
-    '평균 게임 시간': '평균 게임 시간'
   };
 
   final Map<String, List<String>> filterOptions = {
@@ -72,23 +75,61 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg',
   ];
 
+  final Map<String, String> filterTitleMap = {
+    // 인원 변환
+    '파티 : 요원들의 은밀한 모임!': '파티',
+    "전략 : 첩보 전략의 결정판!": '전략',
+    "경제 : 부의 흐름을 추적하라!": '경제',
+    "모험 : 위험과 비밀의 세계!": '모험',
+    "롤플레잉 : 위장하고 기만하라!": '롤플레잉',
+    "가족 : 웃음과 전략을 함께!": '가족',
+    "추리 : 단서로 배신자를 밝혀라!": '추리',
+    "전쟁 : 긴장 속 최후의 승자!": '전쟁',
+    "추상전략 : 냉철한 전략으로 승부!": '추상전략',
+
+    "Solo Mission : 1명": '1인',
+    "Duo Mission : 2명": '2인',
+    "Team Mission : 3 ~ 4명": '3~4인',
+    "Assemble Mission : 5인 이상": '5인 이상',
+
+    "임무 난이도 : 초급": '초급',
+    "임무 난이도 : 중급": '중급',
+    "임무 난이도 : 고급": '고급',
+  };
+
   void _showFilterBottomSheet(String filterType) async {
     final result = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => BottomSheetCommonFilter(
         items: filterOptions[filterType]!,
-        initialValue: selectedFilters[filterType] != filterType
-            ? selectedFilters[filterType]
+        initialValue: widget.selectedFilters[filterType] != filterType
+            ? widget.selectedFilters[filterType]
             : null,
       ),
     );
 
     if (result != null) {
-      setState(() {
-        selectedFilters[filterType] = result == '상관없음' ? filterType : result;
-      });
+      widget.updateFilter(filterType, result == '상관없음' ? filterType : result);
+      setState(() {});
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    widget.selectedFilters[widget.updateCategory] =
+        filterTitleMap[widget.title]!;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    widget.selectedFilters.updateAll((key, value) => key);
   }
 
   @override
@@ -103,13 +144,15 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  ...selectedFilters.keys.map((filterType) {
+                  ...widget.selectedFilters.keys.map((filterType) {
                     return Container(
                       margin: EdgeInsets.only(right: 16),
                       child: ButtonCommonFilter(
-                        text: filterDisplayMap[selectedFilters[filterType]] ??
-                            selectedFilters[filterType]!,
-                        isSelected: selectedFilters[filterType] != filterType,
+                        text: filterDisplayMap[
+                                widget.selectedFilters[filterType]] ??
+                            widget.selectedFilters[filterType]!,
+                        isSelected:
+                            widget.selectedFilters[filterType] != filterType,
                         onTap: () => _showFilterBottomSheet(filterType),
                       ),
                     );
@@ -117,7 +160,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedFilters.updateAll((key, value) => key);
+                        widget.selectedFilters.updateAll((key, value) => key);
                       });
                     },
                     child: Text(
