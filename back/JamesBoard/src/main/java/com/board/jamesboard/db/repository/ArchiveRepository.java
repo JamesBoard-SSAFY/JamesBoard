@@ -37,8 +37,8 @@ public interface ArchiveRepository extends JpaRepository<Archive, Long> {
             "JOIN a.game g " +
             "JOIN g.gameCategories gc " +
             "WHERE a.user.userId = :userId " +
-            "GROUP BY gc.gameCategoryId, gc.gameCategoryName " +
+            "GROUP BY gc.gameCategoryName " +
             "ORDER BY categoryCount DESC")
-    List<Object[]> getGenreStatsByUserId(@Param("userId") Long userId);
+    List<Object[]> getGenreStatsByUserIdGroupByName(@Param("userId") Long userId);
 
 }

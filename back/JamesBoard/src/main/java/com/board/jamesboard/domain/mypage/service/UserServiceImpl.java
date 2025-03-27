@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,6 +31,11 @@ public class UserServiceImpl implements UserService {
 
     // 날짜 포맷터
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // 보드게임 카테고리 정의
+    private static final List<String> PREDEFINED_CATEGORIES = Arrays.asList(
+            "파티", "전략", "경제", "모험", "롤플레잉", "가족", "추리", "전쟁", "추상전략"
+    );
 
     // 내 정보 조회
     @Override
@@ -179,15 +182,35 @@ public class UserServiceImpl implements UserService {
                             .build())
                     .collect(Collectors.toList());
             // 카테고리별 통계조회
-            List<Object[]> genreStatsData = archiveRepository.getGenreStatsByUserId(userId);
+            List<Object[]> genreStatsData = archiveRepository.getGenreStatsByUserIdGroupByName(userId);
 
-            List<UserStatsResponseDto.GenreStats> genres = new ArrayList<>();
+            // 카테고리별 플탐 맵으로 변환
+            Map<String, Integer> categoryCountMap = new HashMap<>();
+            for (Object[] data : genreStatsData) {
+                String categoryName = (String) data[0];
+                Integer count = ((Number) data[1]).intValue();
 
-            if (totalPlayed > 0) {
-                genres = genreStatsData.stream()
-                        .map(data -> {
-                            Long categoryId = ((Number) data[0]).longValue();
-                            String categoryName = (String) data[1];
+                // 동일이름 매핑 처리
+                for (String predefinedCategory : PREDEFINED_CATEGORIES) {
+                    if (categoryName.equalsIgnoreCase(predefinedCategory)) {
+                        // 존재시 누적, 없으면 추가
+                        categoryCountMap.merge(predefinedCategory, count, Integer::sum);
+                        break;
+                    }
+                }
+
+            }
+
+            List<UserStatsResponseDto.GenreStats> genres = PREDEFINED_CATEGORIES.stream()
+                    .map(category -> {
+                        // 해당 카테고리 플레이 횟수 (없으면 0)
+                        Integer count = categoryCountMap.getOrDefault(category, 0);
+
+                        // 퍼센티지 계싼 (총 플레이 횟수 0일시 퍼센티지도 0)
+                        Double percentage
+                    })
+
+
                             Integer count = ((Number) data[2]).intValue();
                             // 소수점 1자리 까지 계산
                             Double percentage = Math.round((double) count / totalPlayed * 1000) / 10.0;
