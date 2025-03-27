@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // flutter_svg 패키지 추가
-import 'package:jamesboard/theme/Colors.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../theme/Colors.dart';
 
 class ItemCommonFilter extends StatelessWidget {
   final String title;
   final String checkIconPath;
   final bool isSelected;
-  final VoidCallback onTap; // 부모에게 선택 상태를 알리기 위한 콜백 속성
+  final VoidCallback onTap;
 
   const ItemCommonFilter({
     super.key,
@@ -22,27 +23,23 @@ class ItemCommonFilter extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4, horizontal: 1),
-        decoration: BoxDecoration(
-          color: secondaryBlack,
-          borderRadius: BorderRadius.circular(4),
-        ),
         child: ListTile(
           title: Text(
             title,
             style: TextStyle(
               fontSize: 20,
               fontFamily: 'PretendardSemiBold',
-              color: isSelected ? mainGold : mainGrey,
+              color: isSelected ? mainGold : mainGrey, // ✅ 선택 시 글자 색 변경
             ),
           ),
           trailing: isSelected
               ? SvgPicture.asset(
-            checkIconPath, // SVG 체크 아이콘
+            checkIconPath,
             width: 24,
             height: 24,
             colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
           )
-          : null,
+              : null,
         ),
       ),
     );

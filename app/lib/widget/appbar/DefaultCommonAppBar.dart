@@ -26,7 +26,9 @@ class DefaultCommonAppBar extends StatelessWidget implements PreferredSizeWidget
           size: 24,
           color: mainWhite,
         ),
-        onPressed: null
+        onPressed: () {
+          Navigator.pop(context);
+        }
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
 
 import '../../../theme/Colors.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
@@ -19,24 +20,32 @@ class ListHomeHorizontalGame extends StatelessWidget {
       margin: EdgeInsets.only(top: 32, left: 20),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontFamily: 'PretendardMedium',
-                  color: mainWhite,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListBoardGameCategory()),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontFamily: 'PretendardMedium',
+                    color: mainWhite,
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: mainWhite,
-                size: 32,
-              ),
-            ],
+                Icon(
+                  Icons.chevron_right,
+                  color: mainWhite,
+                  size: 32,
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 16),
           SizedBox(

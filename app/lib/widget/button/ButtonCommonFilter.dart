@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ButtonCommonFilter extends StatefulWidget {
+class ButtonCommonFilter extends StatelessWidget {
   final String text;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   const ButtonCommonFilter({
     super.key,
-    required this.text
+    required this.text,
+    required this.isSelected,
+    required this.onTap,
   });
-
-  @override
-  _ButtonCommonFilterState createState() => _ButtonCommonFilterState();
-}
-
-class _ButtonCommonFilterState extends State<ButtonCommonFilter> {
-  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          isSelected = !isSelected; // 클릭할 때마다 상태 변경
-        });
-      },
+      onPressed: onTap,
       style: ButtonStyle(
         padding: MaterialStateProperty.all(EdgeInsets.all(10)),
         foregroundColor: MaterialStateProperty.all(
@@ -32,12 +25,12 @@ class _ButtonCommonFilterState extends State<ButtonCommonFilter> {
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4), // 🔹 원하는 radius 값 적용
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
       ),
       child: Text(
-        widget.text,
+        text,
         style: TextStyle(
           fontSize: 16,
           fontFamily: 'PretendardMedium',

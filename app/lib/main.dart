@@ -94,11 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBarUtil.getAppBar(_selectedIndex),
       body: _pages[_selectedIndex],
-      backgroundColor: Colors.black, // 배경색 검정으로 설정
+      backgroundColor: mainBlack, // 배경색 검정으로 설정
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: secondaryBlack,
+        backgroundColor: mainBlack,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         selectedItemColor: mainWhite,
