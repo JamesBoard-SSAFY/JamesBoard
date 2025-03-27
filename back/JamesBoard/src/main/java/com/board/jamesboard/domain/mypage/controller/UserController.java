@@ -1,5 +1,6 @@
 package com.board.jamesboard.domain.mypage.controller;
 
+import com.amazonaws.Response;
 import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.error.ErrorResponse;
 import com.board.jamesboard.core.exception.CustomException;
@@ -219,6 +220,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다"));
         }
+    }
+
+    @GetMapping("/{userId}/prefer-games")
+    @Operation(summary = "유저 선호게임 조회(없으면 -1)")
+    public ResponseEntity<Long> getUserGamePreferGames(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserPreferGame(userId));
     }
 
 }

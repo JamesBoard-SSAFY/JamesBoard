@@ -20,4 +20,7 @@ public interface UserService {
 
     // 사용자 보드게임 통계 및 순위 정보 조회
     UserStatsResponseDto getUserGameStats(Long userId);
+
+    // 유저 선호 게임 조회
+    Long getUserPreferGame(Long userId);
 }
