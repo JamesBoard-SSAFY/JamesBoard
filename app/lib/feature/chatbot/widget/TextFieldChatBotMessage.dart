@@ -75,11 +75,14 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
               controller: _controller,
               decoration: const InputDecoration(
                 hintText: '메시지 입력',
+                hintStyle: TextStyle(
+                  color: mainGrey,
+                ),
                 border: InputBorder.none,
                 counterText: '',
               ),
               style: TextStyle(
-                color: mainGrey,
+                color: mainWhite,
                 fontSize: 16,
               ),
               onEditingComplete: _onSend, // 키패드 완료 버튼
