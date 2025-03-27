@@ -16,7 +16,7 @@ class ArchiveRepository {
       baseUrl: 'https://j12d205.p.ssafy.io/',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken' // 여기에 accessToken을 넣으면 될 듯
+        // 'Authorization': 'Bearer $accessToken' // 여기에 accessToken을 넣으면 될 듯
       },
     ));
 
