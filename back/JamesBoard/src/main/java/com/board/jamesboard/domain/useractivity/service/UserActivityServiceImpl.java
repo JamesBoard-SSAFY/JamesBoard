@@ -83,7 +83,13 @@ public class UserActivityServiceImpl implements UserActivityService {
         // JWT 현재 userId 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        Long requestUserId = ratingPostRequestDto.getUserId();
+
         Long userId = Long.parseLong(authentication.getName());
+
+        if (!userId.equals(requestUserId)) {
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
 
         if (ratingPostRequestDto.getRating() < 0.5 || ratingPostRequestDto.getRating() > 5.0) {
             throw new IllegalArgumentException("평점은 0.5 이상 5.0 이하만 가능합니다.");
