@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RatingPostRequestDto {
+    private Long userId;
     private Long gameId;
 
     @NotNull
