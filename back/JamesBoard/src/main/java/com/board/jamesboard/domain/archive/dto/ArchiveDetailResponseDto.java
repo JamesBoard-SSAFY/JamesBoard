@@ -18,5 +18,5 @@ public class ArchiveDetailResponseDto {
     private String archiveContent;
     private String gameTitle;
     private Integer archiveGamePlayTime;
-    private List<ArchiveImageDto> archiveImageList;
+    private List<String> archiveImageList;
 }

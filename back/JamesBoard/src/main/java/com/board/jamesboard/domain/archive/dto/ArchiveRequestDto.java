@@ -14,7 +14,7 @@ import java.util.List;
 public class ArchiveRequestDto {
     private Long gameId;
     private String archiveContent;
-    private List<ArchiveImageDto> archiveImageList;
+    private List<String> archiveImageList;
     private Integer archiveGamePlayTime;
     private Integer archiveGamePlayCount;
 }
