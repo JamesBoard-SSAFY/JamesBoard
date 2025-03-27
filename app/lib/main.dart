@@ -97,75 +97,70 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBarUtil.getAppBar(_selectedIndex),
       body: _pages[_selectedIndex],
-      backgroundColor: Colors.black, // 배경색 검정으로 설정
+      backgroundColor: mainBlack, // 배경색 검정으로 설정
       bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          backgroundColor: secondaryBlack,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedItemColor: mainWhite,
-          unselectedItemColor: mainWhite,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/image/icon_home_unselected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(
-                  'assets/image/icon_home_selected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: 'home',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                  'assets/image/icon_recommend_unselected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(
-                  'assets/image/icon_recommend_selected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: 'recommend',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                  'assets/image/icon_register_unselected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: 'search',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/image/icon_archive_unselected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(
-                  'assets/image/icon_archive_selected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: 'recommend',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset('assets/image/icon_mypage_unselected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(
-                  'assets/image/icon_mypage_selected.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: 'mypage',
-            ),
-          ]),
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: mainBlack,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: mainWhite,
+        unselectedItemColor: mainWhite,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/image/icon_home_unselected.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset('assets/image/icon_home_selected.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: 'home',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/image/icon_recommend_unselected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset('assets/image/icon_recommend_selected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: 'recommend',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/image/icon_register_unselected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: 'search',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/image/icon_archive_unselected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset('assets/image/icon_archive_selected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: 'recommend',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/image/icon_mypage_unselected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset('assets/image/icon_mypage_selected.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: 'mypage',
+          ),
+        ]
+      ),
     );
   }
 }

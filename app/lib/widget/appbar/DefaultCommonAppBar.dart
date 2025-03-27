@@ -13,10 +13,11 @@ class DefaultCommonAppBar extends StatelessWidget
       backgroundColor: mainBlack,
       elevation: 0,
       title: Text(title,
-          style: TextStyle(
-              fontSize: 22,
-              color: mainWhite,
-              fontFamily: 'PretendardSemiBold')),
+        style: TextStyle(
+          fontSize: 22,
+          color: mainWhite,
+          fontFamily: 'PretendardSemiBold')
+        ),
       centerTitle: true,
       leading: IconButton(
           icon: Icon(
@@ -26,8 +27,9 @@ class DefaultCommonAppBar extends StatelessWidget
           ),
           onPressed: () {
             Navigator.pop(context);
-          }),
-    );
+          }
+        ),
+      );
   }
 
   @override
