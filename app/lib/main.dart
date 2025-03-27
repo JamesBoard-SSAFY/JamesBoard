@@ -11,6 +11,8 @@ import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
+import 'feature/user/screen/MyPageScreen.dart';
+
 final logger = Logger(
     printer: PrettyPrinter(
   colors: true,
@@ -68,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     RecommGameScreenEx(),
     MissionEditScreen(title: '임무 보고'),
     ListArchieveScreenEx(),
-    MyPageScreenEx()
+    MyPageScreen(),
   ];
 
   int _selectedIndex = 0;
