@@ -9,6 +9,9 @@ class ChartUserGenrePercent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int totalCount = chartData.fold(0, (sum, data) => sum + data.count);
+    String totalCountString = totalCount.toString();
+
     return Center(
         child: Container(
           width: 300,
@@ -31,7 +34,7 @@ class ChartUserGenrePercent extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: '75', // 두 번째 줄 (다른 스타일 적용)
+                        text: totalCountString,
                         style: TextStyle(
                           color: mainWhite,
                           fontSize: 32,
@@ -60,9 +63,10 @@ class ChartUserGenrePercent extends StatelessWidget {
 }
 
 class ChartData {
-  ChartData(this.x, this.y, this.color);
+  ChartData(this.x, this.y, this.color, this.count);
 
   final String x;
   final double y;
   final Color color;
+  final int count;
 }

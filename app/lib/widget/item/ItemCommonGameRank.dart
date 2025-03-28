@@ -55,7 +55,7 @@ class ItemCommonGameRank extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "${game['time']}분",
+                        "${game['round']}판",
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'PretendardSemiBold',
