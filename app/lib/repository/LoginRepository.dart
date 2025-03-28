@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:jamesboard/datasource/api/LoginService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../datasource/model/request/RenewalAccessTokenRequest.dart';
 import '../datasource/model/response/RenewalAccessTokenResponse.dart';
@@ -13,7 +14,18 @@ class LoginRepository {
     final dio =
         Dio(BaseOptions(baseUrl: 'https://j12d205.p.ssafy.io/', headers: {
       'Content-Type': 'application/json',
-      // 'Authorization': 'Bearer $accessToken',
+    }));
+
+    dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (options, handler) async {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('accessToken');
+
+      if (token != null && token.isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $token';
+      }
+
+      return handler.next(options);
     }));
 
     final service = LoginService(dio);
