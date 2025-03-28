@@ -3,22 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
-import 'package:jamesboard/feature/boardgame/screen/MyPageScreenEx.dart';
-import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
+import'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
-
+import'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
+
 
 final logger = Logger(
     printer: PrettyPrinter(
-  colors: true,
-  printEmojis: true,
-  printTime: true,
-));
+      colors: true,
+      printEmojis: true,
+      printTime: true,
+    ));
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -67,10 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
+
     RecommendGameScreen(),
     MissionEditScreen(title: AppString.missionEditTitle),
     MissionListScreen(title: AppString.missionListTitle),
-    MyPageScreenEx()
+    MyPageScreen(),
+
   ];
 
   int _selectedIndex = 0;
