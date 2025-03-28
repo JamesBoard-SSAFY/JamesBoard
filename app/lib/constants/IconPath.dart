@@ -57,4 +57,10 @@ class IconPath {
 
   //KakaoLoginButton
   static const String kakaoIcon = 'assets/image/kakao_icon.svg';
+
+  //ChatBubbleChatBot
+  static const String agentImage = 'assets/image/icon_agent_q.png';
+
+  //TextFieldChatBotMessage
+  static const String arrowUp = 'assets/image/icon_arrow_up.svg';
 }

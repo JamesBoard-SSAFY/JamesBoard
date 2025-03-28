@@ -64,4 +64,8 @@ class AppString {
 
   //KakaoLoginButton
   static const String kakaoLogin = "카카오 로그인";
+
+  //TextFieldChatBotMessage
+  static const String correctInputMessage = "올바른 메시지를 입력하세요!";
+  static const String messageInput = "메시지 입력";
 }
