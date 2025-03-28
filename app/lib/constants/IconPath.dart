@@ -54,4 +54,7 @@ class IconPath {
 
   //SelectBoxRegisterMissionBoardGame
   static const String arrowRight = 'assets/image/ic_arrow_right.svg';
+
+  //KakaoLoginButton
+  static const String kakaoIcon = 'assets/image/kakao_icon.svg';
 }

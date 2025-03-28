@@ -61,4 +61,7 @@ class AppString {
 
   //SelectBoxRegisterMissionBoardGame
   static const String selectBoardGame = '보드게임 선택';
+
+  //KakaoLoginButton
+  static const String kakaoLogin = "카카오 로그인";
 }
