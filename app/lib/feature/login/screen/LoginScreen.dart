@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/feature/login/viewmodel/LoginViewModel.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import '../widget/CardLoginExplanation.dart';
 import '../widget/KakaoLoginButton.dart';
 
@@ -10,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final viewModel = LoginViewModel(LoginRepository.create());
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
           Flexible(
             child: CardLoginExplanation(),
           ),
-          KakaoLoginButton(onPressed: () {}),
+          KakaoLoginButton(onPressed: () async {
+            await viewModel.login(context);
+          }),
           SizedBox(
             height: 20,
           ),
