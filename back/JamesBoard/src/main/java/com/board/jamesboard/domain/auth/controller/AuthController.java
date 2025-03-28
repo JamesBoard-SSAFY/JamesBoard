@@ -1,9 +1,11 @@
 package com.board.jamesboard.domain.auth.controller;
 
+import com.amazonaws.Response;
 import com.board.jamesboard.core.auth.dto.CustomUserDetails;
 import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.error.ErrorResponse;
 import com.board.jamesboard.core.exception.CustomException;
+import com.board.jamesboard.domain.auth.dto.KakaoTokenRequestDto;
 import com.board.jamesboard.domain.auth.dto.RefreshTokenRequestDto;
 import com.board.jamesboard.domain.auth.dto.RefreshTokenResponseDto;
 import com.board.jamesboard.domain.auth.service.AuthService;
@@ -134,6 +136,40 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    @Operation(summary = "카카오 토큰 로그인", description = "카카오 SDK에서 얻은 액세스 토큰으로 로그인")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공",
+                    content = @Content(schema = @Schema(implementation = RefreshTokenResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청입니다",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 요청입니다",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다. 다시 시도해 주세요.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("/kakao-token")
+    public ResponseEntity<?> processKakaoToken(@RequestBody KakaoTokenRequestDto request) {
+        try {
+            if (request.getKakaoAccessToken() == null || request.getKakaoAccessToken().isEmpty()) {
+                log.error("카카오 엑세스 토큰이 비어있습니다");
+                return ResponseEntity.badRequest()
+                        .body(new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE));
+            }
+
+            RefreshTokenResponseDto response = authService.processKakaoTokenLogin(request.getKakaoAccessToken());
+            return ResponseEntity.ok(response);
+        } catch (CustomException e) {
+            log.error("카카오 토큰 로그인 처리 실패: {}", e.getMessage());
+            return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                    .body(new ErrorResponse(e.getErrorCode()));
+        } catch (Exception e) {
+            log.error("카카오 토큰 로그인 중 예상치 못한 오류 발생 {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
 //    @GetMapping("/login/oauth2/code/kakao")
