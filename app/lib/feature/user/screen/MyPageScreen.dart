@@ -5,6 +5,7 @@ import 'package:jamesboard/theme/Colors.dart';
 
 import '../../../util/CommonUtils.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
+import '../../../widget/item/ItemCommonGameRank.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -225,8 +226,16 @@ class _MyPageScreenState extends State<MyPageScreen>
       {'genre': '전략', 'percent': 25, 'color': CommonUtils.getGenreColor('전략')},
       {'genre': '파티', 'percent': 22, 'color': CommonUtils.getGenreColor('파티')},
       {'genre': '추리', 'percent': 19, 'color': CommonUtils.getGenreColor('추리')},
-      {'genre': '경제', 'percent': 17.5, 'color': CommonUtils.getGenreColor('경제')},
-      {'genre': '모험', 'percent': 16.5, 'color': CommonUtils.getGenreColor('모험')},
+      {
+        'genre': '경제',
+        'percent': 17.5,
+        'color': CommonUtils.getGenreColor('경제')
+      },
+      {
+        'genre': '모험',
+        'percent': 16.5,
+        'color': CommonUtils.getGenreColor('모험')
+      },
       {'genre': '전쟁', 'percent': 0, 'color': CommonUtils.getGenreColor('전쟁')},
     ];
 
@@ -237,6 +246,79 @@ class _MyPageScreenState extends State<MyPageScreen>
         genre['color'] as Color,
       );
     }).toList();
+
+    var gameData = [
+      {
+        'id': '1',
+        'img':
+            'https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__thumb/img/YT6svCVsWqLrDitcMEtyazVktbQ=/fit-in/200x150/filters:strip_icc()/pic4718279.jpg',
+        'title': '디 마허',
+        'time': '35',
+      },
+      {
+        'id': '2',
+        'img':
+            'https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__thumb/img/22MSUC0-ZWgwzhi_VKIbENJik1w=/fit-in/200x150/filters:strip_icc()/pic3211873.jpg',
+        'title': '사무라이',
+        'time': '35',
+      },
+      {
+        'id': '3',
+        'img':
+            'https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__thumb/img/cpf23VxElZxuYaIGcgrjPn80sZY=/fit-in/200x150/filters:strip_icc()/pic7376875.jpg',
+        'title': '어콰이어',
+        'time': '35',
+      },
+      {
+        'id': '4',
+        'img':
+            'https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__thumb/img/vwTEQOWA3Mw__ztkTMulOgJ82Pw=/fit-in/200x150/filters:strip_icc()/pic6348964.jpg',
+        'title': '보난자',
+        'time': '35',
+      },
+      {
+        'id': '5',
+        'img':
+            'https://cf.geekdo-images.com/k7lG683LBZdvFyS-FH-MpA__thumb/img/6KTtiknxxGwd0ARKrlsdoXFtHfI=/fit-in/200x150/filters:strip_icc()/pic6746812.png',
+        'title': '라',
+        'time': '35',
+      },
+      {
+        'id': '6',
+        'img':
+            'https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__thumb/img/virV2Bm82Dql7gh-LZScBwqByik=/fit-in/200x150/filters:strip_icc()/pic8632666.png',
+        'title': '카탄',
+        'time': '35',
+      },
+      {
+        'id': '7',
+        'img':
+            'https://cf.geekdo-images.com/eJx8hRJ6-86C2VrhECwEPA__thumb/img/J1PlqFqtN-hxuXM4eEi-ekANPP4=/fit-in/200x150/filters:strip_icc()/pic1000553.jpg',
+        'title': '로보랠리',
+        'time': '35',
+      },
+      {
+        'id': '8',
+        'img':
+            'https://cf.geekdo-images.com/nMitZr9Lu4Ux7LLqBy7Z8A__thumb/img/mLHWOFfdxrWljImkFZ2ulIhHt7A=/fit-in/200x150/filters:strip_icc()/pic6875169.png',
+        'title': '디 마허',
+        'time': '35',
+      },
+      {
+        'id': '9',
+        'img':
+            'https://cf.geekdo-images.com/soAzNVWglCdVBacNjoCTJw__thumb/img/0UPEyOaSFyqEH1ikrSig_218RQ0=/fit-in/200x150/filters:strip_icc()/pic2338267.jpg',
+        'title': '멈출 수 없어',
+        'time': '35',
+      },
+      {
+        'id': '10',
+        'img':
+            'https://cf.geekdo-images.com/wX4cTWNjTG7XiGHGgSpiiw__thumb/img/vU6kaL3f06BaVfmwUV91trrvDng=/fit-in/200x150/filters:strip_icc()/pic8630033.png',
+        'title': '티그리스 & 유프라테스',
+        'time': '35',
+      }
+    ];
 
     return SingleChildScrollView(
       child: Padding(
@@ -261,7 +343,35 @@ class _MyPageScreenState extends State<MyPageScreen>
               ],
             ),
             ChartUserGenrePercent(chartData: chartData),
-            ItemUserGenrePercentInfo(genres: genres,),
+            ItemUserGenrePercentInfo(genres: genres),
+            SizedBox(
+              height: 32,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "임무 누적 판수 순위",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: mainWhite,
+                    fontFamily: 'PretendardBold',
+                  ),
+                ),
+                Text(
+                  "더보기",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: mainGrey,
+                    fontFamily: 'PretendardBold',
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            ItemCommonGameRank(gameData: gameData.take(5).toList()),
           ],
         ),
       ),
