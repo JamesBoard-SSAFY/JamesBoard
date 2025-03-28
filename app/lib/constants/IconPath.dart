@@ -42,4 +42,7 @@ class IconPath {
 
   //TextFieldUserNickname
   static const String circularClose = 'assets/image/icon_circular_close.svg';
+
+  //ImageSurveyCategory
+  static const String surveyCheck = 'assets/image/survey_check.svg';
 }
