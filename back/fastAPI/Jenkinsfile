@@ -2,28 +2,20 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = credentials('DOCKER_IMAGE')
-        DOCKER_CONTAINER = credentials('DOCKER_CONTAINER')
-        DOCKER_PORT = credentials('DOCKER_PORT')
+        DOCKER_IMAGE = jamesboard-recommend
+        DOCKER_CONTAINER = jamesboard-recommend-container
+        DOCKER_PORT = 9099
         DOCKER_PATH = credentials('DOCKER_PATH') // EC2 서버의 Docker 저장 경로
 
         EC2_USER = credentials('EC2_USER')
         EC2_IP = credentials('EC2_IP')
         SSH_KEY = credentials('SSH_KEY')
 
-        SPRING_PROFILES_ACTIVE = 'dev'
-        DB_URL = credentials('DB_URL')
+        DB_RECOMMEND_URL = credentials('DB_RECOMMEND_URL')
         DB_USERNAME = credentials('DB_USERNAME')
         DB_PASSWORD = credentials('DB_PASSWORD')
 
-        JAVA_HOME = '/opt/java/openjdk'
-        GRADLE_HOME = '/opt/gradle/gradle-8.5'
-        PATH = "${JAVA_HOME}/bin:${GRADLE_HOME}/bin:${env.PATH}"
-    }
-
-    tools {
-        jdk 'JDK 17'
-        gradle 'Gradle 8.5'
+        PYTHON_VERSION = '3.10'
     }
 
     stages {
@@ -36,21 +28,10 @@ pipeline {
             }
         }
 
-        stage('Build Application') {
-            steps {
-                echo 'Building the application with Gradle Wrapper...'
-                dir('back/JamesBoard') {
-                    sh 'gradle clean build'
-                    sh 'ls -al $(pwd)/build/libs'
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 echo 'Building the Docker image...'
-                dir('back/JamesBoard') {
-                    sh 'cp build/libs/JamesBoard-0.0.1-SNAPSHOT.jar .'
+                dir('back/fastAPI') {
                     sh 'docker build -t ${DOCKER_IMAGE}:latest .'
                 }
             }
@@ -60,20 +41,21 @@ pipeline {
             steps {
                 echo 'Saving and transferring Docker image to EC2...'
                 sh """
-                docker save ${DOCKER_IMAGE}:latest | gzip > JamesBoard-0.0.1-SNAPSHOT.tar.gz
+                docker save ${DOCKER_IMAGE}:latest | gzip > jamesboard-recommend.tar.gz
                 """
                 sshPublisher(publishers: [
                     sshPublisherDesc(
                         configName: 'EC2-Server',
                         transfers: [
                             sshTransfer(
-                                sourceFiles: 'JamesBoard-0.0.1-SNAPSHOT.tar.gz'
+                                sourceFiles: 'jamesboard-recommend.tar.gz'
                             )
                         ]
                     )
                 ])
             }
         }
+
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying the application on EC2...'
@@ -87,11 +69,14 @@ pipeline {
                                     docker stop ${DOCKER_CONTAINER} || true
                                     docker rm ${DOCKER_CONTAINER} || true
                                     docker rmi ${DOCKER_IMAGE}:latest || true
-                                    docker load < ${DOCKER_PATH}/JamesBoard-0.0.1-SNAPSHOT.tar.gz
+                                    docker load < ${DOCKER_PATH}/jamesboard-recommend.tar.gz
                                     docker run -d --name ${DOCKER_CONTAINER} \
                                       -p ${DOCKER_PORT}:${DOCKER_PORT} \
-                                      -e SPRING_PROFILES_ACTIVE=dev \
-                                      -e SERVER_PORT=${DOCKER_PORT} \
+                                      -e MYSQL_HOST=${DB_RECOMMEND_URL} \
+                                      -e MYSQL_PORT=3306 \
+                                      -e MYSQL_DATABASE=board_game \
+                                      -e MYSQL_USER=${DB_USERNAME} \
+                                      -e MYSQL_PASSWORD=${DB_PASSWORD} \
                                       ${DOCKER_IMAGE}:latest
                                 """.stripIndent()
                             )
