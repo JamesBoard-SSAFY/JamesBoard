@@ -44,6 +44,12 @@ dependencies:
   retrofit: ^4.4.2
   json_annotation: ^4.9.0
 
+  # shared_preferences:
+  shared_preferences: ^2.5.3
+
+  # webview_flutter:
+  webview_flutter: ^4.10.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
