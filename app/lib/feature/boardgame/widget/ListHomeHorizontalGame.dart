@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
 
 import '../../../theme/Colors.dart';
@@ -74,8 +75,17 @@ class ListHomeHorizontalGame extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.only(right: 8.0), // 오른쪽에만 마진을 추가
-                  child: ImageCommonGameCard(
-                    imageUrl: imageUrls[index],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BoardGameDetailScreen()),
+                      );
+                    },
+                    child: ImageCommonGameCard(
+                      imageUrl: imageUrls[index],
+                    ),
                   ),
                 );
               },
