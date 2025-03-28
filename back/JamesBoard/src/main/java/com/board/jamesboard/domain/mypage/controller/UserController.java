@@ -81,7 +81,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저를 찾을 수 없습니다. (회원 ID가 존재하지 않을 시)"),
             @ApiResponse(responseCode = "500", description = "서버 오류가 발생했습니다.")
     })
-    @PatchMapping("/{userId}/profile")
+    @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUserProfile(@PathVariable Long userId, @RequestBody UserProfileUpdateRequestDto request) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

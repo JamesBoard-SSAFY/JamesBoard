@@ -27,9 +27,6 @@ public class UserStatsResponseDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class GenreStats {
 
-        @Schema(description = "게임 카테고리 ID", example = "1")
-        private Long gameCategoryId;
-
         @Schema(description = "게임 카테고리 이름", example = "파티")
         private String gameCategoryName;
 

@@ -13,4 +13,8 @@ public interface GameCategoryRepository extends JpaRepository<GameCategory, Long
     // 게임 ID로 카테고리 이름 목록 조회
     @Query("SELECT gc.gameCategoryName FROM GameCategory  gc WHERE gc.game.gameId = :gameId")
     List<String> findCategoryNamesByGameId(@Param("gameId") Long gameId);
+
+    // 고유 카테고리 이름 조회(중복제거)
+    @Query("SELECT DISTINCT gc.gameCategoryName FROM GameCategory gc ORDER BY gc.gameCategoryName")
+    List<String> findDistinctCategoryNames();
 }
