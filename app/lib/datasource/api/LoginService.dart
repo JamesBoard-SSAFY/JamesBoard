@@ -24,4 +24,10 @@ abstract class LoginService {
   Future<RenewalAccessTokenResponse> renewalAccessToken(
     @Body() RenewalAccessTokenRequest request,
   );
+
+  // 카카오 OAuth 콜백 처리
+  @GET("login/oauth2/code/kakao")
+  Future<RenewalAccessTokenResponse> kakaoCallback(
+    @Query("code") String kakaoAccessToken,
+  );
 }
