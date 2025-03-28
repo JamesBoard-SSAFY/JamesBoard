@@ -68,4 +68,29 @@ class AppString {
   //TextFieldChatBotMessage
   static const String correctInputMessage = "올바른 메시지를 입력하세요!";
   static const String messageInput = "메시지 입력";
+
+  //BoardGameHomeScreen
+  static const String genre = "장르";
+  static const String numOfPerson = "인원";
+  static const String level = "난이도";
+
+  static const String bggRank = "BGG 랭크";
+  static const String agentTop = "에이전트 극찬 주요 게임";
+
+  //ListBoardGameCategory
+  static const String listBoardCategoryTitle = "전체임무보기";
+
+  //ListBoardGameCategoryPage
+  static const String noCare = "상관없음";
+  static const String clear = "초기화";
+
+  //HomeAppBar
+  static const String chatbotAppBarTitle = "Q";
+
+  //BottomSheetBoardGameDetailDetail
+  static const String basicInfo = "기본 정보";
+  static const String explanation = "설명";
+  static const String producer = "제작사/제작자";
+
+  static const String close = "닫기";
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
 
 import '../../../theme/Colors.dart';
@@ -47,7 +48,7 @@ class ListHomeHorizontalGame extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 22,
-                    fontFamily: 'PretendardMedium',
+                    fontFamily: FontString.pretendardMedium,
                     color: mainWhite,
                   ),
                 ),

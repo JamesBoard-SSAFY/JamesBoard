@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class RatingBoardGameDetail extends StatelessWidget {
@@ -13,7 +15,7 @@ class RatingBoardGameDetail extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SvgPicture.asset(
-          'assets/image/ic_star_selected.svg',
+          IconPath.starSelected,
           width: 24,
           height: 24,
           color: mainGold,
@@ -24,7 +26,9 @@ class RatingBoardGameDetail extends StatelessWidget {
         Text(
           '$rating',
           style: TextStyle(
-              color: mainGold, fontSize: 16, fontFamily: 'PretendardMedium'),
+              color: mainGold,
+              fontSize: 16,
+              fontFamily: FontString.pretendardMedium),
         )
       ],
     );

@@ -63,4 +63,10 @@ class IconPath {
 
   //TextFieldChatBotMessage
   static const String arrowUp = 'assets/image/icon_arrow_up.svg';
+
+  //MyPageAppBar
+  static const String logout = 'assets/image/icon_logout.svg';
+
+  //RatingBoardGameDetail
+  static const String starSelected = 'assets/image/ic_star_selected.svg';
 }

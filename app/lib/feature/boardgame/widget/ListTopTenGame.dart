@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 
 import '../../../theme/Colors.dart';
 import 'CardHomeTopTen.dart';
@@ -18,17 +19,53 @@ class ListTopTenGame extends StatefulWidget {
 }
 
 class _ListHomeHorizontalGameState extends State<ListTopTenGame> {
- // 섹션 제목
+  // 섹션 제목
   final List<Map<String, String>> images = [
-    {'id': '1', 'url': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg'},
-    {'id': '2', 'url': 'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'},
-    {'id': '3', 'url': 'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'},
-    {'id': '4', 'url': 'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'},
-    {'id': '5', 'url': 'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'},
-    {'id': '6', 'url': 'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'},
-    {'id': '7', 'url': 'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'},
-    {'id': '8', 'url': 'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'},
-    {'id': '9', 'url': 'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'},
+    {
+      'id': '1',
+      'url':
+          'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg'
+    },
+    {
+      'id': '2',
+      'url':
+          'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'
+    },
+    {
+      'id': '3',
+      'url':
+          'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'
+    },
+    {
+      'id': '4',
+      'url':
+          'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'
+    },
+    {
+      'id': '5',
+      'url':
+          'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'
+    },
+    {
+      'id': '6',
+      'url':
+          'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'
+    },
+    {
+      'id': '7',
+      'url':
+          'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'
+    },
+    {
+      'id': '8',
+      'url':
+          'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg'
+    },
+    {
+      'id': '9',
+      'url':
+          'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'
+    },
   ];
 
   @override
@@ -44,14 +81,14 @@ class _ListHomeHorizontalGameState extends State<ListTopTenGame> {
                 widget.title,
                 style: TextStyle(
                   fontSize: 22,
-                  fontFamily: 'PretendardMedium',
+                  fontFamily: FontString.pretendardMedium,
                   color: mainWhite,
                 ),
               ),
             ],
           ),
           SizedBox(height: 20),
-          CardHomeTopTen(images: images, onImageTap: (String id) {  })
+          CardHomeTopTen(images: images, onImageTap: (String id) {})
         ],
       ),
     );

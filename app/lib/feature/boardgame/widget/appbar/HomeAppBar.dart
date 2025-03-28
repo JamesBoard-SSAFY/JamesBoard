@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/chatbot/screen/ChatBotScreen.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -34,7 +35,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ChatBotScreen(title: 'Q'),
+                builder: (context) =>
+                    ChatBotScreen(title: AppString.chatbotAppBarTitle),
               ),
             );
           },

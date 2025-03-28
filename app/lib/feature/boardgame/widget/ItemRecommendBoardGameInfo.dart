@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 
@@ -101,7 +102,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     gameName,
                     style: TextStyle(
                       fontSize: 32,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                       color: mainWhite,
                     ),
                   ),
@@ -135,7 +136,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 16,
-                        fontFamily: 'PretendardMedium',
+                        fontFamily: FontString.pretendardMedium,
                         color: mainWhite),
                   ),
                 ),

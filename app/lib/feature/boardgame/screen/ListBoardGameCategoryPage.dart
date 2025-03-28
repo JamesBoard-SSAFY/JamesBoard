@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import '../../../widget/button/ButtonCommonFilter.dart';
 import '../../../widget/bottomsheet/BottomSheetCommonFilter.dart';
@@ -110,14 +112,14 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     );
 
     if (result != null) {
-      widget.updateFilter(filterType, result == '상관없음' ? filterType : result);
+      widget.updateFilter(
+          filterType, result == AppString.noCare ? filterType : result);
       setState(() {});
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     widget.selectedFilters[widget.updateCategory] =
@@ -126,7 +128,6 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
     widget.selectedFilters.updateAll((key, value) => key);
@@ -164,11 +165,11 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                       });
                     },
                     child: Text(
-                      '초기화',
+                      AppString.clear,
                       style: TextStyle(
                         color: mainWhite,
                         fontSize: 16,
-                        fontFamily: 'PretendardSemiBold',
+                        fontFamily: FontString.pretendardSemiBold,
                         decoration: TextDecoration.underline,
                       ),
                     ),

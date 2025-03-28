@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListBGGRankGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListHomeHorizontalGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
@@ -146,27 +147,27 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
               imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
               title: title, // 각 제목을 전달
               updateFilter: updateFilter,
-              updateCategory: "장르",
+              updateCategory: AppString.genre,
               selectedFilters: selectedFilters,
             );
           }),
-          ListTopTenGame(imageUrls: imageUrls, title: "에이전트 극찬 주요 게임"),
+          ListTopTenGame(imageUrls: imageUrls, title: AppString.agentTop),
           ...numOfPersonTitles.map((title) {
             return ListHomeHorizontalGame(
               imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
               title: title, // 각 제목을 전달
               updateFilter: updateFilter,
-              updateCategory: "인원",
+              updateCategory: AppString.numOfPerson,
               selectedFilters: selectedFilters,
             );
           }),
-          ListBGGRankGame(imageUrls: imageUrls, title: "BGG 랭크"),
+          ListBGGRankGame(imageUrls: imageUrls, title: AppString.bggRank),
           ...missionLevelTitles.map((title) {
             return ListHomeHorizontalGame(
               imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
               title: title, // 각 제목을 전달
               updateFilter: updateFilter,
-              updateCategory: "난이도",
+              updateCategory: AppString.level,
               selectedFilters: selectedFilters,
             );
           }),
