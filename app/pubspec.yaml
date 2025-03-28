@@ -50,6 +50,10 @@ dependencies:
   # webview_flutter:
   webview_flutter: ^4.10.0
 
+  #kakao_flutter_sdk:
+  kakao_flutter_sdk: ^1.9.7+3
+  kakao_flutter_sdk_common: ^1.9.7+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
