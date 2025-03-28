@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
@@ -19,6 +20,8 @@ class _TextFieldUserNicknameState extends State<TextFieldUserNickname> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength: 16, // 최대 길이 설정
+      inputFormatters: [LengthLimitingTextInputFormatter(16)],
       controller: _controller,
       style: TextStyle(
         color: mainWhite,
@@ -30,6 +33,7 @@ class _TextFieldUserNicknameState extends State<TextFieldUserNickname> {
             fontFamily: FontString.pretendardSemiBold, color: mainGrey),
         filled: true,
         fillColor: secondaryBlack,
+        counterText: '',
         suffixIcon: _controller.text.isNotEmpty
             ? IconButton(
                 icon: SvgPicture.asset(

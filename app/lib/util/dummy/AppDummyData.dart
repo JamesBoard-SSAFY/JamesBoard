@@ -202,6 +202,7 @@ class AppDummyData {
     "임무 난이도 : 고급": '고급',
   };
 
+  // Mypage
   static final List<Map<String, String>> missionReportimages = [
   {
   'id': '1',
@@ -279,7 +280,6 @@ class AppDummyData {
   'https://cf.geekdo-images.com/ajU3xzGDUKihjNdvjCR1Hw__thumb/img/pXR57sUMEJ-GJydf-yyAu0ZLgZw=/fit-in/200x150/filters:strip_icc()/pic3328391.jpg'
   },
   ];
-
   static final List<Map<String, dynamic>> missionStatisticsGenres = [
     {'genre': '전략', 'percent': 25, 'count': 33, 'color': CommonUtils.getGenreColor('전략')},
     {'genre': '파티', 'percent': 22, 'count': 100, 'color': CommonUtils.getGenreColor('파티')},
@@ -288,7 +288,6 @@ class AppDummyData {
     {'genre': '모험', 'percent': 16.5, 'count': 70, 'color': CommonUtils.getGenreColor('모험')},
     {'genre': '전쟁', 'percent': 0, 'count': 0, 'color': CommonUtils.getGenreColor('전쟁')},
   ];
-
   static final List<ChartData> missionStatisticsChartData = missionStatisticsGenres.map((genre) {
     return ChartData(
       genre['genre'] as String,
@@ -297,7 +296,6 @@ class AppDummyData {
       genre['count'] as int, // count 추가
     );
   }).toList();
-
   static final List<Map<String, String>> missionCumulativeGameData = [
     {
       'id': '1',
@@ -370,4 +368,5 @@ class AppDummyData {
       'round': '35',
     }
   ];
+
 }

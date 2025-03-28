@@ -93,4 +93,7 @@ class AppString {
   static const String producer = "제작사/제작자";
 
   static const String close = "닫기";
+
+  //MyPageUserEditScreen
+  static const String changeUserName = "변경";
 }

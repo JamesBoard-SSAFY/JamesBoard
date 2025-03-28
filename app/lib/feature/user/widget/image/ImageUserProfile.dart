@@ -5,10 +5,12 @@ import 'package:jamesboard/theme/Colors.dart';
 
 class ImageUserProfile extends StatelessWidget {
   final double imageSize;
+  final String imageUrl;
 
   const ImageUserProfile({
     super.key,
     this.imageSize = 120,
+    required this.imageUrl,
   });
 
   @override
@@ -17,7 +19,7 @@ class ImageUserProfile extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: imageSize / 2,
-          backgroundImage: AssetImage(IconPath.defaultImage),
+          backgroundImage: NetworkImage(imageUrl),
           backgroundColor: mainBlack,
         ),
         Positioned(

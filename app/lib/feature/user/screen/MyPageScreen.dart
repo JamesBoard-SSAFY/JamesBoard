@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
@@ -8,7 +9,7 @@ import '../../../util/CommonUtils.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
-import 'MyPagePlayTime.dart';
+import 'MyPagePlayTimeScreen.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -68,19 +69,32 @@ class _MyPageScreenState extends State<MyPageScreen>
                   SizedBox(
                     width: 4,
                   ),
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: secondaryBlack,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(6),
-                      child: SvgPicture.asset(
-                        'assets/image/icon_pen.svg',
-                        width: 24,
-                        height: 24,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyPageUserEditScreen(
+                            title: "요원 정보 변경",
+                            userName: "장킨스",
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: secondaryBlack,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: SvgPicture.asset(
+                          'assets/image/icon_pen.svg',
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                     ),
                   ),
@@ -168,8 +182,10 @@ class _MyPageScreenState extends State<MyPageScreen>
                 ),
               ],
             ),
-            ChartUserGenrePercent(chartData: AppDummyData.missionStatisticsChartData),
-            ItemUserGenrePercentInfo(genres: AppDummyData.missionStatisticsGenres),
+            ChartUserGenrePercent(
+                chartData: AppDummyData.missionStatisticsChartData),
+            ItemUserGenrePercentInfo(
+                genres: AppDummyData.missionStatisticsGenres),
             SizedBox(
               height: 32,
             ),
@@ -189,7 +205,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyPagePlayTime(
+                        builder: (context) => MyPagePlayTimeScreen(
                           title: "작전 누적 판수 순위",
                           gameData: AppDummyData.missionCumulativeGameData,
                         ),
@@ -210,7 +226,9 @@ class _MyPageScreenState extends State<MyPageScreen>
             SizedBox(
               height: 24,
             ),
-            ItemCommonGameRank(gameData: AppDummyData.missionCumulativeGameData.take(5).toList()),
+            ItemCommonGameRank(
+                gameData:
+                    AppDummyData.missionCumulativeGameData.take(5).toList()),
           ],
         ),
       ),
