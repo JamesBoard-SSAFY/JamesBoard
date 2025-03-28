@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = jamesboard-recommend
-        DOCKER_CONTAINER = jamesboard-recommend-container
+        DOCKER_IMAGE = "jamesboard-recommend"
+        DOCKER_CONTAINER = "jamesboard-recommend-container"
         DOCKER_PORT = 9099
         DOCKER_PATH = credentials('DOCKER_PATH') // EC2 서버의 Docker 저장 경로
 
