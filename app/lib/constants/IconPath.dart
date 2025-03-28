@@ -32,4 +32,14 @@ class IconPath {
   //ItemCommonGameRank
   static const String bangImage = 'assets/image/bang.png';
   static const String time = 'assets/image/icon_time.svg';
+
+  //ImageUserProfile
+  static const String defaultImage = 'assets/image/image_default_profile.png';
+  static const String pen = 'assets/image/icon_pen.svg';
+
+  //ItemUserArchiveCard
+  static const String archivePhoto = 'assets/image/item_archieve_photo.jpg';
+
+  //TextFieldUserNickname
+  static const String circularClose = 'assets/image/icon_circular_close.svg';
 }

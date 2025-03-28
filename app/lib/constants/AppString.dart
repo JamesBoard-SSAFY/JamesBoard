@@ -21,4 +21,10 @@ class AppString {
   static const String recommendAppBarTitle = "요원님을 위한 맞춤 업무";
   static const String missionAppBarTitle = "임무 보고 아카이브";
   static const String myPageAppBarTitle = "요원 로그";
+
+  //ChartUserGenrePercent
+  static const String chartCenterTitle = "Total Value\n";
+
+  //TextFieldUserNickname
+  static const String userNicknameHint = "닉네임을 입력하세요";
 }
