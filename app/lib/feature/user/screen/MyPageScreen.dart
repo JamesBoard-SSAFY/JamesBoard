@@ -133,8 +133,8 @@ class _MyPageScreenState extends State<MyPageScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildTabContent1(),
-                _buildTabContent2(),
+                _buildTabContentMissionReport(),
+                _buildTabContentMissionStatistics(),
               ],
             ),
           ),
@@ -144,7 +144,7 @@ class _MyPageScreenState extends State<MyPageScreen>
   }
 
   // 임무 보고
-  Widget _buildTabContent1() {
+  Widget _buildTabContentMissionReport() {
     void handleImageTap(String id) {
       print('클릭한 이미지 ID: $id');
       // 여기에 원하는 동작 추가
@@ -159,7 +159,7 @@ class _MyPageScreenState extends State<MyPageScreen>
   }
 
   // 임무 통계
-  Widget _buildTabContent2() {
+  Widget _buildTabContentMissionStatistics() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
