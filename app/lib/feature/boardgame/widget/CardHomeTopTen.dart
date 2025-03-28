@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
+import '../../../constants/FontString.dart';
+
 class CardHomeTopTen extends StatefulWidget {
   final List<Map<String, String>> images; // {id: imageUrl}
   final Function(String id) onImageTap; // 클릭 시 수행할 작업
 
-  const CardHomeTopTen({super.key, required this.images, required this.onImageTap});
+  const CardHomeTopTen(
+      {super.key, required this.images, required this.onImageTap});
 
   @override
   State<CardHomeTopTen> createState() => _CardHomeTopTenState();
@@ -32,8 +35,9 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
               return GestureDetector(
                 onTap: () => widget.onImageTap(id),
                 child: Container(
-                  width: width * 1.33 , // 숫자 공간 추가
-                  margin: const EdgeInsets.symmetric(horizontal: 20), // 아이템 간격 추가
+                  width: width * 1.33, // 숫자 공간 추가
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20), // 아이템 간격 추가
                   child: Row(
                     children: [
                       Container(
@@ -46,7 +50,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                               '${index + 1}',
                               style: TextStyle(
                                 fontSize: height * 9 / 10,
-                                fontFamily: 'PretendardBold',
+                                fontFamily: FontString.pretendardBold,
                                 foreground: Paint()
                                   ..style = PaintingStyle.stroke
                                   ..strokeWidth = 5 // Stroke 두께 조절
@@ -58,7 +62,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                               '${index + 1}',
                               style: TextStyle(
                                 fontSize: height * 9 / 10,
-                                fontFamily: 'PretendardBold',
+                                fontFamily: FontString.pretendardBold,
                                 color: mainRed, // 내부 색상
                               ),
                             ),

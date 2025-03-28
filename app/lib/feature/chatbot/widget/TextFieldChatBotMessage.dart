@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +43,7 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('올바른 메시지를 입력하세요!'),
+          content: Text(AppString.correctInputMessage),
           duration: Duration(seconds: 2),
           backgroundColor: mainRed,
         ),
@@ -70,7 +72,7 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
               inputFormatters: [LengthLimitingTextInputFormatter(100)],
               controller: _controller,
               decoration: const InputDecoration(
-                hintText: '메시지 입력',
+                hintText: AppString.messageInput,
                 hintStyle: TextStyle(
                   color: mainGrey,
                 ),
@@ -88,7 +90,7 @@ class _TextFieldChatBotMessageState extends State<TextFieldChatBotMessage> {
           GestureDetector(
             onTap: _onSend,
             child: SvgPicture.asset(
-              'assets/image/icon_arrow_up.svg',
+              IconPath.arrowUp,
               width: 34,
               height: 34,
             ),

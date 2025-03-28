@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ItemUserGenrePercentInfo extends StatelessWidget {
@@ -43,7 +44,7 @@ class ItemUserGenrePercentInfo extends StatelessWidget {
           genre,
           style: TextStyle(
             fontSize: 20,
-            fontFamily: 'PretendardSemiBold',
+            fontFamily: FontString.pretendardSemiBold,
             color: mainWhite,
           ),
         ),
@@ -56,7 +57,7 @@ class ItemUserGenrePercentInfo extends StatelessWidget {
             textAlign: TextAlign.right,
             style: TextStyle(
               fontSize: 20,
-              fontFamily: 'PretendardSemiBold',
+              fontFamily: FontString.pretendardSemiBold,
               color: mainWhite,
             ),
           ),

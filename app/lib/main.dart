@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jamesboard/feature/boardgame/screen/AddArchieveScreenEx.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
-import 'package:jamesboard/feature/boardgame/screen/ListArchieveScreenEx.dart';
-import 'package:jamesboard/feature/boardgame/screen/RecommGameScreenEx.dart';
-import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
+import'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
+import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import'feature/user/screen/MyPageScreen.dart';
+import 'feature/boardgame/screen/RecommendGameScreen.dart';
 
-import 'feature/user/screen/MyPageScreen.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
-  colors: true,
-  printEmojis: true,
-  printTime: true,
-));
+      colors: true,
+      printEmojis: true,
+      printTime: true,
+    ));
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -66,10 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
-    RecommGameScreenEx(),
-    MissionEditScreen(title: '임무 보고'),
-    ListArchieveScreenEx(),
+
+    RecommendGameScreen(),
+    MissionEditScreen(title: AppString.missionEditTitle),
+    MissionListScreen(title: AppString.missionListTitle),
     MyPageScreen(),
+
   ];
 
   int _selectedIndex = 0;
@@ -80,10 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                MissionEditScreen(title: '임무 보고')), // 현재 화면을 새로운 화면으로 대체
+                MissionEditScreen(title: AppString.missionEditTitle)),
       ).then((_) {
         setState(() {
-          _selectedIndex = 0; // Home 화면으로 돌아가기
+          _selectedIndex = 0;
         });
       });
     } else {
@@ -98,70 +102,68 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBarUtil.getAppBar(_selectedIndex),
       body: _pages[_selectedIndex],
-      backgroundColor: mainBlack, // 배경색 검정으로 설정
+      backgroundColor: mainBlack,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        backgroundColor: mainBlack,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: mainWhite,
-        unselectedItemColor: mainWhite,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/image/icon_home_unselected.svg',
-              width: 24,
-              height: 24,
-              colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset('assets/image/icon_home_selected.svg',
-              width: 24,
-              height: 24,
-              colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/image/icon_recommend_unselected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset('assets/image/icon_recommend_selected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            label: 'recommend',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/image/icon_register_unselected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            label: 'search',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/image/icon_archive_unselected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset('assets/image/icon_archive_selected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            label: 'recommend',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/image/icon_mypage_unselected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset('assets/image/icon_mypage_selected.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-            label: 'mypage',
-          ),
-        ]
-      ),
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          backgroundColor: mainBlack,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedItemColor: mainWhite,
+          unselectedItemColor: mainWhite,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(IconPath.homeUnselected,
+                    width: 24,
+                    height: 24,
+                    colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+                activeIcon: SvgPicture.asset(IconPath.homeSelected,
+                    width: 24,
+                    height: 24,
+                    colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+                label: AppString.labelHome),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(IconPath.recommendUnselected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              activeIcon: SvgPicture.asset(IconPath.recommendSelected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              label: AppString.labelRecommend,
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(IconPath.registerUnselected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              label: AppString.labelSearch,
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(IconPath.archiveUnselected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              activeIcon: SvgPicture.asset(IconPath.archiveSelected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              label: AppString.labelArchive,
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(IconPath.myPageUnselected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              activeIcon: SvgPicture.asset(IconPath.myPageSelected,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+              label: AppString.labelMyPage,
+            ),
+          ]),
     );
   }
 }

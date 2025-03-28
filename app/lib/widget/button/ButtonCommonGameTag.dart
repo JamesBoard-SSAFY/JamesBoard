@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ButtonCommonGameTag extends StatelessWidget {
@@ -18,7 +19,7 @@ class ButtonCommonGameTag extends StatelessWidget {
         style: TextStyle(
           color: mainGold,
           fontSize: 16,
-          fontFamily: 'PretendardSemiBold',
+          fontFamily: FontString.pretendardSemiBold,
           backgroundColor: secondaryBlack,
         ),
       ),

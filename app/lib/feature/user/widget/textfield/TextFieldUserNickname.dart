@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
+
+import '../../../../constants/FontString.dart';
 
 class TextFieldUserNickname extends StatefulWidget {
   const TextFieldUserNickname({super.key});
@@ -16,30 +20,30 @@ class _TextFieldUserNicknameState extends State<TextFieldUserNickname> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,
-      style: TextStyle(color: mainWhite, fontFamily: 'PretendardSemiBold'),
+      style: TextStyle(
+        color: mainWhite,
+        fontFamily: FontString.pretendardSemiBold,
+      ),
       decoration: InputDecoration(
-        hintText: "닉네임을 입력하세요",
+        hintText: AppString.userNicknameHint,
         hintStyle: TextStyle(
-          fontFamily: 'PretendardSemiBold',
-          color: mainGrey
-        ),
+            fontFamily: FontString.pretendardSemiBold, color: mainGrey),
         filled: true,
         fillColor: secondaryBlack,
         suffixIcon: _controller.text.isNotEmpty
-          ?
-          IconButton(
-            icon: SvgPicture.asset(
-              'assets/image/icon_circular_close.svg',
-              width: 24,
-              height: 24,
-              colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
-            ),
-            onPressed: () {
-              _controller.clear(); // X 버튼 클릭 시 텍스트 삭제
-              setState(() {}); // UI 갱신
-            },
-          )
-          : null,
+            ? IconButton(
+                icon: SvgPicture.asset(
+                  IconPath.circularClose,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
+                ),
+                onPressed: () {
+                  _controller.clear(); // X 버튼 클릭 시 텍스트 삭제
+                  setState(() {}); // UI 갱신
+                },
+              )
+            : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0), // 둥근 테두리 설정
           borderSide: BorderSide.none, // 테두리 색상 없애기

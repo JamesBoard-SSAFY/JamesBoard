@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import '../item/ItemCommonFilter.dart';
 
@@ -6,10 +8,12 @@ class BottomSheetCommonFilter extends StatefulWidget {
   final List<String> items;
   final String? initialValue; // 초기 선택값
 
-  const BottomSheetCommonFilter({super.key, required this.items, this.initialValue});
+  const BottomSheetCommonFilter(
+      {super.key, required this.items, this.initialValue});
 
   @override
-  _BottomSheetCommonFilterState createState() => _BottomSheetCommonFilterState();
+  _BottomSheetCommonFilterState createState() =>
+      _BottomSheetCommonFilterState();
 }
 
 class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
@@ -19,7 +23,9 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
   void initState() {
     super.initState();
     // 초기값이 있으면 해당 값의 인덱스를 찾아 selectedIndex에 설정
-    selectedIndex = widget.initialValue != null ? widget.items.indexOf(widget.initialValue!) : null;
+    selectedIndex = widget.initialValue != null
+        ? widget.items.indexOf(widget.initialValue!)
+        : null;
   }
 
   @override
@@ -42,7 +48,7 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
               '옵션 선택',
               style: TextStyle(
                 fontSize: 18,
-                fontFamily: 'PretendardBold',
+                fontFamily: FontString.pretendardBold,
                 color: mainGrey,
               ),
             ),
@@ -53,7 +59,7 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
               itemBuilder: (context, index) {
                 return ItemCommonFilter(
                   title: widget.items[index],
-                  checkIconPath: 'assets/image/icon_filter_check.svg',
+                  checkIconPath: IconPath.filterCheck,
                   isSelected: selectedIndex == index,
                   onTap: () {
                     setState(() {
@@ -67,7 +73,8 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
           GestureDetector(
             onTap: () {
               // 닫을 때만 선택된 값 전달
-              Navigator.pop(context, selectedIndex != null ? widget.items[selectedIndex!] : null);
+              Navigator.pop(context,
+                  selectedIndex != null ? widget.items[selectedIndex!] : null);
             },
             behavior: HitTestBehavior.opaque,
             child: Container(
@@ -84,7 +91,7 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
                 style: TextStyle(
                   fontSize: 16,
                   color: mainWhite,
-                  fontFamily: 'PretendardBold',
+                  fontFamily: FontString.pretendardBold,
                 ),
               ),
             ),

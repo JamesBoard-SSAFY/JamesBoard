@@ -1,6 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/widget/DividerBottomSheetBoardGameDetail.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
@@ -46,7 +48,7 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
           text: info['title'],
           style: TextStyle(
             fontSize: 16,
-            fontFamily: 'PretendardMedium',
+            fontFamily: FontString.pretendardMedium,
             color: mainWhite,
           ),
         ),
@@ -111,14 +113,14 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
                     gameTitle,
                     style: TextStyle(
                       fontSize: 24,
-                      fontFamily: 'PretendardBold',
+                      fontFamily: FontString.pretendardBold,
                       color: mainWhite,
                     ),
                   ),
                   const SizedBox(height: 24),
 
                   // 기본 정보 섹션
-                  _buildSectionTitle('기본 정보'),
+                  _buildSectionTitle(AppString.basicInfo),
                   const SizedBox(height: 4),
                   ...gameDefaultInfo.map((info) => Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -130,13 +132,13 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
                       height: 24, color: mainGrey),
 
                   // 설명 섹션
-                  _buildSectionTitle('설명'),
+                  _buildSectionTitle(AppString.explanation),
                   const SizedBox(height: 24),
                   Text(
                     gameDescription,
                     style: TextStyle(
                       fontSize: 16,
-                      fontFamily: 'PretendardMedium',
+                      fontFamily: FontString.pretendardMedium,
                       color: mainGrey,
                     ),
                   ),
@@ -145,7 +147,7 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
                       height: 24, color: mainGrey),
 
                   // 제작사/제작자 섹션
-                  _buildSectionTitle('제작사/제작자'),
+                  _buildSectionTitle(AppString.producer),
                   const SizedBox(height: 4),
                   ...gameMakerInfo.map((info) => Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -176,11 +178,11 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 24),
                 ),
                 child: Text(
-                  '닫기',
+                  AppString.close,
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 20,
-                    fontFamily: 'PretendardBold',
+                    fontFamily: FontString.pretendardBold,
                   ),
                 ),
               ),
@@ -196,7 +198,9 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-          fontSize: 20, fontFamily: 'PretendardSemiBold', color: mainWhite),
+          fontSize: 20,
+          fontFamily: FontString.pretendardSemiBold,
+          color: mainWhite),
     );
   }
 
@@ -263,7 +267,7 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
               key,
               style: TextStyle(
                 fontSize: 16,
-                fontFamily: 'PretendardMedium',
+                fontFamily: FontString.pretendardMedium,
                 color: mainWhite,
               ),
             ),
@@ -277,7 +281,7 @@ class BottomSheetBoardGameDetailDetail extends StatelessWidget {
               displayValue,
               style: TextStyle(
                 fontSize: 16,
-                fontFamily: 'PretendardMedium',
+                fontFamily: FontString.pretendardMedium,
                 color: mainGrey,
               ),
             ),

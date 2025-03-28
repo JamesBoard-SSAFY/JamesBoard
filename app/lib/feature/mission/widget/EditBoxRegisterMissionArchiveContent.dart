@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class EditBoxRegisterMissionArchiveContent extends StatefulWidget {
@@ -52,12 +54,14 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionArchiveContent> {
         style: TextStyle(
           color: _hasInput ? mainWhite : mainGrey,
           fontSize: 16,
-          fontFamily: 'PretendardMedium',
+          fontFamily: FontString.pretendardMedium,
         ),
         decoration: InputDecoration(
-            hintText: '문구 입력',
+            hintText: AppString.missionContentInput,
             hintStyle: TextStyle(
-                color: mainGrey, fontSize: 16, fontFamily: 'PretendardMedium'),
+                color: mainGrey,
+                fontSize: 16,
+                fontFamily: FontString.pretendardMedium),
             border: InputBorder.none,
             isDense: true,
             contentPadding: EdgeInsets.zero),

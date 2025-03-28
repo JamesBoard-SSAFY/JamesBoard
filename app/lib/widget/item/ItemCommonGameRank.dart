@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ItemCommonGameRank extends StatelessWidget {
@@ -41,7 +43,7 @@ class ItemCommonGameRank extends StatelessWidget {
                     game['title']!,
                     style: TextStyle(
                       fontSize: 20,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                       color: mainWhite,
                     ),
                   ),
@@ -58,7 +60,7 @@ class ItemCommonGameRank extends StatelessWidget {
                         "${game['round']}판",
                         style: TextStyle(
                           fontSize: 20,
-                          fontFamily: 'PretendardSemiBold',
+                          fontFamily: FontString.pretendardSemiBold,
                           color: mainWhite,
                         ),
                       ),
@@ -77,7 +79,7 @@ class ItemCommonGameRank extends StatelessWidget {
                           '${index + 1}', // index + 1로 순위 표시
                           style: TextStyle(
                             fontSize: 50,
-                            fontFamily: 'PretendardSemiBold',
+                            fontFamily: FontString.pretendardSemiBold,
                             foreground: Paint()
                               ..style = PaintingStyle.stroke
                               ..strokeWidth = 3
@@ -88,7 +90,7 @@ class ItemCommonGameRank extends StatelessWidget {
                           '${index + 1}',
                           style: TextStyle(
                             fontSize: 50,
-                            fontFamily: 'PretendardSemiBold',
+                            fontFamily: FontString.pretendardSemiBold,
                             color: mainRed,
                           ),
                         ),

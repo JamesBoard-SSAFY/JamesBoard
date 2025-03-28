@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
 
 import '../../theme/Colors.dart';
 
@@ -28,17 +29,17 @@ class ItemCommonFilter extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 20,
-              fontFamily: 'PretendardSemiBold',
-              color: isSelected ? mainGold : mainGrey, // ✅ 선택 시 글자 색 변경
+              fontFamily: FontString.pretendardSemiBold,
+              color: isSelected ? mainGold : mainGrey,
             ),
           ),
           trailing: isSelected
               ? SvgPicture.asset(
-            checkIconPath,
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
-          )
+                  checkIconPath,
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(mainGold, BlendMode.srcIn),
+                )
               : null,
         ),
       ),

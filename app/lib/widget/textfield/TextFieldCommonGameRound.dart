@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class TextFieldCommonGameRound extends StatelessWidget {
@@ -18,10 +19,8 @@ class TextFieldCommonGameRound extends StatelessWidget {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly], // 숫자만 입력 가능
       style: TextStyle(color: mainWhite),
       decoration: InputDecoration(
-        hintStyle: TextStyle(
-          color: mainGrey
-        ), // 힌트 텍스트 색상
-        hintText: "판수를 입력하세요.",
+        hintStyle: TextStyle(color: mainGrey), // 힌트 텍스트 색상
+        hintText: AppString.gameRoundHint,
         fillColor: secondaryBlack,
         filled: true, // 배경색 활성화
         border: OutlineInputBorder(

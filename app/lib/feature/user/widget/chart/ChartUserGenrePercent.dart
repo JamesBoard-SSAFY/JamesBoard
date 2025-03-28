@@ -6,7 +6,6 @@ class ChartUserGenrePercent extends StatelessWidget {
   final List<ChartData> chartData; // chartData를 인자로 받음
 
   const ChartUserGenrePercent({super.key, required this.chartData});
-
   @override
   Widget build(BuildContext context) {
     int totalCount = chartData.fold(0, (sum, data) => sum + data.count);
@@ -59,6 +58,7 @@ class ChartUserGenrePercent extends StatelessWidget {
             ],
           ),
         ));
+
   }
 }
 

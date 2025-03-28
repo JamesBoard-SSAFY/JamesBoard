@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
 
 import '../../../theme/Colors.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
 
 class ListHomeHorizontalGame extends StatelessWidget {
-  final List<String> imageUrls; // 게임 이미지 URL 리스트
-  final String title; // 섹션 제목
+  final List<String> imageUrls;
+  final String title;
+  final String updateCategory;
+  final Function(String, String) updateFilter;
+  final Map<String, String> selectedFilters;
 
-  const ListHomeHorizontalGame({
-    Key? key,
-    required this.imageUrls,
-    required this.title,
-  }) : super(key: key);
+  const ListHomeHorizontalGame(
+      {Key? key,
+      required this.imageUrls,
+      required this.title,
+      required this.updateCategory,
+      required this.updateFilter,
+      required this.selectedFilters})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,13 @@ class ListHomeHorizontalGame extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ListBoardGameCategory()),
+                MaterialPageRoute(
+                    builder: (context) => ListBoardGameCategory(
+                          title: title,
+                          updateCategory: updateCategory,
+                          updateFilter: updateFilter,
+                          selectedFilters: selectedFilters,
+                        )),
               );
             },
             child: Row(
@@ -35,7 +48,7 @@ class ListHomeHorizontalGame extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 22,
-                    fontFamily: 'PretendardMedium',
+                    fontFamily: FontString.pretendardMedium,
                     color: mainWhite,
                   ),
                 ),
@@ -44,6 +57,11 @@ class ListHomeHorizontalGame extends StatelessWidget {
                   color: mainWhite,
                   size: 32,
                 ),
+                Container(
+                  decoration: BoxDecoration(color: Colors.transparent),
+                  width: 50,
+                  height: 30,
+                )
               ],
             ),
           ),
@@ -55,7 +73,7 @@ class ListHomeHorizontalGame extends StatelessWidget {
               itemCount: 10, // 아이템 개수
               itemBuilder: (context, index) {
                 return Container(
-                  margin: EdgeInsets.only(right: 8.0),  // 오른쪽에만 마진을 추가
+                  margin: EdgeInsets.only(right: 8.0), // 오른쪽에만 마진을 추가
                   child: ImageCommonGameCard(
                     imageUrl: imageUrls[index],
                   ),
