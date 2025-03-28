@@ -15,4 +15,10 @@ class AppString {
 
   //TextFieldCommonGameRound
   static const String gameRoundHint = "판수를 입력하세요.";
+
+  //AppBarUtil
+  static const String homeAppBarTitle = "JamesBoard";
+  static const String recommendAppBarTitle = "요원님을 위한 맞춤 업무";
+  static const String missionAppBarTitle = "임무 보고 아카이브";
+  static const String myPageAppBarTitle = "요원 로그";
 }
