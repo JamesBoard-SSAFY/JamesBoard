@@ -32,7 +32,7 @@ public interface ArchiveRepository extends JpaRepository<Archive, Long> {
     List<Object[]> getTopPlayGamesByUserId(@Param("userId") Long userId);
 
     //사용자 카테고리별 게임 플레이 횟수 조회
-    @Query("SELECT gc.gameCategoryId, gc.gameCategoryName, SUM(a.archiveGamePlayCount) as categoryCount " +
+    @Query("SELECT gc.gameCategoryName, SUM(a.archiveGamePlayCount) as categoryCount " +
             "FROM Archive a " +
             "JOIN a.game g " +
             "JOIN g.gameCategories gc " +
