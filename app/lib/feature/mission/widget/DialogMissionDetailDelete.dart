@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonMissionDetailDialog.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
@@ -55,7 +57,7 @@ class DialogMissionDetailDelete extends StatelessWidget {
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 20,
-                    fontFamily: 'PretendardSemiBold',
+                    fontFamily: FontString.pretendardSemiBold,
                     decoration: TextDecoration.none,
                   ),
                 ),
@@ -67,7 +69,7 @@ class DialogMissionDetailDelete extends StatelessWidget {
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 16,
-                    fontFamily: 'PretendardSemiBold',
+                    fontFamily: FontString.pretendardSemiBold,
                     decoration: TextDecoration.none,
                   ),
                 ),
@@ -80,7 +82,7 @@ class DialogMissionDetailDelete extends StatelessWidget {
                     // 취소
                     Expanded(
                       child: ButtonMissionDetailDialog(
-                        text: '취소',
+                        text: AppString.cancel,
                         onPressed: onCancel,
                       ),
                     ),
@@ -90,7 +92,7 @@ class DialogMissionDetailDelete extends StatelessWidget {
                     // 확인
                     Expanded(
                       child: ButtonMissionDetailDialog(
-                        text: '확인',
+                        text: AppString.confirm,
                         onPressed: onConfirm,
                       ),
                     )

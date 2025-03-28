@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ButtonMissionDetailDialog extends StatelessWidget {
@@ -11,7 +13,7 @@ class ButtonMissionDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isConfirm = text == '확인';
+    bool isConfirm = text == AppString.confirm;
 
     return GestureDetector(
       onTap: onPressed,
@@ -27,7 +29,7 @@ class ButtonMissionDetailDialog extends StatelessWidget {
           style: TextStyle(
             color: mainGold,
             fontSize: 16,
-            fontFamily: 'PretendardSemiBold',
+            fontFamily: FontString.pretendardSemiBold,
             decoration: TextDecoration.none,
           ),
         ),

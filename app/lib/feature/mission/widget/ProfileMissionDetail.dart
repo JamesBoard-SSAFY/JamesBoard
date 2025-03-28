@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/mission/widget/DialogMissionDetailDelete.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
@@ -29,7 +32,7 @@ class ProfileMissionDetail extends StatelessWidget {
               userName,
               style: TextStyle(
                   fontSize: 16,
-                  fontFamily: 'PretendardMedium',
+                  fontFamily: FontString.pretendardMedium,
                   color: mainWhite),
             )
           ],
@@ -39,7 +42,7 @@ class ProfileMissionDetail extends StatelessWidget {
         GestureDetector(
           onTap: () => {_onMorePressed(context)},
           child: SvgPicture.asset(
-            'assets/image/ic_more.svg',
+            IconPath.more,
             width: 24,
             height: 24,
             color: mainWhite,
@@ -50,11 +53,6 @@ class ProfileMissionDetail extends StatelessWidget {
   }
 
   void _onMorePressed(BuildContext context) {
-    // 다이얼로그 메인 메시지
-    final String mainMessage = '해당 보고를 삭제하실 건가요?';
-    // 다이얼로그 서브 메시지
-    final String subMessage = '한 번 삭제하시면 되돌릴 수 없습니다.';
-
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -89,11 +87,11 @@ class ProfileMissionDetail extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      '수정',
+                      AppString.update,
                       style: TextStyle(
                         color: mainWhite,
                         fontSize: 20,
-                        fontFamily: 'PretendardBold',
+                        fontFamily: FontString.pretendardBold,
                       ),
                     ),
                   ),
@@ -108,7 +106,9 @@ class ProfileMissionDetail extends StatelessWidget {
 
                       Future.delayed(const Duration(milliseconds: 100), () {
                         showCustomDialogMissionDetailDelete(
-                            context, mainMessage, subMessage);
+                            context,
+                            AppString.missionDialogMainMessage,
+                            AppString.missionDialogSubMessage);
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -117,11 +117,11 @@ class ProfileMissionDetail extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      '삭제',
+                      AppString.delete,
                       style: TextStyle(
                         color: mainWhite,
                         fontSize: 20,
-                        fontFamily: 'PretendardBold',
+                        fontFamily: FontString.pretendardBold,
                       ),
                     ),
                   ),

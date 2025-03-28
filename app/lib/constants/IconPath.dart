@@ -45,4 +45,13 @@ class IconPath {
 
   //ImageSurveyCategory
   static const String surveyCheck = 'assets/image/survey_check.svg';
+
+  //ImageSurveyCategory
+  static const String addPicture = "assets/image/ic_add_picture.svg";
+  static const String camera = 'assets/image/ic_camera.svg';
+
+  static const String more = 'assets/image/ic_more.svg';
+
+  //SelectBoxRegisterMissionBoardGame
+  static const String arrowRight = 'assets/image/ic_arrow_right.svg';
 }

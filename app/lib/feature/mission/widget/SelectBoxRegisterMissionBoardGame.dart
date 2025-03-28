@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class SelectBoxRegisterMissionBoardGame extends StatefulWidget {
@@ -36,14 +39,14 @@ class _SelectBoxRegisterMissionBoardGameState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              _selectedGame ?? '보드게임 선택',
+              _selectedGame ?? AppString.selectBoardGame,
               style: TextStyle(
                   color: _selectedGame != null ? mainWhite : mainGrey,
                   fontSize: 16,
-                  fontFamily: 'PretendardMedium'),
+                  fontFamily: FontString.pretendardMedium),
             ),
             SvgPicture.asset(
-              'assets/image/ic_arrow_right.svg',
+              IconPath.arrowRight,
               width: 24,
               height: 24,
               color: mainGrey,
