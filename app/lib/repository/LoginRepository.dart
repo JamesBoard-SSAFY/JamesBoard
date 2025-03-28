@@ -42,4 +42,8 @@ class LoginRepository {
   Future<RenewalAccessTokenResponse> renewalAccessToken(
           RenewalAccessTokenRequest request) =>
       _service.renewalAccessToken(request);
+
+  // 카카오 OAuth 콜백 처리
+  Future<RenewalAccessTokenResponse> kakaoCallback(String kakaoAccessToken) =>
+      _service.kakaoCallback(kakaoAccessToken);
 }
