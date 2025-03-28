@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
+import '../../../util/CommonUtils.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
 
@@ -221,11 +222,12 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 임무 통계
   Widget _buildTabContent2() {
     var genres = [
-      {'genre': '전략', 'percent': 25, 'color': Colors.blue},
-      {'genre': '파티', 'percent': 22, 'color': Colors.red},
-      {'genre': '추리', 'percent': 19, 'color': Colors.green},
-      {'genre': '경제', 'percent': 17.5, 'color': Colors.orange},
-      {'genre': '모험', 'percent': 16.5, 'color': Colors.purple},
+      {'genre': '전략', 'percent': 25, 'color': CommonUtils.getGenreColor('전략')},
+      {'genre': '파티', 'percent': 22, 'color': CommonUtils.getGenreColor('파티')},
+      {'genre': '추리', 'percent': 19, 'color': CommonUtils.getGenreColor('추리')},
+      {'genre': '경제', 'percent': 17.5, 'color': CommonUtils.getGenreColor('경제')},
+      {'genre': '모험', 'percent': 16.5, 'color': CommonUtils.getGenreColor('모험')},
+      {'genre': '전쟁', 'percent': 0, 'color': CommonUtils.getGenreColor('전쟁')},
     ];
 
     List<ChartData> chartData = genres.map((genre) {

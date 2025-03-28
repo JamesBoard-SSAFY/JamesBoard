@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:jamesboard/feature/boardgame/screen/AddArchieveScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListArchieveScreenEx.dart';
-import 'package:jamesboard/feature/boardgame/screen/MyPageScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/RecommGameScreenEx.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
