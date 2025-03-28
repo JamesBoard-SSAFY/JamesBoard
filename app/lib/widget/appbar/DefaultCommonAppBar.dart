@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class DefaultCommonAppBar extends StatelessWidget
@@ -13,11 +14,10 @@ class DefaultCommonAppBar extends StatelessWidget
       backgroundColor: mainBlack,
       elevation: 0,
       title: Text(title,
-        style: TextStyle(
-          fontSize: 22,
-          color: mainWhite,
-          fontFamily: 'PretendardSemiBold')
-        ),
+          style: TextStyle(
+              fontSize: 22,
+              color: mainWhite,
+              fontFamily: FontString.pretendardSemiBold)),
       centerTitle: true,
       leading: IconButton(
           icon: Icon(
@@ -27,9 +27,8 @@ class DefaultCommonAppBar extends StatelessWidget
           ),
           onPressed: () {
             Navigator.pop(context);
-          }
-        ),
-      );
+          }),
+    );
   }
 
   @override

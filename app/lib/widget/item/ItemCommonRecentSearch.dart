@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // flutter_svg 패키지 추가
 import 'package:jamesboard/theme/Colors.dart';
 
+import '../../constants/FontString.dart';
+
 class ItemCommonRecentSearch extends StatefulWidget {
   final String title;
   final String iconPath;
@@ -26,7 +28,9 @@ class _ItemCommonRecentSearchState extends State<ItemCommonRecentSearch> {
         title: Text(
           widget.title,
           style: TextStyle(
-              fontSize: 18, fontFamily: 'PretendardSemiBold', color: mainWhite),
+              fontSize: 18,
+              fontFamily: FontString.pretendardSemiBold,
+              color: mainWhite),
         ),
         trailing: SvgPicture.asset(
           widget.iconPath, // SVG 체크 아이콘

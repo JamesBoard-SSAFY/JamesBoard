@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/chatbot/screen/ChatBotScreen.dart';
 import 'package:jamesboard/theme/Colors.dart';
+
+import '../../../../constants/FontString.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -17,11 +20,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: TextStyle(
               fontSize: 22,
               color: mainWhite,
-              fontFamily: 'PretendardSemiBold')),
+              fontFamily: FontString.pretendardSemiBold)),
       actions: [
         IconButton(
           icon: SvgPicture.asset(
-            'assets/image/icon_chat.svg', // 🔹 SVG 아이콘 적용
+            IconPath.chat, // 🔹 SVG 아이콘 적용
             width: 24, // 아이콘 크기 조정
             height: 24,
             colorFilter:
@@ -38,7 +41,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: SvgPicture.asset(
-            'assets/image/icon_search.svg', // 🔹 다른 SVG 아이콘 추가
+            IconPath.search, // 🔹 다른 SVG 아이콘 추가
             width: 24,
             height: 24,
             colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn),

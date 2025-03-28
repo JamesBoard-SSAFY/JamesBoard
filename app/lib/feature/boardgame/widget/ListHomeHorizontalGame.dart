@@ -56,6 +56,11 @@ class ListHomeHorizontalGame extends StatelessWidget {
                   color: mainWhite,
                   size: 32,
                 ),
+                Container(
+                  decoration: BoxDecoration(color: Colors.transparent),
+                  width: 50,
+                  height: 30,
+                )
               ],
             ),
           ),

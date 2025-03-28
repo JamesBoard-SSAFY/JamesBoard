@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ItemCommonGameRank extends StatelessWidget {
@@ -17,9 +19,10 @@ class ItemCommonGameRank extends StatelessWidget {
         clipBehavior: Clip.none, // Stack 내에서의 크기 초과를 허용
         children: [
           ListTile(
-            leading: ClipOval( // ClipOval을 이용해 원형으로 만듦
+            leading: ClipOval(
+              // ClipOval을 이용해 원형으로 만듦
               child: Image.asset(
-                'assets/image/bang.png',
+                IconPath.bangImage,
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover, // 이미지 비율 유지
@@ -29,15 +32,15 @@ class ItemCommonGameRank extends StatelessWidget {
               "부루마블",
               style: TextStyle(
                 fontSize: 20,
-                fontFamily: 'PretendardSemiBold',
-                color: mainWhite, // mainWhite 색상 적용
+                fontFamily: FontString.pretendardSemiBold,
+                color: mainWhite,
               ),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
-                  'assets/image/icon_time.svg',
+                  IconPath.time,
                   width: 24,
                   height: 24,
                 ),
@@ -46,8 +49,8 @@ class ItemCommonGameRank extends StatelessWidget {
                   "35분",
                   style: TextStyle(
                     fontSize: 20,
-                    fontFamily: 'PretendardSemiBold',
-                    color: mainWhite, // mainWhite 색상 적용
+                    fontFamily: FontString.pretendardSemiBold,
+                    color: mainWhite,
                   ),
                 ),
               ],
@@ -66,7 +69,7 @@ class ItemCommonGameRank extends StatelessWidget {
                     '100',
                     style: TextStyle(
                       fontSize: 50,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                       foreground: Paint()
                         ..style = PaintingStyle.stroke
                         ..strokeWidth = 3
@@ -78,7 +81,7 @@ class ItemCommonGameRank extends StatelessWidget {
                     '100',
                     style: TextStyle(
                       fontSize: 50,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                       color: mainRed,
                     ),
                   ),
