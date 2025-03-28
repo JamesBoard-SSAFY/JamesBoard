@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.board.jamesboard.db.repository.GameRepository;
 import com.board.jamesboard.domain.boardgame.dto.BoardgameTopDto;
-import com.board.jamesboard.domain.boardgame.dto.BoardgameType;
+import com.board.jamesboard.db.entity.Game;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,13 +18,26 @@ public class BoardgameTopServiceImpl implements BoardgameTopService {
     private final GameRepository gameRepository;
 
     @Override
-    public List<BoardgameTopDto> getBoardgameTop(Long userId, Long boardId, BoardgameType boardType, Long page, Integer limit) {
-        // TODO: GameRepository에 적절한 메서드 추가 필요
-        // 임시로 모든 게임을 가져와서 정렬하는 방식으로 구현
-        return gameRepository.findAll().stream()
-                .sorted((a, b) -> b.getGameRank().compareTo(a.getGameRank()))  // 게임 순위로 정렬
-                .skip(page * limit)  // 페이지네이션
-                .limit(limit)  // limit 개수만큼만 가져오기
+    public List<BoardgameTopDto> getBoardgameTop(String sortBy, Integer limit) {
+        // 기본값 설정
+        if (limit == null || limit <= 0) {
+            limit = 9;
+        }
+
+        List<Game> games;
+        if ("game_rank".equals(sortBy)) {
+            // 게임 순위로 정렬
+            games = gameRepository.findTopGamesByRank(limit);
+        } else if ("game_avg_rating".equals(sortBy)) {
+            // 평균 평점으로 정렬
+            games = gameRepository.findTopGamesByRating(limit);
+        } else {
+            // 기본값은 게임 순위로 정렬
+            games = gameRepository.findTopGamesByRank(limit);
+        }
+
+        // DTO로 변환
+        return games.stream()
                 .map(game -> new BoardgameTopDto(
                     game.getGameId(),
                     game.getGameImage()

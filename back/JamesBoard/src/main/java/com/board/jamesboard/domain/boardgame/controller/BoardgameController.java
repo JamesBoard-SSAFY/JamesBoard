@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.board.jamesboard.domain.boardgame.dto.BoardgameDetailDto;
 import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
 import com.board.jamesboard.domain.boardgame.dto.BoardgameTopDto;
-import com.board.jamesboard.domain.boardgame.dto.BoardgameType;
 import com.board.jamesboard.domain.boardgame.service.BoardgameDetailService;
 import com.board.jamesboard.domain.boardgame.service.BoardgameRecommendService;
 import com.board.jamesboard.domain.boardgame.service.BoardgameSearchService;
@@ -61,14 +60,11 @@ public class BoardgameController {
     }
 
     @GetMapping("/top")
-    @Operation(summary = "상위 N개의 게임 조회", description = "보드게임 id와 이미지 반환 기본값 10으로 설정")
+    @Operation(summary = "상위 N개의 게임 조회", description = "bdg는 game_rank, jamesboard는 game_avg_rating입력 (반환 기본값은 9)")
     public ResponseEntity<List<BoardgameTopDto>> getTopBoardgame(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Long boardId,
-            @RequestParam(required = false) BoardgameType boardgameType,
-            @RequestParam(required = false) Long page,
-            @RequestParam(defaultValue = "10") Integer limit) {
-        return ResponseEntity.ok(boardgameTopService.getBoardgameTop(userId, boardId, boardgameType, page, limit));
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "9") Integer limit) {
+        return ResponseEntity.ok(boardgameTopService.getBoardgameTop(sortBy, limit));
     }
 
     @GetMapping("/{gameId}")
