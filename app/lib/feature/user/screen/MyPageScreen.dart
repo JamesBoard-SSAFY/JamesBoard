@@ -7,6 +7,7 @@ import '../../../util/CommonUtils.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
+import 'MyPagePlayTime.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -358,12 +359,25 @@ class _MyPageScreenState extends State<MyPageScreen>
                     fontFamily: 'PretendardBold',
                   ),
                 ),
-                Text(
-                  "더보기",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: mainGrey,
-                    fontFamily: 'PretendardBold',
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyPagePlayTime(
+                          title: "작전 누적 시간 순위",
+                          gameData: gameData,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "더보기",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: mainGrey,
+                      fontFamily: 'PretendardBold',
+                    ),
                   ),
                 ),
               ],
