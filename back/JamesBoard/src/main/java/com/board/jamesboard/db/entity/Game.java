@@ -85,6 +85,7 @@ public class Game {
     private Float gameAvgRating;
 
     @Column(name = "game_review_count")
+
     private Integer gameReviewCount;
 
     @OneToMany(mappedBy = "game")

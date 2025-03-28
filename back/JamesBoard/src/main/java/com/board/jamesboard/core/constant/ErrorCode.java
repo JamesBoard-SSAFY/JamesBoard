@@ -1,7 +1,8 @@
 package com.board.jamesboard.core.constant;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
@@ -17,6 +18,7 @@ public enum ErrorCode {
 
     // 404 NOT_FOUND
     USER_NOT_FOUND("해당 유저를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+    GAME_NOT_FOUND("해당 게임을 찾을 수 없습니다", HttpStatus.NOT_FOUND),
 
     // 500 SERVER_ERROR
     INTERNAL_SERVER_ERROR("서버 오류가 발생했습니다", HttpStatus.INTERNAL_SERVER_ERROR);
