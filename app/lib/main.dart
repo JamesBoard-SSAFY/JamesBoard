@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/boardgame/screen/AddArchieveScreenEx.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListArchieveScreenEx.dart';
@@ -21,6 +22,8 @@ final logger = Logger(
   printEmojis: true,
   printTime: true,
 ));
+
+final storage = FlutterSecureStorage();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
