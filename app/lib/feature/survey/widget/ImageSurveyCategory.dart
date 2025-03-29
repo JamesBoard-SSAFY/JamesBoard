@@ -29,7 +29,7 @@ class _ImageSurveyCategory extends State<ImageSurveyCategory> {
           physics: NeverScrollableScrollPhysics(), // 내부 스크롤을 비활성화
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, // 3개의 열
-            childAspectRatio: 0.9, // 정사각형 비율
+            childAspectRatio: 0.85, // 정사각형 비율
             crossAxisSpacing: 8, // 열 간 간격
             mainAxisSpacing: 16, // 행 간 간격
           ),
