@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widget/ItemRecommendBoardGameInfo.dart';
+import 'BoardGameDetailScreen.dart';
 
 class RecommendGameScreen extends StatelessWidget {
   final List<Map<String, dynamic>> gameList = [
@@ -56,19 +57,27 @@ class RecommendGameScreen extends StatelessWidget {
       itemCount: gameList.length,
       itemBuilder: (context, index) {
         final game = gameList[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-          child: ItemRecommendBoardGameInfo(
-            gameId: game['gameId'],
-            imageUrl: game['imageUrl'],
-            gameName: game['gameName'],
-            gameCategory: game['gameCategory'],
-            gameTheme: game['gameTheme'],
-            gameMinPlayer: game['gameMinPlayer'],
-            gameMaxPlayer: game['gameMaxPlayer'],
-            gameDifficulty: game['gameDifficulty'],
-            gamePlayTime: game['gamePlayTime'],
-            gameDescription: game['gameDescription'],
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BoardGameDetailScreen()),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+            child: ItemRecommendBoardGameInfo(
+              gameId: game['gameId'],
+              imageUrl: game['imageUrl'],
+              gameName: game['gameName'],
+              gameCategory: game['gameCategory'],
+              gameTheme: game['gameTheme'],
+              gameMinPlayer: game['gameMinPlayer'],
+              gameMaxPlayer: game['gameMaxPlayer'],
+              gameDifficulty: game['gameDifficulty'],
+              gamePlayTime: game['gamePlayTime'],
+              gameDescription: game['gameDescription'],
+            ),
           ),
         );
       },

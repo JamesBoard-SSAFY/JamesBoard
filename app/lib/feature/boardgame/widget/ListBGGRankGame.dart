@@ -8,12 +8,14 @@ import '../../../theme/Colors.dart';
 class ListBGGRankGame extends StatefulWidget {
   final List<String> imageUrls; // 게임 이미지 URL 리스트
   final String title;
+  final Function(String id) onImageTap; // 클릭 시 수행할 작업
 
-  const ListBGGRankGame({
-    Key? key,
-    required this.imageUrls,
-    required this.title,
-  }) : super(key: key);
+  const ListBGGRankGame(
+      {Key? key,
+      required this.imageUrls,
+      required this.title,
+      required this.onImageTap})
+      : super(key: key);
 
   @override
   State<ListBGGRankGame> createState() => _ListHomeHorizontalGameState();
@@ -41,7 +43,9 @@ class _ListHomeHorizontalGameState extends State<ListBGGRankGame> {
           ),
           SizedBox(height: 20),
           CardHomeReview(
-              images: AppDummyData.images, onImageTap: (String id) {})
+            images: AppDummyData.images,
+            onImageTap: (String id) => {widget.onImageTap(id)},
+          )
         ],
       ),
     );

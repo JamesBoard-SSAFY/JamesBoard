@@ -8,12 +8,14 @@ import 'CardHomeTopTen.dart';
 class ListTopTenGame extends StatefulWidget {
   final List<String> imageUrls; // 게임 이미지 URL 리스트
   final String title;
+  final Function(String id) onImageTap; // 클릭 시 수행할 작업
 
-  const ListTopTenGame({
-    Key? key,
-    required this.imageUrls,
-    required this.title,
-  }) : super(key: key);
+  const ListTopTenGame(
+      {Key? key,
+      required this.imageUrls,
+      required this.title,
+      required this.onImageTap})
+      : super(key: key);
 
   @override
   State<ListTopTenGame> createState() => _ListHomeHorizontalGameState();
@@ -41,7 +43,9 @@ class _ListHomeHorizontalGameState extends State<ListTopTenGame> {
           ),
           SizedBox(height: 20),
           CardHomeTopTen(
-              images: AppDummyData.images, onImageTap: (String id) {})
+            images: AppDummyData.images,
+            onImageTap: (String id) => widget.onImageTap(id),
+          )
         ],
       ),
     );

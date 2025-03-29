@@ -6,6 +6,7 @@ import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 
 import '../widget/CardHomeSuggestion.dart';
+import 'BoardGameDetailScreen.dart';
 
 class BoardGameHomeScreen extends StatefulWidget {
   const BoardGameHomeScreen({super.key});
@@ -15,10 +16,14 @@ class BoardGameHomeScreen extends StatefulWidget {
 }
 
 class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
-  // 이미지 클릭 시 수행할 작업
   void onImageTap(String id) {
     // id로 수행할 작업을 여기에 작성
     print('Image $id clicked!');
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BoardGameDetailScreen()),
+    );
   }
 
   List<String> makeImageUrlOrder() {
@@ -57,7 +62,10 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
             );
           }),
           ListTopTenGame(
-              imageUrls: AppDummyData.imageUrls, title: AppString.agentTop),
+            imageUrls: AppDummyData.imageUrls,
+            title: AppString.agentTop,
+            onImageTap: onImageTap,
+          ),
           ...AppDummyData.numOfPersonTitles.map((title) {
             return ListHomeHorizontalGame(
               imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
@@ -68,7 +76,10 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
             );
           }),
           ListBGGRankGame(
-              imageUrls: AppDummyData.imageUrls, title: AppString.bggRank),
+            imageUrls: AppDummyData.imageUrls,
+            title: AppString.bggRank,
+            onImageTap: onImageTap,
+          ),
           ...AppDummyData.missionLevelTitles.map((title) {
             return ListHomeHorizontalGame(
               imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
