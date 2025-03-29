@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/datasource/model/request/KakaoTokenLoginRequest.dart';
+import 'package:jamesboard/datasource/model/request/RenewalAccessTokenRequest.dart';
+import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -10,6 +14,7 @@ class LoginViewModel {
   LoginViewModel(this._loginRepository);
 
   Future<void> login(BuildContext context) async {
+    logger.d('login() 실행 시작');
     try {
       OAuthToken token;
 
@@ -19,14 +24,17 @@ class LoginViewModel {
       } else {
         token = await UserApi.instance.loginWithKakaoAccount();
       }
-      logger.d('카카오 로그인 성공! 액세스 토큰: ${token.accessToken}');
+      logger.d('카카오 로그인 성공! accessToken: ${token.accessToken}');
+      logger.d('카카오 로그인 성공! refreshToken: ${token.refreshToken}');
 
       // 카카오 콜백
-      final response = await _loginRepository.kakaoCallback(token.accessToken);
+      final request =
+          KakaoTokenLoginRequest(kakaoAccessToken: token.accessToken);
+      final response = await _loginRepository.kakaoTokenLogin(request);
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('accessToken', response.accessToken);
-      await prefs.setInt('userId', response.userId);
+      await storage.write(key: 'accessToken', value: response.accessToken);
+      await storage.write(key: 'refreshToken', value: response.refreshToken);
+      await storage.write(key: 'userId', value: response.userId.toString());
 
       if (context.mounted) {
         Navigator.pushReplacement(
@@ -36,15 +44,76 @@ class LoginViewModel {
           ),
         );
       }
+    } on DioError catch (e) {
+      logger.e('서버 로그인 API 실패 : $e');
+      final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
+      if (scaffoldMessenger != null) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(content: Text('서버 로그인 실패')),
+        );
+      }
     } catch (e) {
-      logger.d('카카오 로그인 실패: $e');
+      logger.d('알 수 없는 로그인 실패: $e');
 
       final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
       if (scaffoldMessenger != null) {
         scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('로그인 중 오류가 발생했습니다.')),
+          const SnackBar(content: Text('알 수 없는 로그인 실패')),
         );
       }
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    try {
+      await _loginRepository.logout();
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logger.d('로그아웃 시 401 발생 - 토큰 갱신 시도');
+
+        final refreshToken = await storage.read(key: 'refreshToken');
+
+        if (refreshToken == null || refreshToken.isEmpty) {
+          logger.e('Refresh token이 존재하지 않습니다.');
+          rethrow;
+        }
+
+        final request = RenewalAccessTokenRequest(refreshToken: refreshToken);
+        final renewalResponse =
+            await _loginRepository.renewalAccessToken(request);
+
+        storage.deleteAll();
+
+        if (renewalResponse.accessToken.isNotEmpty) {
+          await storage.write(
+              key: 'accessToken', value: renewalResponse.accessToken);
+          await storage.write(
+              key: 'refreshToken', value: renewalResponse.refreshToken);
+          await storage.write(
+              key: 'userId', value: renewalResponse.userId.toString());
+
+          await _loginRepository.logout();
+        } else {
+          logger.e('토큰 갱신 실패로 로그아웃 재시도 불가');
+          rethrow;
+        }
+      } else {
+        // 401 외 다른 에러는 그대로 throw
+        rethrow;
+      }
+    }
+
+    await storage.deleteAll();
+
+    await UserApi.instance.logout();
+    logger.d('카카오 로그아웃 성공');
+
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (route) => false,
+      );
     }
   }
 }
