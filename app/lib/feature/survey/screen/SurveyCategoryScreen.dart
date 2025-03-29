@@ -91,6 +91,11 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
         ),
         child: ButtonCommonPrimaryBottom(
           text: '선택',
+          onPressed: selectedId != null
+              ? () {
+                  print('object');
+                }
+              : null,
         ),
       ),
     );

@@ -1,14 +1,14 @@
 import 'package:jamesboard/datasource/api/SurveyService.dart';
 import 'package:jamesboard/util/DioProviderUtil.dart';
 
-class UserRepository {
-  final UserService _service;
+class SurveyRepository {
+  final SurveyService _service;
 
-  UserRepository._(this._service);
+  SurveyRepository._(this._service);
 
-  factory UserRepository.create() {
-    final service = UserService(DioProviderUtil.dio);
-    return UserRepository._(service);
+  factory SurveyRepository.create() {
+    final service = SurveyService(DioProviderUtil.dio);
+    return SurveyRepository._(service);
   }
 
   // 유저 선호 게임 조회

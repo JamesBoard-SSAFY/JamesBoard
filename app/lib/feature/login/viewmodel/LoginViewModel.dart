@@ -5,7 +5,7 @@ import 'package:jamesboard/datasource/model/request/RenewalAccessTokenRequest.da
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
-import 'package:jamesboard/repository/UserRepository.dart';
+import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,14 +13,14 @@ import '../../survey/screen/SurveyCategoryScreen.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final LoginRepository _loginRepository;
-  final UserRepository _userRepository;
+  final SurveyRepository _surveyRepository;
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
   LoginViewModel(
     this._loginRepository,
-    this._userRepository,
+    this._surveyRepository,
   );
 
   void _setLoading(bool value) {
@@ -55,7 +55,7 @@ class LoginViewModel extends ChangeNotifier {
 
       final userId = response.userId;
       final preferBoardGameId =
-          await _userRepository.checkUserPreferBoardGame(userId);
+          await _surveyRepository.checkUserPreferBoardGame(userId);
 
       logger.d('유저 선호 게임 ID : $preferBoardGameId');
 

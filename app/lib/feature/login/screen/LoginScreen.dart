@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/login/viewmodel/LoginViewModel.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
-import 'package:jamesboard/repository/UserRepository.dart';
+import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import '../widget/CardLoginExplanation.dart';
 import '../widget/KakaoLoginButton.dart';
@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return ChangeNotifierProvider(
       create: (_) => LoginViewModel(
         LoginRepository.create(),
-        UserRepository.create(),
+        SurveyRepository.create(),
       ),
       child: Consumer<LoginViewModel>(
         builder: (context, viewModel, _) {
