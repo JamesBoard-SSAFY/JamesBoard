@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:jamesboard/datasource/model/request/KakaoTokenLoginRequest.dart';
 import 'package:jamesboard/datasource/model/response/RenewalAccessTokenResponse.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
@@ -29,5 +30,11 @@ abstract class LoginService {
   @GET("login/oauth2/code/kakao")
   Future<RenewalAccessTokenResponse> kakaoCallback(
     @Query("code") String kakaoAccessToken,
+  );
+
+  // 카카오 토큰 로그인
+  @POST("/api/auth/kakao-token")
+  Future<RenewalAccessTokenResponse> kakaoTokenLogin(
+    @Body() KakaoTokenLoginRequest request,
   );
 }
