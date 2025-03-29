@@ -255,4 +255,23 @@ public class AuthServiceImpl implements AuthService {
             throw e;
         }
     }
+
+    @Override
+    @Transactional
+    public RefreshTokenResponseDto processKakaoTokenLogin(String kakaoAccessToken) {
+        log.info("카카오 토큰 로그인 프로세스 시작");
+        try {
+            //엑세스 토큰으로 사용자 정보 요청
+            Map<String, Object> userInfo = getKakaoUserInfo(kakaoAccessToken);
+            log.info("카카오 사용자 정보 : id={}", userInfo.get("id"));
+
+            //jwt 생성 및 반환
+            return processUserLogin(userInfo);
+        } catch (Exception e) {
+            log.error("카카오 토큰 로그인 처리 중 오류 발생 {}", e.getMessage(), e);
+            throw e;
+        }
+
+    }
+
 }
