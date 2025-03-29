@@ -369,4 +369,17 @@ class AppDummyData {
     }
   ];
 
+  //MissionRecordScreen
+  static final Map<String, dynamic> missionReportGameData = {
+    "id": 1,
+    'name': '클루',
+    'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
+    'minAge': '15',
+    'year': '1997',
+    'minPlayer': '2',
+    'maxPlayer': '4',
+    'difficulty': 1,
+    'playTime': '40',
+    'genre': ['추리', '전략'],
+  };
 }
