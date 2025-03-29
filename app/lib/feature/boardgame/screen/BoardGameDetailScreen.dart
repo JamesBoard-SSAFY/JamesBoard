@@ -6,8 +6,11 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 
+import '../../../util/BottomSheetUtil.dart';
 import '../../../util/dummy/AppDummyData.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
+import '../widget/BottomSheetBoardGameDetailDetail.dart';
+import '../widget/RatingBarBoardGameDetailReview.dart';
 
 class BoardGameDetailScreen extends StatelessWidget {
   @override
@@ -169,12 +172,17 @@ class BoardGameDetailScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      "더보기",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontString.pretendardMedium,
-                        color: mainGrey,
+                    GestureDetector(
+                      onTap: () {
+                        BottomSheetUtil.showBoardGameDetailBottomSheet(context);
+                      },
+                      child: Text(
+                        "더보기",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: FontString.pretendardMedium,
+                          color: mainGrey,
+                        ),
                       ),
                     ),
                   ],
