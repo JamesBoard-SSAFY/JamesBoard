@@ -8,13 +8,23 @@ import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginViewModel {
+class LoginViewModel extends ChangeNotifier {
   final LoginRepository _loginRepository;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
 
   LoginViewModel(this._loginRepository);
 
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   Future<void> login(BuildContext context) async {
     logger.d('login() 실행 시작');
+    _setLoading(true);
+
     try {
       OAuthToken token;
 
@@ -61,6 +71,8 @@ class LoginViewModel {
           const SnackBar(content: Text('알 수 없는 로그인 실패')),
         );
       }
+    } finally {
+      _setLoading(false);
     }
   }
 
