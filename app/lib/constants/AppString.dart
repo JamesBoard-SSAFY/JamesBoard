@@ -93,4 +93,11 @@ class AppString {
   static const String producer = "제작사/제작자";
 
   static const String close = "닫기";
+
+  //BoardGmaeDetailScreen
+  static const String evaluation = "평가";
+  static const String similarMission = "비슷한 임무";
+
+  //BottomSheetBoardGameEvaluation
+  static const String apply = "적용";
 }

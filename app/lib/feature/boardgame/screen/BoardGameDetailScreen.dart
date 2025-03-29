@@ -6,11 +6,10 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 
+import '../../../constants/AppString.dart';
 import '../../../util/BottomSheetUtil.dart';
 import '../../../util/dummy/AppDummyData.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
-import '../widget/BottomSheetBoardGameDetailDetail.dart';
-import '../widget/RatingBarBoardGameDetailReview.dart';
 
 class BoardGameDetailScreen extends StatelessWidget {
   @override
@@ -150,7 +149,7 @@ class BoardGameDetailScreen extends StatelessWidget {
                   right: 20,
                   top: 24,
                 ),
-                child: ButtonCommonPrimaryBottom(text: "평가"),
+                child: ButtonCommonPrimaryBottom(text: AppString.evaluation),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 24, right: 20),
@@ -206,7 +205,7 @@ class BoardGameDetailScreen extends StatelessWidget {
                   right: 20,
                 ),
                 child: Text(
-                  "비슷한 임무",
+                  AppString.similarMission,
                   style: TextStyle(
                     fontSize: 22,
                     fontFamily: FontString.pretendardBold,
