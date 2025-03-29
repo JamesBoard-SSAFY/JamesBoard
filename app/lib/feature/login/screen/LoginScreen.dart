@@ -4,6 +4,7 @@ import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import '../widget/CardLoginExplanation.dart';
 import '../widget/KakaoLoginButton.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,29 +14,41 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final viewModel = LoginViewModel(LoginRepository.create());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainBlack,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 32,
+    return ChangeNotifierProvider(
+      create: (_) => LoginViewModel(LoginRepository.create()),
+      child: Consumer<LoginViewModel>(
+        builder: (context, viewModel, _) {
+          return Scaffold(
+            backgroundColor: mainBlack,
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32),
+                    const Flexible(child: CardLoginExplanation()),
+                    if (viewModel.isLoading)
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(
+                          color: mainGold,
+                        ),
+                      )
+                    else
+                      KakaoLoginButton(
+                        onPressed: () async {
+                          await viewModel.login(context);
+                        },
+                      ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
             ),
-            Flexible(
-              child: CardLoginExplanation(),
-            ),
-            KakaoLoginButton(onPressed: () async {
-              await viewModel.login(context);
-            }),
-            SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
