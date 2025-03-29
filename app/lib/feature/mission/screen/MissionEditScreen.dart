@@ -336,7 +336,10 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ButtonCommonPrimaryBottom(text: AppString.register),
+                  ButtonCommonPrimaryBottom(
+                    text: AppString.register,
+                    onPressed: () {},
+                  ),
                 ],
               ),
             ),
