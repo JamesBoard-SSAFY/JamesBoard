@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/BottomSheetUtil.dart';
 
 class ButtonCommonPrimaryBottom extends StatelessWidget {
   final String text;
@@ -14,7 +15,7 @@ class ButtonCommonPrimaryBottom extends StatelessWidget {
         // 버튼 높이를 내부 컨텐츠 크기에 맞게 조정
         child: ElevatedButton(
           onPressed: () {
-            // 버튼 클릭 시 동작
+            BottomSheetUtil.showRatingBottomSheet(context);
           },
           style: ElevatedButton.styleFrom(
             shape:
