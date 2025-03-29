@@ -69,4 +69,7 @@ class IconPath {
 
   //RatingBoardGameDetail
   static const String starSelected = 'assets/image/ic_star_selected.svg';
+
+  //MissionRecordScreen
+  static const String arrowDown = 'assets/image/icon_arrow_down.svg';
 }

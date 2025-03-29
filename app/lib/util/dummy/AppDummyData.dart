@@ -382,4 +382,11 @@ class AppDummyData {
     'playTime': '40',
     'genre': ['추리', '전략'],
   };
+  static final Map<String, dynamic> missionData = {
+    'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
+    'content': '무심한 듯하지만 디테일은 확실한.  3시간 40분동안 클루 보드게임에 푹 빠져, 시간 가는 줄 몰랐던 그 특별한 순간.',
+    'tag': 3,
+    'date': "2025-03-10",
+  };
+
 }

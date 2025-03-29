@@ -42,4 +42,25 @@ class CommonUtils {
         return Colors.black; // 기본 색상 (알 수 없는 장르에 대한 색상)
     }
   }
+
+  // 날짜 문자열에서 "일(day)" 추출 (예: "2025-03-10" → "10")
+  static String extractDay(String date) {
+    try {
+      DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      return parsedDate.day.toString();
+    } catch (e) {
+      return ''; // 에러 발생 시 빈 문자열 반환
+    }
+  }
+
+  // 날짜 문자열에서 요일의 첫 글자 반환 (예: "2025-03-10" → "월")
+  static String extractDayOfWeek(String date) {
+    try {
+      DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      List<String> weekDays = ["일", "월", "화", "수", "목", "금", "토"];
+      return weekDays[parsedDate.weekday % 7]; // DateTime에서 요일(1=월 ~ 7=일) 변환
+    } catch (e) {
+      return ''; // 에러 발생 시 빈 문자열 반환
+    }
+  }
 }
