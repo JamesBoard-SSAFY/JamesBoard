@@ -1,4 +1,4 @@
-import 'package:jamesboard/datasource/api/UserService.dart';
+import 'package:jamesboard/datasource/api/SurveyService.dart';
 import 'package:jamesboard/util/DioProviderUtil.dart';
 
 class UserRepository {

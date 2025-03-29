@@ -4,7 +4,12 @@ import 'package:jamesboard/theme/Colors.dart';
 
 class ButtonCommonPrimaryBottom extends StatelessWidget {
   final String text;
-  const ButtonCommonPrimaryBottom({super.key, required this.text});
+  final VoidCallback? onPressed;
+  const ButtonCommonPrimaryBottom({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class ButtonCommonPrimaryBottom extends StatelessWidget {
         // 버튼 높이를 내부 컨텐츠 크기에 맞게 조정
         child: ElevatedButton(
           onPressed: () {
-            // 버튼 클릭 시 동작
+            onPressed;
           },
           style: ElevatedButton.styleFrom(
             shape:
