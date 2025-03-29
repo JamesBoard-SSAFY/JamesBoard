@@ -21,6 +21,12 @@ public class UserGameArchiveResponseDto {
     @Schema(description = "게임 카테고리 목록", example = "[\"전략\", \"추리\"]")
     private List<String> gameCategoryList;
 
+    @Schema(description = "최소 연령", example = "15")
+    private Integer minAge;
+
+    @Schema(description = "출시 연도", example = "1997")
+    private Integer gameYear;
+
     @Schema(description = "최소 플레이어 수", example = "2")
     private Integer minPlayer;
 

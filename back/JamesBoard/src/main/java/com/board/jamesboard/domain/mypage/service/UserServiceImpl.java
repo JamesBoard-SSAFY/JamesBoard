@@ -137,6 +137,8 @@ public class UserServiceImpl implements UserService {
                     .gameTitle(game.getGameTitle())
                     .gameImage(game.getGameImage())
                     .gameCategoryList(categories)
+                    .minAge(game.getGameMinAge())
+                    .gameYear(game.getGameYear())
                     .minPlayer(game.getMinPlayer())
                     .maxPlayer(game.getMaxPlayer())
                     .difficulty(game.getGameDifficulty())
