@@ -1,38 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
-import'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
+import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import'feature/user/screen/MyPageScreen.dart';
+import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
-      colors: true,
-      printEmojis: true,
-      printTime: true,
-    ));
+  colors: true,
+  printEmojis: true,
+  printTime: true,
+));
 
-void main() {
+final storage = FlutterSecureStorage();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([
+  KakaoSdk.init(nativeAppKey: 'd6a47244edea272d361af14d6d35d274');
+
+  final keyHash = await KakaoSdk.origin;
+  logger.d('현재 사용 중인 키 해시 : $keyHash');
+
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(MyApp());
-  });
+  ]);
+
+  final prefs = await SharedPreferences.getInstance();
+  final accessToken = prefs.getString('accessToken');
+
+  final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({
+    super.key,
+    required this.isLoggedIn,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +66,15 @@ class MyApp extends StatelessWidget {
         );
       },
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'JamesBoard',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         splashColor: Colors.transparent, // 클릭 시 원형 퍼지는 효과 제거
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: isLoggedIn
+          ? const MyHomePage(title: 'Flutter Demo Home Page')
+          : const LoginScreen(),
     );
   }
 }
@@ -68,12 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
-
     RecommendGameScreen(),
     MissionEditScreen(title: AppString.missionEditTitle),
     MissionListScreen(title: AppString.missionListTitle),
     MyPageScreen(),
-
   ];
 
   int _selectedIndex = 0;

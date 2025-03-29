@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/login/viewmodel/LoginViewModel.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class MyPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final LoginViewModel loginViewModel;
 
-  const MyPageAppBar({super.key, required this.title});
+  const MyPageAppBar(
+      {super.key, required this.title, required this.loginViewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,9 @@ class MyPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             colorFilter:
                 ColorFilter.mode(mainWhite, BlendMode.srcIn), // 🔹 색상 변경
           ),
-          onPressed: () {},
+          onPressed: () async {
+            await loginViewModel.logout(context);
+          },
         ),
       ],
     );

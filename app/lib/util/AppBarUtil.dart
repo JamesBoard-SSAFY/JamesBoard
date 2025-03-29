@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/feature/boardgame/widget/appbar/MyPageAppBar.dart';
+import 'package:jamesboard/feature/login/viewmodel/LoginViewModel.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 
 import '../feature/boardgame/widget/appbar/HomeAppBar.dart';
 import '../feature/boardgame/widget/appbar/ListAppBar.dart';
 
 class AppBarUtil {
   static PreferredSizeWidget? getAppBar(int selectedIndex) {
+    final loginViewModel = LoginViewModel(LoginRepository.create());
+
     switch (selectedIndex) {
       case 0: // 홈
         return HomeAppBar(title: AppString.homeAppBarTitle);
@@ -17,7 +21,10 @@ class AppBarUtil {
       case 3: // 프로필 (AppBar가 없음)
         return ListAppBar(title: AppString.missionAppBarTitle);
       default:
-        return MyPageAppBar(title: AppString.myPageAppBarTitle);
+        return MyPageAppBar(
+          title: AppString.myPageAppBarTitle,
+          loginViewModel: loginViewModel,
+        );
     }
   }
 }
