@@ -8,6 +8,8 @@ import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../survey/screen/SurveyCategoryScreen.dart';
+
 class LoginViewModel extends ChangeNotifier {
   final LoginRepository _loginRepository;
   bool _isLoading = false;
@@ -50,7 +52,7 @@ class LoginViewModel extends ChangeNotifier {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const MyHomePage(title: '홈'),
+            builder: (_) => const SurveyCategoryScreen(),
           ),
         );
       }
