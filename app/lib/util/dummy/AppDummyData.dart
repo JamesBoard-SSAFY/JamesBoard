@@ -197,4 +197,36 @@ class AppDummyData {
     "임무 난이도 : 중급": '중급',
     "임무 난이도 : 고급": '고급',
   };
+
+  static final List<Map<String, String>> surveyImages = [
+    {'id': '1', 'img': 'assets/image/survey_category_party.jpg', 'name': '파티'},
+    {
+      'id': '2',
+      'img': 'assets/image/survey_category_strategy.jpg',
+      'name': '전략'
+    },
+    {
+      'id': '3',
+      'img': 'assets/image/survey_category_economy.jpg',
+      'name': '경제'
+    },
+    {
+      'id': '4',
+      'img': 'assets/image/survey_category_adventure.jpg',
+      'name': '모험'
+    },
+    {
+      'id': '5',
+      'img': 'assets/image/survey_category_role_playing.jpg',
+      'name': '롤플레잉'
+    },
+    {'id': '6', 'img': 'assets/image/survey_category_family.jpg', 'name': '가족'},
+    {'id': '7', 'img': 'assets/image/survey_category_reason.jpg', 'name': '추리'},
+    {'id': '8', 'img': 'assets/image/survey_category_war.jpg', 'name': '전쟁'},
+    {
+      'id': '9',
+      'img': 'assets/image/survey_category_abstract_strategy.jpg',
+      'name': '추상전략'
+    },
+  ];
 }
