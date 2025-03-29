@@ -5,6 +5,7 @@ import 'package:jamesboard/datasource/model/request/RenewalAccessTokenRequest.da
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
+import 'package:jamesboard/repository/UserRepository.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,11 +13,15 @@ import '../../survey/screen/SurveyCategoryScreen.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final LoginRepository _loginRepository;
+  final UserRepository _userRepository;
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
-  LoginViewModel(this._loginRepository);
+  LoginViewModel(
+    this._loginRepository,
+    this._userRepository,
+  );
 
   void _setLoading(bool value) {
     _isLoading = value;
@@ -48,11 +53,29 @@ class LoginViewModel extends ChangeNotifier {
       await storage.write(key: 'refreshToken', value: response.refreshToken);
       await storage.write(key: 'userId', value: response.userId.toString());
 
-      if (context.mounted) {
+      final userId = response.userId;
+      final preferBoardGameId =
+          await _userRepository.checkUserPreferBoardGame(userId);
+
+      logger.d('유저 선호 게임 ID : $preferBoardGameId');
+
+      if (!context.mounted) return;
+
+      // 선호 게임 선택 안 함.
+      if (preferBoardGameId == -1) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (_) => const SurveyCategoryScreen(),
+          ),
+        );
+      }
+      // 선호 게임 선택함.
+      else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const MyHomePage(title: '홈'),
           ),
         );
       }
