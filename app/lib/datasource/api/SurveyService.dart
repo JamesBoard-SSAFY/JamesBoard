@@ -7,7 +7,7 @@ import '../model/request/SurveyBoardGameRequest.dart';
 
 part 'SurveyService.g.dart';
 
-@RestApi(baseUrl: "https://j12d205.p.ssafy.io/")
+@RestApi(baseUrl: "https://j12d205.p.ssafy.io")
 abstract class SurveyService {
   factory SurveyService(Dio dio, {String baseUrl}) = _SurveyService;
 
