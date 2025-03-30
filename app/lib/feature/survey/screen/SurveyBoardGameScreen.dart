@@ -1,82 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/datasource/model/request/SurveyBoardGameRequest.dart';
+import 'package:jamesboard/datasource/model/response/SurveyBoardGameResponse.dart';
+import 'package:jamesboard/feature/survey/viewmodel/SurveyViewModel.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/FontString.dart';
 import '../../../widget/button/ButtonCommonPrimaryBottom.dart';
 import '../widget/ButtonSurveyBoardGameName.dart';
 
 class SurveyBoardGameScreen extends StatefulWidget {
-  final String selectedBoardGameId;
+  final String selectedCategory;
 
-  const SurveyBoardGameScreen({super.key, required this.selectedBoardGameId});
+  const SurveyBoardGameScreen({super.key, required this.selectedCategory});
 
   @override
   State<SurveyBoardGameScreen> createState() => _SurveyBoardGameScreenState();
 }
 
 class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
-  String? selectedGameId;
-
-  final List<Map<String, dynamic>> games = [
-    {'gameId': 1, 'gameTitle': '카탄'},
-    {'gameId': 2, 'gameTitle': '티켓 투 라이드'},
-    {'gameId': 3, 'gameTitle': '팬데믹'},
-    {'gameId': 4, 'gameTitle': '아그리콜라'},
-    {'gameId': 5, 'gameTitle': '다 마허'},
-    {'gameId': 6, 'gameTitle': '사무라이'},
-    {'gameId': 7, 'gameTitle': '어콰이어'},
-    {'gameId': 8, 'gameTitle': '보난자'},
-    {'gameId': 9, 'gameTitle': '라'},
-    {'gameId': 10, 'gameTitle': '로보랠리'},
-    {'gameId': 11, 'gameTitle': '팬데믹'},
-    {'gameId': 12, 'gameTitle': '아그리콜라'},
-    {'gameId': 13, 'gameTitle': '카탄'},
-    {'gameId': 14, 'gameTitle': '티켓 투 라이드'},
-    {'gameId': 15, 'gameTitle': '팬데믹'},
-    {'gameId': 16, 'gameTitle': '아그리콜라'},
-    {'gameId': 17, 'gameTitle': '카탄'},
-    {'gameId': 18, 'gameTitle': '티켓 투 라이드'},
-    {'gameId': 19, 'gameTitle': '팬데믹'},
-    {'gameId': 20, 'gameTitle': '아그리콜라'},
-    {'gameId': 21, 'gameTitle': '카탄'},
-    {'gameId': 22, 'gameTitle': '티켓 투 라이드'},
-    {'gameId': 23, 'gameTitle': '팬데믹'},
-    {'gameId': 24, 'gameTitle': '아그리콜라'},
-    {'gameId': 25, 'gameTitle': '카탄'},
-    {'gameId': 26, 'gameTitle': '티켓 투 라이드'},
-    {'gameId': 27, 'gameTitle': '팬데믹'},
-    {'gameId': 28, 'gameTitle': '아그리콜라'},
-    {'gameId': 29, 'gameTitle': '카탄'},
-    {'gameId': 30, 'gameTitle': '티켓 투 라이드'},
-  ];
+  int? selectedGameId;
 
   @override
   Widget build(BuildContext context) {
-    String getCategoryName() {
-      switch (widget.selectedBoardGameId) {
-        case '1':
-          return '파티';
-        case '2':
-          return '전략';
-        case '3':
-          return '경제';
-        case '4':
-          return '모험';
-        case '5':
-          return '롤플레잉';
-        case '6':
-          return '가족';
-        case '7':
-          return '추리';
-        case '8':
-          return '전쟁';
-        case '9':
-          return '추상전략';
-        default:
-          return '아무거나';
-      }
-    }
+    final viewModel = context.watch<SurveyViewModel>();
+    final games = viewModel.boardGames;
 
     return Scaffold(
       backgroundColor: mainBlack,
@@ -95,7 +45,7 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: getCategoryName(),
+                      text: widget.selectedCategory,
                       style: TextStyle(
                         color: mainGold,
                         fontFamily: FontString.pretendardSemiBold,
@@ -137,8 +87,8 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
                 spacing: 8,
                 runSpacing: 12,
                 children: games.map((game) {
-                  final gameId = game['gameId'].toString();
-                  final gameTitle = game['gameTitle'] as String;
+                  final gameId = game.gameId;
+                  final gameTitle = game.gameTitle;
                   final isSelected = selectedGameId == gameId;
 
                   return ButtonSurveyBoardGameName(
@@ -164,8 +114,43 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
           bottom: 32,
         ),
         child: ButtonCommonPrimaryBottom(
-          text: '선택',
-          onPressed: () {},
+          text: '등록',
+          onPressed: selectedGameId != null
+              ? () async {
+                  final userId = await storage.read(key: 'userId');
+
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('로그인이 필요합니다.')),
+                    );
+                    return;
+                  }
+
+                  final request = SurveyBoardGameRequest(
+                    gameId: selectedGameId!,
+                  );
+
+                  final result =
+                      await viewModel.insertUserPreferBoardGameSurvey(
+                    int.parse(userId),
+                    request,
+                  );
+
+                  if (result == int.parse(userId)) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(title: '홈'),
+                      ),
+                      (route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('등록에 실패했어요. 다시 시도해 주세요.')),
+                    );
+                  }
+                }
+              : null,
         ),
       ),
     );
