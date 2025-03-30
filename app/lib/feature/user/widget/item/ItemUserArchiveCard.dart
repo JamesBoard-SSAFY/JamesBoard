@@ -6,99 +6,149 @@ import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import '../../../../util/CommonUtils.dart';
 
 class ItemUserArchiveCard extends StatelessWidget {
-  final Map<String, dynamic> missionData;
+  final List<Map<String, dynamic>> missionDataList;
 
-  const ItemUserArchiveCard({super.key, required this.missionData});
+  const ItemUserArchiveCard({super.key, required this.missionDataList});
 
   @override
   Widget build(BuildContext context) {
-    String day = CommonUtils.extractDay(missionData['date'] ?? '');
-    String dayOfWeek = CommonUtils.extractDayOfWeek(missionData['date'] ?? '');
+    // 월별로 그룹화된 데이터
+    Map<String, List<Map<String, dynamic>>> groupedData = {};
+
+    // missionDataList를 월별로 그룹화
+    for (var missionData in missionDataList) {
+      String month = CommonUtils.extractMonth(missionData['createdAt'] ?? '');
+      if (groupedData.containsKey(month)) {
+        groupedData[month]!.add(missionData);
+      } else {
+        groupedData[month] = [missionData];
+      }
+    }
 
     return Padding(
       padding: const EdgeInsets.only(left: 34), // 왼쪽 여백 확보
-      child: Stack(
-        clipBehavior: Clip.none, // 바깥 요소가 잘리지 않도록 설정
-        children: [
-          // 왼쪽 바깥에 텍스트 배치
-          Positioned(
-            left: -34, // 카드의 왼쪽 바깥으로 이동
-            child: Column(
-              children: [
-                Text(
-                  day,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: mainWhite,
-                    fontFamily: FontString.pretendardMedium,
-                  ),
+      child: Column(
+        children: groupedData.entries.map((entry) {
+          String month = entry.key;
+          List<Map<String, dynamic>> items = entry.value;
+
+          // 월별 텍스트와 해당 월에 속하는 아이템들 출력
+          return Column(
+            children: [
+              Text(
+                month, // 월을 상단에 출력
+                style: TextStyle(
+                  fontSize: 24,
+                  color: mainWhite,
+                  fontFamily: FontString.pretendardSemiBold,
                 ),
-                SizedBox(height: 5),
-                Text(
-                  dayOfWeek,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: mainWhite,
-                    fontFamily: FontString.pretendardMedium,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // 카드 위젯
-          IntrinsicHeight(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: mainGrey, width: 1),
               ),
-              color: Colors.transparent,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    child: Image.network(
-                      missionData['img'] ?? '',
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 16, bottom: 12),
-                    child: Column(
+              SizedBox(
+                height: 20,
+              ),
+
+              // 아이템들 출력
+              Column(
+                children: items.map((missionData) {
+                  String day =
+                      CommonUtils.extractDay(missionData['createdAt'] ?? '');
+                  String dayOfWeek = CommonUtils.extractDayOfWeek(
+                      missionData['createdAt'] ?? '');
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        Text(
-                          missionData['content'] ?? '',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: mainWhite,
-                            fontFamily: FontString.pretendardMedium,
+                        // 왼쪽 바깥에 텍스트 배치
+                        Positioned(
+                          left: -34,
+                          child: Column(
+                            children: [
+                              Text(
+                                day,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: mainWhite,
+                                  fontFamily: FontString.pretendardMedium,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                dayOfWeek,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: mainWhite,
+                                  fontFamily: FontString.pretendardMedium,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(top: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ButtonCommonGameTag(
-                                  text: '${missionData['tag'] ?? 0}판'),
-                            ],
+                        // 카드 위젯
+                        IntrinsicHeight(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: mainGrey, width: 1),
+                            ),
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16),
+                                  ),
+                                  child: Image.network(
+                                    missionData['archiveImage'] ?? '',
+                                    height: 300,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 16, bottom: 12),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        missionData['archiveContent'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: mainWhite,
+                                          fontFamily:
+                                              FontString.pretendardMedium,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 16),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            ButtonCommonGameTag(
+                                                text:
+                                                    '${missionData['archiveGamePlayCount'] ?? 0}판'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        }).toList(),
       ),
     );
   }

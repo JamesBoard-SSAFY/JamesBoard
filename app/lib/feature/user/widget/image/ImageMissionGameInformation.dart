@@ -42,7 +42,7 @@ class ImageMissionGameInformation extends StatelessWidget {
                 topRight: Radius.circular(8),
               ),
               child: Image.network(
-                gameData["img"] ?? '',
+                gameData["gameImage"] ?? '',
                 width: screenWidth,
                 height: imageHeight,
                 fit: BoxFit.cover,
@@ -53,7 +53,7 @@ class ImageMissionGameInformation extends StatelessWidget {
               bottom: 12,
               child: Container(
                 child: Text(
-                  gameData["name"] ?? '',
+                  gameData["gameTitle"] ?? '',
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 44,
@@ -74,7 +74,7 @@ class ImageMissionGameInformation extends StatelessWidget {
             runSpacing: 8.0, // 줄바꿈 시 항목 간의 수직 간격
             children: [
               ButtonCommonGameTag(text: '${gameData["minAge"]}세'),
-              ButtonCommonGameTag(text: '${gameData["year"]}년'),
+              ButtonCommonGameTag(text: '${gameData["gameYear"]}년'),
               ButtonCommonGameTag(
                   text: _getDifficultyText(gameData["difficulty"])),
               ButtonCommonGameTag(
@@ -92,7 +92,7 @@ class ImageMissionGameInformation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                gameData["genre"].join(' · '),
+                gameData["gameCategoryList"].join(' · '),
                 style: TextStyle(
                   color: mainGrey,
                   fontSize: 16,

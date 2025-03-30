@@ -371,22 +371,69 @@ class AppDummyData {
 
   //MissionRecordScreen
   static final Map<String, dynamic> missionReportGameData = {
-    "id": 1,
-    'name': '클루',
-    'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
-    'minAge': '15',
-    'year': '1997',
-    'minPlayer': '2',
-    'maxPlayer': '4',
-    'difficulty': 1,
-    'playTime': '40',
-    'genre': ['추리', '전략'],
+    "gameTitle": "다빈치 코드",
+    "gameImage": "https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__original/img/yR0aoBVKNrAmmCuBeSzQnMflLYg=/0x0/filters:format(jpeg)/pic4718279.jpg",
+    "gameCategoryList": ["전략", "추리"],
+    "minAge": 15,
+    "gameYear": 1997,
+    "minPlayer": 2,
+    "maxPlayer": 4,
+    "difficulty": 2,
+    "playTime": 45,
+    "archiveList": [
+      {
+        "archiveId": 101,
+        "createdAt": "2025-03-10",
+        "archiveContent": "친구들과 플레이했는데 너무 재미있었어요!",
+        "archiveGamePlayCount": 3,
+        "archiveImage": "https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__original/img/g11AF48C6pLizxWPAq9dUEeKltQ=/0x0/filters:format(png)/pic8632666.png"
+      },
+      {
+        "archiveId": 102,
+        "createdAt": "2024-12-15",
+        "archiveContent": "가족과 함께 플레이하면서 전략적인 부분을 많이 배웠어요.",
+        "archiveGamePlayCount": 5,
+        "archiveImage": "https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__original/img/TPKZgpNxB_C73RNbhKyP6UR76X0=/0x0/filters:format(jpeg)/pic3211873.jpg"
+      },
+      {
+        "archiveId": 103,
+        "createdAt": "2023-07-08",
+        "archiveContent": "처음 해봤는데 규칙이 쉬워서 금방 적응할 수 있었어요.",
+        "archiveGamePlayCount": 2,
+        "archiveImage": "https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__original/img/9xV86q5SLQAJtOsr0KKw5G6UOMM=/0x0/filters:format(jpeg)/pic7376875.jpg"
+      },
+      {
+        "archiveId": 104,
+        "createdAt": "2025-03-20",
+        "archiveContent": "2025-03-20오랜만에 다시 해보니 새로운 전략을 발견했어요.",
+        "archiveGamePlayCount": 4,
+        "archiveImage": "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
+      },
+      {
+        "archiveId": 105,
+        "createdAt": "2025-07-20",
+        "archiveContent": "2025-07-20오랜만에 다시 해보니 새로운 전략을 발견했어요.",
+        "archiveGamePlayCount": 4,
+        "archiveImage": "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
+      },
+    ]
   };
-  static final Map<String, dynamic> missionData = {
-    'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
-    'content': '무심한 듯하지만 디테일은 확실한.  3시간 40분동안 클루 보드게임에 푹 빠져, 시간 가는 줄 몰랐던 그 특별한 순간.',
-    'tag': 3,
-    'date': "2025-03-10",
-  };
-
+  // static final Map<String, dynamic> missionReportGameData = {
+  //   "id": 1,
+  //   'name': '클루',
+  //   'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
+  //   'minAge': 15,
+  //   'year': 1997,
+  //   'minPlayer': 2,
+  //   'maxPlayer': 4,
+  //   'difficulty': 1,
+  //   'playTime': 40,
+  //   'genre': ['추리', '전략'],
+  // };
+  // static final Map<String, dynamic> missionData = {
+  //   'img': 'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
+  //   'content': '무심한 듯하지만 디테일은 확실한.  3시간 40분동안 클루 보드게임에 푹 빠져, 시간 가는 줄 몰랐던 그 특별한 순간.',
+  //   'tag': 3,
+  //   'date': "2025-03-10",
+  // };
 }
