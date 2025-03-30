@@ -81,6 +81,13 @@ class AppDummyData {
     "Assemble Mission : 5인 이상",
   ];
 
+  static final Map<String, int> gamePersonMap = {
+    'Solo Mission : 1명': 1,
+    'Duo Mission : 2명': 2,
+    'Team Mission : 3 ~ 4명': 3,
+    'Assemble Mission : 5인 이상': 5,
+  };
+
   static final List<String> missionLevelTitles = [
     "임무 난이도 : 초급",
     "임무 난이도 : 중급",

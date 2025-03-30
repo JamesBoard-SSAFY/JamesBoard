@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jamesboard/theme/Colors.dart';
-import 'package:provider/provider.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListBGGRankGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListHomeHorizontalGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
-import '../../../repository/BoardGameRepository.dart';
-import '../viewmodel/BoardGameViewModel.dart';
 import '../widget/CardHomeSuggestion.dart';
 import 'BoardGameDetailScreen.dart';
 
@@ -54,7 +50,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
               queryParameters: {
                 'category': AppDummyData.titleCategoryMap[title],
               },
-              title: AppDummyData.titleCategoryMap[title]!,
+              title: title,
               updateFilter: updateFilter,
               updateCategory: AppString.genre,
               selectedFilters: AppDummyData.selectedFilters,
@@ -65,12 +61,12 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
             onImageTap: onImageTap,
             imageUrls: AppDummyData.imageUrls,
           ),
-          ...AppDummyData.numOfPersonTitles.map((title) {
+          ...AppDummyData.numOfPersonTitles.map((numTitle) {
             return ListHomeHorizontalGame(
               queryParameters: {
-                'category': AppDummyData.titleCategoryMap[title],
+                'minPlayers': AppDummyData.gamePersonMap[numTitle],
               },
-              title: title,
+              title: numTitle,
               updateFilter: updateFilter,
               updateCategory: AppString.numOfPerson,
               selectedFilters: AppDummyData.selectedFilters,

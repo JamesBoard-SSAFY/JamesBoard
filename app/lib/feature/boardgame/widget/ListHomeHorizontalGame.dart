@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
+import 'package:jamesboard/main.dart';
 import 'package:provider/provider.dart';
 
 import '../../../theme/Colors.dart';
@@ -51,6 +52,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
         }
 
         final games = viewModel.categoryGames[widget.title] ?? [];
+
+        logger.d("${widget.title} games ${games}");
 
         return Container(
           margin: EdgeInsets.only(top: 32, left: 20),
