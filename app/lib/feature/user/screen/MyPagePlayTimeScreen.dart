@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
 
-class MyPagePlayTime extends StatefulWidget {
+class MyPagePlayTimeScreen extends StatefulWidget {
   final String title;
   final List<Map<String, String>> gameData;
 
-  const MyPagePlayTime({
+  const MyPagePlayTimeScreen({
     super.key,
     required this.title,
     required this.gameData,
   });
 
   @override
-  State<MyPagePlayTime> createState() => _MyPagePlayTimeState();
+  State<MyPagePlayTimeScreen> createState() => _MyPagePlayTimeScreenState();
 }
 
-class _MyPagePlayTimeState extends State<MyPagePlayTime> {
+class _MyPagePlayTimeScreenState extends State<MyPagePlayTimeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

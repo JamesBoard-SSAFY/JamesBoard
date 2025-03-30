@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/feature/user/screen/MissionRecordScreen.dart';
 
 class ImageCommonMyPageGameCard extends StatelessWidget {
   final List<Map<String, String>> images;
@@ -25,7 +26,15 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
         final item = images[index];
 
         return GestureDetector(
-          onTap: () => onTap(item['id']!), // 클릭 시 id 전달
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    MissionRecordScreen(id: int.parse(item['id']!)),
+              ),
+            );
+          },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Image.network(

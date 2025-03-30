@@ -94,10 +94,12 @@ class AppString {
 
   static const String close = "닫기";
 
-  //BoardGmaeDetailScreen
+  //BoardGameDetailScreen
   static const String evaluation = "평가";
   static const String similarMission = "비슷한 임무";
 
   //BottomSheetBoardGameEvaluation
   static const String apply = "적용";
+  //MyPageUserEditScreen
+  static const String changeUserName = "변경";
 }

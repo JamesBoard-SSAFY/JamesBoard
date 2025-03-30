@@ -71,4 +71,7 @@ class IconPath {
   static const String starSelected = 'assets/image/ic_star_selected.svg';
   static const String starUnSelected = 'assets/image/ic_star_unSelected.svg';
   static const String starHalfFilled = 'assets/image/ic_star_half_filled.svg';
+
+  //MissionRecordScreen
+  static const String arrowDown = 'assets/image/icon_arrow_down.svg';
 }

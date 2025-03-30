@@ -12,7 +12,8 @@ class CommonUtils {
     String formattedTime = DateFormat('a hh:mm').format(currentTime);
 
     // 'AM'은 '오전', 'PM'은 '오후'로 변환
-    formattedTime = formattedTime.replaceFirst('AM', '오전').replaceFirst('PM', '오후');
+    formattedTime =
+        formattedTime.replaceFirst('AM', '오전').replaceFirst('PM', '오후');
 
     return formattedTime;
   }
@@ -41,5 +42,78 @@ class CommonUtils {
       default:
         return Colors.black; // 기본 색상 (알 수 없는 장르에 대한 색상)
     }
+  }
+
+  // 날짜 문자열에서 "일(day)" 추출 (예: "2025-03-10" → "10")
+  static String extractDay(String date) {
+    try {
+      DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      return parsedDate.day.toString();
+    } catch (e) {
+      return ''; // 에러 발생 시 빈 문자열 반환
+    }
+  }
+
+  // 날짜 문자열에서 요일의 첫 글자 반환 (예: "2025-03-10" → "월")
+  static String extractDayOfWeek(String date) {
+    try {
+      DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      List<String> weekDays = ["일", "월", "화", "수", "목", "금", "토"];
+      return weekDays[parsedDate.weekday % 7]; // DateTime에서 요일(1=월 ~ 7=일) 변환
+    } catch (e) {
+      return ''; // 에러 발생 시 빈 문자열 반환
+    }
+  }
+
+  // 날짜 문자열에서 달 내용 추출
+  static String extractMonth(String dateStr) {
+    return ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'][DateTime.parse(dateStr).month - 1];
+  }
+
+  // 연도 목록을 추출하는 메서드
+  static List<String> extractAvailableYears(
+      List<Map<String, dynamic>> archiveList) {
+    Set<String> years = {};
+    for (var item in archiveList) {
+      String createdAt = item["createdAt"];
+      String year = createdAt.split("-")[0]; // "2025-03-10" → "2025"
+      years.add("$year년");
+    }
+    return years.toList()..sort((a, b) => b.compareTo(a)); // 최신 연도부터 정렬
+  }
+
+  // 선택된 연도에 대한 월 목록을 추출하는 메서드
+  static List<String> extractAvailableMonths(
+      List<Map<String, dynamic>> archiveList, String selectedYear) {
+    Set<String> months = {"전체"};
+    for (var item in archiveList) {
+      String createdAt = item["createdAt"];
+      List<String> dateParts = createdAt.split("-");
+      String year = dateParts[0];
+      String month = dateParts[1].replaceFirst(RegExp("^0"), ""); // "03" → "3"
+
+      if ("$year년" == selectedYear) {
+        months.add("$month월");
+      }
+    }
+    return months.toList()..sort((a, b) => a.compareTo(b)); // 1월부터 정렬
+  }
+
+  // 연도 및 월에 따라 데이터 필터링
+  static List<Map<String, dynamic>> filterArchiveList(
+      List<dynamic> archiveList, String selectedYear, String selectedMonth) {
+    return archiveList
+        .where((item) {
+          if (item["createdAt"] == null) return false;
+
+          DateTime date = DateTime.parse(item["createdAt"]);
+          bool yearMatch = "${date.year}년" == selectedYear;
+          bool monthMatch =
+              selectedMonth == "전체" || "${date.month}월" == selectedMonth;
+
+          return yearMatch && monthMatch;
+        })
+        .map((item) => item as Map<String, dynamic>)
+        .toList();
   }
 }

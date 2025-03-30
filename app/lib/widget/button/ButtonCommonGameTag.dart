@@ -19,7 +19,7 @@ class ButtonCommonGameTag extends StatelessWidget {
         style: TextStyle(
           color: mainGold,
           fontSize: 16,
-          fontFamily: FontString.pretendardSemiBold,
+          fontFamily: FontString.pretendardMedium,
           backgroundColor: secondaryBlack,
         ),
       ),
