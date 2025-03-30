@@ -20,11 +20,14 @@ class ButtonSurveyBoardGameName extends StatelessWidget {
     return OutlinedButton(
       onPressed: onTap,
       style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          isSelected ? mainGold : Colors.transparent,
+        ),
         padding: MaterialStateProperty.all(
           EdgeInsets.all(10),
         ),
         foregroundColor: MaterialStateProperty.all(
-          isSelected ? mainGold : mainWhite,
+          isSelected ? mainBlack : mainWhite,
         ),
         side: MaterialStateProperty.all(
           BorderSide(
@@ -41,7 +44,9 @@ class ButtonSurveyBoardGameName extends StatelessWidget {
         text,
         style: TextStyle(
           fontSize: 16,
-          fontFamily: FontString.pretendardMedium,
+          fontFamily: isSelected
+              ? FontString.pretendardBold
+              : FontString.pretendardMedium,
         ),
       ),
     );
