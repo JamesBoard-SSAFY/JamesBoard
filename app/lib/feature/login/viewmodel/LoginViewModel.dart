@@ -53,6 +53,8 @@ class LoginViewModel extends ChangeNotifier {
       await storage.write(key: 'refreshToken', value: response.refreshToken);
       await storage.write(key: 'userId', value: response.userId.toString());
 
+      logger.d('우리꺼 accessToken : ${response.accessToken}');
+
       final userId = response.userId;
       final preferBoardGameId =
           await _surveyRepository.checkUserPreferBoardGame(userId);
