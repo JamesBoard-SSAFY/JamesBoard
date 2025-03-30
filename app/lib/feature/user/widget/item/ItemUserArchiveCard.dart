@@ -25,30 +25,34 @@ class ItemUserArchiveCard extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 34), // 왼쪽 여백 확보
-      child: Column(
-        children: groupedData.entries.map((entry) {
-          String month = entry.key;
-          List<Map<String, dynamic>> items = entry.value;
-
-          // 월별 텍스트와 해당 월에 속하는 아이템들 출력
-          return Column(
-            children: [
-              Text(
-                month, // 월을 상단에 출력
-                style: TextStyle(
-                  fontSize: 24,
-                  color: mainWhite,
-                  fontFamily: FontString.pretendardSemiBold,
+    return Column(
+      children: groupedData.entries.map((entry) {
+        String month = entry.key;
+        List<Map<String, dynamic>> items = entry.value;
+        // 월별 텍스트와 해당 월에 속하는 아이템들 출력
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  month, // 월을 상단에 출력
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: mainWhite,
+                    fontFamily: FontString.pretendardSemiBold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
 
-              // 아이템들 출력
-              Column(
+            // 아이템들 출력
+            Padding(
+              padding: const EdgeInsets.only(left: 34),
+              child: Column(
                 children: items.map((missionData) {
                   String day =
                       CommonUtils.extractDay(missionData['createdAt'] ?? '');
@@ -146,10 +150,10 @@ class ItemUserArchiveCard extends StatelessWidget {
                   );
                 }).toList(),
               ),
-            ],
-          );
-        }).toList(),
-      ),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }

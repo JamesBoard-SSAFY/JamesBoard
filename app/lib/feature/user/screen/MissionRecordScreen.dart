@@ -187,13 +187,18 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 8, 20),
                 child: filteredArchiveList.isEmpty
-                    ? Text(
-                        '등록된 임무 보고가 없습니다.',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: mainWhite,
-                          fontFamily: FontString.pretendardSemiBold,
-                        ),
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '등록된 임무 보고가 없습니다.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: mainWhite,
+                              fontFamily: FontString.pretendardSemiBold,
+                            ),
+                          ),
+                        ],
                       )
                     : Column(
                         children: [
