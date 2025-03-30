@@ -8,7 +8,6 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
   final String imageUrl;
   final String gameName;
   final String gameCategory;
-  final String gameTheme;
   final int gameMinPlayer;
   final int gameMaxPlayer;
   final int gameDifficulty;
@@ -20,7 +19,6 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
       required this.imageUrl,
       required this.gameName,
       required this.gameCategory,
-      required this.gameTheme,
       required this.gameMinPlayer,
       required this.gameMaxPlayer,
       required this.gameDifficulty,
@@ -116,7 +114,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     runSpacing: 8.0,
                     children: [
                       ButtonCommonGameTag(text: gameCategory),
-                      ButtonCommonGameTag(text: gameTheme),
+                      // ButtonCommonGameTag(text: gameTheme),
                       ButtonCommonGameTag(
                           text: '$gameMinPlayer ~ $gameMaxPlayer명'),
                       ButtonCommonGameTag(
