@@ -8,11 +8,15 @@ import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
+import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
+import 'feature/survey/viewmodel/SurveyViewModel.dart';
 import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +49,21 @@ void main() async {
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SurveyViewModel(
+            SurveyRepository.create(),
+            LoginRepository.create(),
+          ),
+        ),
+      ],
+      child: MyApp(
+        isLoggedIn: isLoggedIn,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

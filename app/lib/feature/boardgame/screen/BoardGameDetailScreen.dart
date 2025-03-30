@@ -149,7 +149,11 @@ class BoardGameDetailScreen extends StatelessWidget {
                   right: 20,
                   top: 24,
                 ),
-                child: ButtonCommonPrimaryBottom(text: AppString.evaluation),
+                child: ButtonCommonPrimaryBottom(
+                  text: AppString.evaluation,
+                  onPressed: () {},
+                  disableWithOpacity: false,
+                ),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 24, right: 20),

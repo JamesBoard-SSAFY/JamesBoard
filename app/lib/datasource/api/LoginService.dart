@@ -8,7 +8,7 @@ import '../model/request/RenewalAccessTokenRequest.dart';
 
 part 'LoginService.g.dart';
 
-@RestApi(baseUrl: "https://j12d205.p.ssafy.io/")
+@RestApi(baseUrl: "https://j12d205.p.ssafy.io")
 abstract class LoginService {
   factory LoginService(Dio dio, {String baseUrl}) = _LoginService;
 
@@ -21,13 +21,13 @@ abstract class LoginService {
   Future<void> logout();
 
   // AccessToken 갱신
-  @POST("api/auth/refresh")
+  @POST("/api/auth/refresh")
   Future<RenewalAccessTokenResponse> renewalAccessToken(
     @Body() RenewalAccessTokenRequest request,
   );
 
   // 카카오 OAuth 콜백 처리
-  @GET("login/oauth2/code/kakao")
+  @GET("/login/oauth2/code/kakao")
   Future<RenewalAccessTokenResponse> kakaoCallback(
     @Query("code") String kakaoAccessToken,
   );

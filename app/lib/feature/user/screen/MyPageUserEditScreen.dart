@@ -70,7 +70,11 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
             SizedBox(
               height: 24,
             ),
-            ButtonCommonPrimaryBottom(text: AppString.changeUserName),
+            ButtonCommonPrimaryBottom(
+              text: AppString.changeUserName,
+              onPressed: () {},
+              disableWithOpacity: false,
+            ),
           ],
         ),
       ),

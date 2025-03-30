@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'LoginService.dart';
+part of 'SurveyService.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'LoginService.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _LoginService implements LoginService {
-  _LoginService(this._dio, {this.baseUrl, this.errorLogger}) {
+class _SurveyService implements SurveyService {
+  _SurveyService(this._dio, {this.baseUrl, this.errorLogger}) {
     baseUrl ??= 'https://j12d205.p.ssafy.io';
   }
 
@@ -20,66 +20,25 @@ class _LoginService implements LoginService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<void> goToKakaoLoginPage() async {
+  Future<int> checkUserPreferBoardGame(int userId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
+    final _options = _setStreamType<int>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/login-oauth',
+            '/api/users/${userId}/prefer-games',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
-  }
-
-  @override
-  Future<void> logout() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/auth/logout',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    await _dio.fetch<void>(_options);
-  }
-
-  @override
-  Future<RenewalAccessTokenResponse> renewalAccessToken(
-    RenewalAccessTokenRequest request,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
-    final _options = _setStreamType<RenewalAccessTokenResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/auth/refresh',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RenewalAccessTokenResponse _value;
+    final _result = await _dio.fetch<int>(_options);
+    late int _value;
     try {
-      _value = RenewalAccessTokenResponse.fromJson(_result.data!);
+      _value = _result.data!;
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -88,27 +47,32 @@ class _LoginService implements LoginService {
   }
 
   @override
-  Future<RenewalAccessTokenResponse> kakaoCallback(
-    String kakaoAccessToken,
+  Future<List<SurveyBoardGameResponse>> getTop30BoardGameByGenre(
+    String category,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'code': kakaoAccessToken};
+    final queryParameters = <String, dynamic>{r'category': category};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<RenewalAccessTokenResponse>(
+    final _options = _setStreamType<List<SurveyBoardGameResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/login/oauth2/code/kakao',
+            '/api/onboard/games',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RenewalAccessTokenResponse _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<SurveyBoardGameResponse> _value;
     try {
-      _value = RenewalAccessTokenResponse.fromJson(_result.data!);
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                SurveyBoardGameResponse.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -117,28 +81,29 @@ class _LoginService implements LoginService {
   }
 
   @override
-  Future<RenewalAccessTokenResponse> kakaoTokenLogin(
-    KakaoTokenLoginRequest request,
+  Future<int> insertUserPreferBoardGameSurvey(
+    int userId,
+    SurveyBoardGameRequest request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
-    final _options = _setStreamType<RenewalAccessTokenResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _options = _setStreamType<int>(
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/kakao-token',
+            '/api/onboard/users/${userId}/prefer-games',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RenewalAccessTokenResponse _value;
+    final _result = await _dio.fetch<int>(_options);
+    late int _value;
     try {
-      _value = RenewalAccessTokenResponse.fromJson(_result.data!);
+      _value = _result.data!;
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

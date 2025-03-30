@@ -204,91 +204,122 @@ class AppDummyData {
 
   // Mypage
   static final List<Map<String, String>> missionReportimages = [
-  {
-  'id': '1',
-  'img':
-  'https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__thumb/img/YT6svCVsWqLrDitcMEtyazVktbQ=/fit-in/200x150/filters:strip_icc()/pic4718279.jpg'
-  },
-  {
-  'id': '2',
-  'img':
-  'https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__thumb/img/22MSUC0-ZWgwzhi_VKIbENJik1w=/fit-in/200x150/filters:strip_icc()/pic3211873.jpg'
-  },
-  {
-  'id': '3',
-  'img':
-  'https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__thumb/img/cpf23VxElZxuYaIGcgrjPn80sZY=/fit-in/200x150/filters:strip_icc()/pic7376875.jpg'
-  },
-  {
-  'id': '4',
-  'img':
-  'https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__thumb/img/vwTEQOWA3Mw__ztkTMulOgJ82Pw=/fit-in/200x150/filters:strip_icc()/pic6348964.jpg'
-  },
-  {
-  'id': '5',
-  'img':
-  'https://cf.geekdo-images.com/k7lG683LBZdvFyS-FH-MpA__thumb/img/6KTtiknxxGwd0ARKrlsdoXFtHfI=/fit-in/200x150/filters:strip_icc()/pic6746812.png'
-  },
-  {
-  'id': '6',
-  'img':
-  'https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__thumb/img/virV2Bm82Dql7gh-LZScBwqByik=/fit-in/200x150/filters:strip_icc()/pic8632666.png'
-  },
-  {
-  'id': '7',
-  'img':
-  'https://cf.geekdo-images.com/eJx8hRJ6-86C2VrhECwEPA__thumb/img/J1PlqFqtN-hxuXM4eEi-ekANPP4=/fit-in/200x150/filters:strip_icc()/pic1000553.jpg'
-  },
-  {
-  'id': '8',
-  'img':
-  'https://cf.geekdo-images.com/nMitZr9Lu4Ux7LLqBy7Z8A__thumb/img/mLHWOFfdxrWljImkFZ2ulIhHt7A=/fit-in/200x150/filters:strip_icc()/pic6875169.png'
-  },
-  {
-  'id': '9',
-  'img':
-  'https://cf.geekdo-images.com/soAzNVWglCdVBacNjoCTJw__thumb/img/0UPEyOaSFyqEH1ikrSig_218RQ0=/fit-in/200x150/filters:strip_icc()/pic2338267.jpg'
-  },
-  {
-  'id': '10',
-  'img':
-  'https://cf.geekdo-images.com/wX4cTWNjTG7XiGHGgSpiiw__thumb/img/vU6kaL3f06BaVfmwUV91trrvDng=/fit-in/200x150/filters:strip_icc()/pic8630033.png'
-  },
-  {
-  'id': '11',
-  'img':
-  'https://cf.geekdo-images.com/iif2Nv17Vhw8puN2bATaaw__thumb/img/GtXKwk8tJkmHtUvWPT2FIabXh0w=/fit-in/200x150/filters:strip_icc()/pic7794273.png'
-  },
-  {
-  'id': '12',
-  'img':
-  'https://cf.geekdo-images.com/o23NBqu_LBRAtRaVoOBBhQ__thumb/img/VEXGKhNHkULY2hJ41r4Agob5RvE=/fit-in/200x150/filters:strip_icc()/pic403442.jpg'
-  },
-  {
-  'id': '13',
-  'img':
-  'https://cf.geekdo-images.com/AL5D-dXabY-Lk3PqIFk_0g__thumb/img/Q-76aN92M3OveMp26t7b0i7V-i4=/fit-in/200x150/filters:strip_icc()/pic4597095.jpg'
-  },
-  {
-  'id': '14',
-  'img':
-  'https://cf.geekdo-images.com/3qg1xTP7ZZiu8OolGBYJ1w__thumb/img/2LGbUy0Hen-8-8bQ-ZfwHjNnCtU=/fit-in/200x150/filters:strip_icc()/pic1766273.jpg'
-  },
-  {
-  'id': '15',
-  'img':
-  'https://cf.geekdo-images.com/ajU3xzGDUKihjNdvjCR1Hw__thumb/img/pXR57sUMEJ-GJydf-yyAu0ZLgZw=/fit-in/200x150/filters:strip_icc()/pic3328391.jpg'
-  },
+    {
+      'id': '1',
+      'img':
+          'https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__thumb/img/YT6svCVsWqLrDitcMEtyazVktbQ=/fit-in/200x150/filters:strip_icc()/pic4718279.jpg'
+    },
+    {
+      'id': '2',
+      'img':
+          'https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__thumb/img/22MSUC0-ZWgwzhi_VKIbENJik1w=/fit-in/200x150/filters:strip_icc()/pic3211873.jpg'
+    },
+    {
+      'id': '3',
+      'img':
+          'https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__thumb/img/cpf23VxElZxuYaIGcgrjPn80sZY=/fit-in/200x150/filters:strip_icc()/pic7376875.jpg'
+    },
+    {
+      'id': '4',
+      'img':
+          'https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__thumb/img/vwTEQOWA3Mw__ztkTMulOgJ82Pw=/fit-in/200x150/filters:strip_icc()/pic6348964.jpg'
+    },
+    {
+      'id': '5',
+      'img':
+          'https://cf.geekdo-images.com/k7lG683LBZdvFyS-FH-MpA__thumb/img/6KTtiknxxGwd0ARKrlsdoXFtHfI=/fit-in/200x150/filters:strip_icc()/pic6746812.png'
+    },
+    {
+      'id': '6',
+      'img':
+          'https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__thumb/img/virV2Bm82Dql7gh-LZScBwqByik=/fit-in/200x150/filters:strip_icc()/pic8632666.png'
+    },
+    {
+      'id': '7',
+      'img':
+          'https://cf.geekdo-images.com/eJx8hRJ6-86C2VrhECwEPA__thumb/img/J1PlqFqtN-hxuXM4eEi-ekANPP4=/fit-in/200x150/filters:strip_icc()/pic1000553.jpg'
+    },
+    {
+      'id': '8',
+      'img':
+          'https://cf.geekdo-images.com/nMitZr9Lu4Ux7LLqBy7Z8A__thumb/img/mLHWOFfdxrWljImkFZ2ulIhHt7A=/fit-in/200x150/filters:strip_icc()/pic6875169.png'
+    },
+    {
+      'id': '9',
+      'img':
+          'https://cf.geekdo-images.com/soAzNVWglCdVBacNjoCTJw__thumb/img/0UPEyOaSFyqEH1ikrSig_218RQ0=/fit-in/200x150/filters:strip_icc()/pic2338267.jpg'
+    },
+    {
+      'id': '10',
+      'img':
+          'https://cf.geekdo-images.com/wX4cTWNjTG7XiGHGgSpiiw__thumb/img/vU6kaL3f06BaVfmwUV91trrvDng=/fit-in/200x150/filters:strip_icc()/pic8630033.png'
+    },
+    {
+      'id': '11',
+      'img':
+          'https://cf.geekdo-images.com/iif2Nv17Vhw8puN2bATaaw__thumb/img/GtXKwk8tJkmHtUvWPT2FIabXh0w=/fit-in/200x150/filters:strip_icc()/pic7794273.png'
+    },
+    {
+      'id': '12',
+      'img':
+          'https://cf.geekdo-images.com/o23NBqu_LBRAtRaVoOBBhQ__thumb/img/VEXGKhNHkULY2hJ41r4Agob5RvE=/fit-in/200x150/filters:strip_icc()/pic403442.jpg'
+    },
+    {
+      'id': '13',
+      'img':
+          'https://cf.geekdo-images.com/AL5D-dXabY-Lk3PqIFk_0g__thumb/img/Q-76aN92M3OveMp26t7b0i7V-i4=/fit-in/200x150/filters:strip_icc()/pic4597095.jpg'
+    },
+    {
+      'id': '14',
+      'img':
+          'https://cf.geekdo-images.com/3qg1xTP7ZZiu8OolGBYJ1w__thumb/img/2LGbUy0Hen-8-8bQ-ZfwHjNnCtU=/fit-in/200x150/filters:strip_icc()/pic1766273.jpg'
+    },
+    {
+      'id': '15',
+      'img':
+          'https://cf.geekdo-images.com/ajU3xzGDUKihjNdvjCR1Hw__thumb/img/pXR57sUMEJ-GJydf-yyAu0ZLgZw=/fit-in/200x150/filters:strip_icc()/pic3328391.jpg'
+    },
   ];
   static final List<Map<String, dynamic>> missionStatisticsGenres = [
-    {'genre': '전략', 'percent': 25, 'count': 33, 'color': CommonUtils.getGenreColor('전략')},
-    {'genre': '파티', 'percent': 22, 'count': 100, 'color': CommonUtils.getGenreColor('파티')},
-    {'genre': '추리', 'percent': 19, 'count': 95, 'color': CommonUtils.getGenreColor('추리')},
-    {'genre': '경제', 'percent': 17.5, 'count': 80, 'color': CommonUtils.getGenreColor('경제')},
-    {'genre': '모험', 'percent': 16.5, 'count': 70, 'color': CommonUtils.getGenreColor('모험')},
-    {'genre': '전쟁', 'percent': 0, 'count': 0, 'color': CommonUtils.getGenreColor('전쟁')},
+    {
+      'genre': '전략',
+      'percent': 25,
+      'count': 33,
+      'color': CommonUtils.getGenreColor('전략')
+    },
+    {
+      'genre': '파티',
+      'percent': 22,
+      'count': 100,
+      'color': CommonUtils.getGenreColor('파티')
+    },
+    {
+      'genre': '추리',
+      'percent': 19,
+      'count': 95,
+      'color': CommonUtils.getGenreColor('추리')
+    },
+    {
+      'genre': '경제',
+      'percent': 17.5,
+      'count': 80,
+      'color': CommonUtils.getGenreColor('경제')
+    },
+    {
+      'genre': '모험',
+      'percent': 16.5,
+      'count': 70,
+      'color': CommonUtils.getGenreColor('모험')
+    },
+    {
+      'genre': '전쟁',
+      'percent': 0,
+      'count': 0,
+      'color': CommonUtils.getGenreColor('전쟁')
+    },
   ];
-  static final List<ChartData> missionStatisticsChartData = missionStatisticsGenres.map((genre) {
+  static final List<ChartData> missionStatisticsChartData =
+      missionStatisticsGenres.map((genre) {
     return ChartData(
       genre['genre'] as String,
       (genre['percent'] as num).toDouble(),
@@ -300,70 +331,70 @@ class AppDummyData {
     {
       'id': '1',
       'img':
-      'https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__thumb/img/YT6svCVsWqLrDitcMEtyazVktbQ=/fit-in/200x150/filters:strip_icc()/pic4718279.jpg',
+          'https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__thumb/img/YT6svCVsWqLrDitcMEtyazVktbQ=/fit-in/200x150/filters:strip_icc()/pic4718279.jpg',
       'title': '디 마허',
       'round': '35',
     },
     {
       'id': '2',
       'img':
-      'https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__thumb/img/22MSUC0-ZWgwzhi_VKIbENJik1w=/fit-in/200x150/filters:strip_icc()/pic3211873.jpg',
+          'https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__thumb/img/22MSUC0-ZWgwzhi_VKIbENJik1w=/fit-in/200x150/filters:strip_icc()/pic3211873.jpg',
       'title': '사무라이',
       'round': '35',
     },
     {
       'id': '3',
       'img':
-      'https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__thumb/img/cpf23VxElZxuYaIGcgrjPn80sZY=/fit-in/200x150/filters:strip_icc()/pic7376875.jpg',
+          'https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__thumb/img/cpf23VxElZxuYaIGcgrjPn80sZY=/fit-in/200x150/filters:strip_icc()/pic7376875.jpg',
       'title': '어콰이어',
       'round': '35',
     },
     {
       'id': '4',
       'img':
-      'https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__thumb/img/vwTEQOWA3Mw__ztkTMulOgJ82Pw=/fit-in/200x150/filters:strip_icc()/pic6348964.jpg',
+          'https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__thumb/img/vwTEQOWA3Mw__ztkTMulOgJ82Pw=/fit-in/200x150/filters:strip_icc()/pic6348964.jpg',
       'title': '보난자',
       'round': '35',
     },
     {
       'id': '5',
       'img':
-      'https://cf.geekdo-images.com/k7lG683LBZdvFyS-FH-MpA__thumb/img/6KTtiknxxGwd0ARKrlsdoXFtHfI=/fit-in/200x150/filters:strip_icc()/pic6746812.png',
+          'https://cf.geekdo-images.com/k7lG683LBZdvFyS-FH-MpA__thumb/img/6KTtiknxxGwd0ARKrlsdoXFtHfI=/fit-in/200x150/filters:strip_icc()/pic6746812.png',
       'title': '라',
       'round': '35',
     },
     {
       'id': '6',
       'img':
-      'https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__thumb/img/virV2Bm82Dql7gh-LZScBwqByik=/fit-in/200x150/filters:strip_icc()/pic8632666.png',
+          'https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__thumb/img/virV2Bm82Dql7gh-LZScBwqByik=/fit-in/200x150/filters:strip_icc()/pic8632666.png',
       'title': '카탄',
       'round': '35',
     },
     {
       'id': '7',
       'img':
-      'https://cf.geekdo-images.com/eJx8hRJ6-86C2VrhECwEPA__thumb/img/J1PlqFqtN-hxuXM4eEi-ekANPP4=/fit-in/200x150/filters:strip_icc()/pic1000553.jpg',
+          'https://cf.geekdo-images.com/eJx8hRJ6-86C2VrhECwEPA__thumb/img/J1PlqFqtN-hxuXM4eEi-ekANPP4=/fit-in/200x150/filters:strip_icc()/pic1000553.jpg',
       'title': '로보랠리',
       'round': '35',
     },
     {
       'id': '8',
       'img':
-      'https://cf.geekdo-images.com/nMitZr9Lu4Ux7LLqBy7Z8A__thumb/img/mLHWOFfdxrWljImkFZ2ulIhHt7A=/fit-in/200x150/filters:strip_icc()/pic6875169.png',
+          'https://cf.geekdo-images.com/nMitZr9Lu4Ux7LLqBy7Z8A__thumb/img/mLHWOFfdxrWljImkFZ2ulIhHt7A=/fit-in/200x150/filters:strip_icc()/pic6875169.png',
       'title': '디 마허',
       'round': '35',
     },
     {
       'id': '9',
       'img':
-      'https://cf.geekdo-images.com/soAzNVWglCdVBacNjoCTJw__thumb/img/0UPEyOaSFyqEH1ikrSig_218RQ0=/fit-in/200x150/filters:strip_icc()/pic2338267.jpg',
+          'https://cf.geekdo-images.com/soAzNVWglCdVBacNjoCTJw__thumb/img/0UPEyOaSFyqEH1ikrSig_218RQ0=/fit-in/200x150/filters:strip_icc()/pic2338267.jpg',
       'title': '멈출 수 없어',
       'round': '35',
     },
     {
       'id': '10',
       'img':
-      'https://cf.geekdo-images.com/wX4cTWNjTG7XiGHGgSpiiw__thumb/img/vU6kaL3f06BaVfmwUV91trrvDng=/fit-in/200x150/filters:strip_icc()/pic8630033.png',
+          'https://cf.geekdo-images.com/wX4cTWNjTG7XiGHGgSpiiw__thumb/img/vU6kaL3f06BaVfmwUV91trrvDng=/fit-in/200x150/filters:strip_icc()/pic8630033.png',
       'title': '티그리스 & 유프라테스',
       'round': '35',
     }
@@ -372,7 +403,8 @@ class AppDummyData {
   //MissionRecordScreen
   static final Map<String, dynamic> missionReportGameData = {
     "gameTitle": "다빈치 코드",
-    "gameImage": "https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__original/img/yR0aoBVKNrAmmCuBeSzQnMflLYg=/0x0/filters:format(jpeg)/pic4718279.jpg",
+    "gameImage":
+        "https://cf.geekdo-images.com/rpwCZAjYLD940NWwP3SRoA__original/img/yR0aoBVKNrAmmCuBeSzQnMflLYg=/0x0/filters:format(jpeg)/pic4718279.jpg",
     "gameCategoryList": ["전략", "추리"],
     "minAge": 15,
     "gameYear": 1997,
@@ -386,35 +418,40 @@ class AppDummyData {
         "createdAt": "2025-03-10",
         "archiveContent": "친구들과 플레이했는데 너무 재미있었어요!",
         "archiveGamePlayCount": 3,
-        "archiveImage": "https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__original/img/g11AF48C6pLizxWPAq9dUEeKltQ=/0x0/filters:format(png)/pic8632666.png"
+        "archiveImage":
+            "https://cf.geekdo-images.com/PyUol9QxBnZQCJqZI6bmSA__original/img/g11AF48C6pLizxWPAq9dUEeKltQ=/0x0/filters:format(png)/pic8632666.png"
       },
       {
         "archiveId": 102,
         "createdAt": "2024-12-15",
         "archiveContent": "가족과 함께 플레이하면서 전략적인 부분을 많이 배웠어요.",
         "archiveGamePlayCount": 5,
-        "archiveImage": "https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__original/img/TPKZgpNxB_C73RNbhKyP6UR76X0=/0x0/filters:format(jpeg)/pic3211873.jpg"
+        "archiveImage":
+            "https://cf.geekdo-images.com/o9-sNXmFS_TLAb7ZlZ4dRA__original/img/TPKZgpNxB_C73RNbhKyP6UR76X0=/0x0/filters:format(jpeg)/pic3211873.jpg"
       },
       {
         "archiveId": 103,
         "createdAt": "2023-07-08",
         "archiveContent": "처음 해봤는데 규칙이 쉬워서 금방 적응할 수 있었어요.",
         "archiveGamePlayCount": 2,
-        "archiveImage": "https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__original/img/9xV86q5SLQAJtOsr0KKw5G6UOMM=/0x0/filters:format(jpeg)/pic7376875.jpg"
+        "archiveImage":
+            "https://cf.geekdo-images.com/FfguJeknahk88vKT7C3JLA__original/img/9xV86q5SLQAJtOsr0KKw5G6UOMM=/0x0/filters:format(jpeg)/pic7376875.jpg"
       },
       {
         "archiveId": 104,
         "createdAt": "2025-03-20",
         "archiveContent": "2025-03-20오랜만에 다시 해보니 새로운 전략을 발견했어요.",
         "archiveGamePlayCount": 4,
-        "archiveImage": "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
+        "archiveImage":
+            "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
       },
       {
         "archiveId": 105,
         "createdAt": "2025-07-20",
         "archiveContent": "2025-07-20오랜만에 다시 해보니 새로운 전략을 발견했어요.",
         "archiveGamePlayCount": 4,
-        "archiveImage": "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
+        "archiveImage":
+            "https://cf.geekdo-images.com/8SADtu_4zBH_UJrCo935Iw__original/img/RNuAr2CDbxE3XzeJVkxj4Df3eVM=/0x0/filters:format(jpeg)/pic6348964.jpg"
       },
     ]
   };
@@ -436,4 +473,36 @@ class AppDummyData {
   //   'tag': 3,
   //   'date': "2025-03-10",
   // };
+
+  static final List<Map<String, String>> surveyImages = [
+    {'id': '1', 'img': 'assets/image/survey_category_party.jpg', 'name': '파티'},
+    {
+      'id': '2',
+      'img': 'assets/image/survey_category_strategy.jpg',
+      'name': '전략'
+    },
+    {
+      'id': '3',
+      'img': 'assets/image/survey_category_economy.jpg',
+      'name': '경제'
+    },
+    {
+      'id': '4',
+      'img': 'assets/image/survey_category_adventure.jpg',
+      'name': '모험'
+    },
+    {
+      'id': '5',
+      'img': 'assets/image/survey_category_role_playing.jpg',
+      'name': '롤플레잉'
+    },
+    {'id': '6', 'img': 'assets/image/survey_category_family.jpg', 'name': '가족'},
+    {'id': '7', 'img': 'assets/image/survey_category_reason.jpg', 'name': '추리'},
+    {'id': '8', 'img': 'assets/image/survey_category_war.jpg', 'name': '전쟁'},
+    {
+      'id': '9',
+      'img': 'assets/image/survey_category_abstract_strategy.jpg',
+      'name': '추상전략'
+    },
+  ];
 }
