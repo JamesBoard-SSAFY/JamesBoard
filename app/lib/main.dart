@@ -4,15 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/BoardGameRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +48,18 @@ void main() async {
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BoardGameViewModel>(
+          create: (context) => BoardGameViewModel(
+            BoardGameRepository.create(),
+          ),
+        ),
+      ],
+      child: MyApp(isLoggedIn: true), // App을 여기서 시작
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
