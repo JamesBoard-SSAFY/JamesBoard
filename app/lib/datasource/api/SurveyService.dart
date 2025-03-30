@@ -26,6 +26,7 @@ abstract class SurveyService {
   // 유저 선호게임 수정(사실상 등록)
   @PATCH("/api/onboard/users/{userId}/prefer-games")
   Future<int> insertUserPreferBoardGameSurvey(
+    @Path("userId") int userId,
     @Body() SurveyBoardGameRequest request,
   );
 }

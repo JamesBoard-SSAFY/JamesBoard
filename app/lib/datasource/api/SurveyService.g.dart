@@ -10,7 +10,7 @@ part of 'SurveyService.dart';
 
 class _SurveyService implements SurveyService {
   _SurveyService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://j12d205.p.ssafy.io/';
+    baseUrl ??= 'https://j12d205.p.ssafy.io';
   }
 
   final Dio _dio;
@@ -82,6 +82,7 @@ class _SurveyService implements SurveyService {
 
   @override
   Future<int> insertUserPreferBoardGameSurvey(
+    int userId,
     SurveyBoardGameRequest request,
   ) async {
     final _extra = <String, dynamic>{};
@@ -93,7 +94,7 @@ class _SurveyService implements SurveyService {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/onboard/users/{userId}/prefer-games',
+            '/api/onboard/users/${userId}/prefer-games',
             queryParameters: queryParameters,
             data: _data,
           )
