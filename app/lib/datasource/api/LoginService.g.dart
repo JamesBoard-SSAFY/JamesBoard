@@ -10,7 +10,7 @@ part of 'LoginService.dart';
 
 class _LoginService implements LoginService {
   _LoginService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://j12d205.p.ssafy.io/';
+    baseUrl ??= 'https://j12d205.p.ssafy.io';
   }
 
   final Dio _dio;
@@ -70,7 +70,7 @@ class _LoginService implements LoginService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'api/auth/refresh',
+            '/api/auth/refresh',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -99,7 +99,7 @@ class _LoginService implements LoginService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'login/oauth2/code/kakao',
+            '/login/oauth2/code/kakao',
             queryParameters: queryParameters,
             data: _data,
           )

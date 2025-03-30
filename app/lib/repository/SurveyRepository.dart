@@ -24,6 +24,7 @@ class SurveyRepository {
       _service.getTop30BoardGameByGenre(category);
 
   // 유저 선호게임 수정(사실상 등록)
-  Future<int> insertUserPreferBoardGameSurvey(SurveyBoardGameRequest request) =>
-      _service.insertUserPreferBoardGameSurvey(request);
+  Future<int> insertUserPreferBoardGameSurvey(
+          int userId, SurveyBoardGameRequest request) =>
+      _service.insertUserPreferBoardGameSurvey(userId, request);
 }
