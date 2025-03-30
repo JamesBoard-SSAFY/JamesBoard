@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/feature/survey/screen/SurveyBoardGameScreen.dart';
 import 'package:jamesboard/feature/survey/widget/ImageSurveyCategory.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
+
+import '../../../main.dart';
 
 class SurveyCategoryScreen extends StatefulWidget {
   const SurveyCategoryScreen({super.key});
@@ -93,7 +96,15 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
           text: '선택',
           onPressed: selectedId != null
               ? () {
-                  print('object');
+                  logger.d('selectedId : $selectedId');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SurveyBoardGameScreen(
+                        selectedBoardGameId: selectedId!,
+                      ),
+                    ),
+                  );
                 }
               : null,
         ),
