@@ -3,6 +3,7 @@ package com.board.jamesboard.domain.boardgame.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.board.jamesboard.db.entity.Game;
@@ -15,20 +16,26 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BoardgameSearchServiceImpl implements BoardgameSearchService {
 
     private final GameRepository gameRepository;
 
     @Override
-    public List<BoardgameRecommendDto> BoardgameSearchService(Integer difficulty, Integer minPlayers, String name, String category) {
-        List<Game> games = gameRepository.findAll();
+    public List<BoardgameRecommendDto> searchBoardgames(Integer difficulty, Integer minPlayers, String name, String category) {
+        // N+1 방지용 fetch join 사용된 메서드
+        List<Game> games = gameRepository.findAllWithCategories();
+
+        log.debug("{} games found", games.size());
+
         return games.stream()
-                .filter(game -> (difficulty == null || game.getGameDifficulty().equals(difficulty)))
-                .filter(game -> (minPlayers == null || game.getMinPlayer() >= minPlayers))
-                .filter(game -> (name == null || game.getGameTitle().contains(name)))
-                .filter(game -> (category == null || 
-                    (game.getGameCategories() != null && !game.getGameCategories().isEmpty() && 
-                     game.getGameCategories().get(0).getGameCategoryName().equalsIgnoreCase(category))))
+                .filter(game -> difficulty == null || game.getGameDifficulty().equals(difficulty))
+                .filter(game -> minPlayers == null || game.getMinPlayer() >= minPlayers)
+                .filter(game -> name == null || game.getGameTitle().contains(name))
+                .filter(game -> category == null ||
+                        (game.getGameCategories() != null &&
+                                game.getGameCategories().stream()
+                                        .anyMatch(c -> c.getGameCategoryName().equalsIgnoreCase(category))))
                 .map(game -> new BoardgameRecommendDto(
                         game.getGameId(),
                         game.getGameTitle(),
