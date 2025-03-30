@@ -19,7 +19,7 @@ class ButtonCommonPrimaryBottom extends StatelessWidget {
         // 버튼 높이를 내부 컨텐츠 크기에 맞게 조정
         child: ElevatedButton(
           onPressed: () {
-            onPressed;
+            onPressed!();
           },
           style: ElevatedButton.styleFrom(
             shape:
