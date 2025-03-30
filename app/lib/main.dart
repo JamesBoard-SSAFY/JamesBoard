@@ -8,6 +8,7 @@ import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -52,7 +53,11 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => SurveyViewModel(SurveyRepository.create())),
+          create: (_) => SurveyViewModel(
+            SurveyRepository.create(),
+            LoginRepository.create(),
+          ),
+        ),
       ],
       child: MyApp(
         isLoggedIn: isLoggedIn,
