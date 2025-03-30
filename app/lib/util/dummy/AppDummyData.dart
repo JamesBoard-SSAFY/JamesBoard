@@ -62,6 +62,18 @@ class AppDummyData {
     "추상전략 : 냉철한 전략으로 승부!"
   ];
 
+  static Map<String, String> titleCategoryMap = {
+    '파티 : 요원들의 은밀한 모임!': '파티',
+    '전략 : 첩보 전략의 결정판!': '전략',
+    "경제 : 부의 흐름을 추적하라!": "경제",
+    "모험 : 위험과 비밀의 세계!": "모험",
+    "롤플레잉 : 위장하고 기만하라!": "롤플레잉",
+    "가족 : 웃음과 전략을 함께!": "가족",
+    "추리 : 단서로 배신자를 밝혀라!": "추리",
+    "전쟁 : 긴장 속 최후의 승자!": "전쟁",
+    "추상전략 : 냉철한 전략으로 승부!": "추상 전략"
+  };
+
   static final List<String> numOfPersonTitles = [
     "Solo Mission : 1명",
     "Duo Mission : 2명",
@@ -197,4 +209,50 @@ class AppDummyData {
     "임무 난이도 : 중급": '중급',
     "임무 난이도 : 고급": '고급',
   };
+
+  static final List<Map<String, dynamic>> gameList = [
+    {
+      'gameId': 1,
+      'imageUrl':
+          'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
+      'gameName': '클루',
+      'gameCategory': '추리',
+      'gameTheme': '모험',
+      'gameMinPlayer': 2,
+      'gameMaxPlayer': 4,
+      'gameDifficulty': 1,
+      'gamePlayTime': 60,
+      'gameDescription':
+          '클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다.클루에 대한 설명입니다.클루에 대한 ...',
+    },
+    {
+      'gameId': 2,
+      'imageUrl':
+          'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg',
+      'gameName': '부루마블',
+      'gameCategory': '파티',
+      'gameTheme': '추리',
+      'gameMinPlayer': 3,
+      'gameMaxPlayer': 6,
+      'gameDifficulty': 0,
+      'gamePlayTime': 45,
+      'gameDescription':
+          '부루마블에 대한 설명입니다. 부루마블에 대한 설명입니다. 부루마블에 대한 설명입니다. 부루마블에 대한 설명입니다. 부루마블에 대한 설명입니다.클루에 대한 설명입니다.클루에 대한 ...',
+    },
+    {
+      'gameId': 2,
+      'imageUrl':
+          'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg',
+      'gameName': '클루',
+      'gameCategory': '파티',
+      'gameTheme': '추리',
+      'gameMinPlayer': 3,
+      'gameMaxPlayer': 6,
+      'gameDifficulty': 0,
+      'gamePlayTime': 45,
+      'gameDescription':
+          '클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다.클루에 대한 설명입니다.클루에 대한 ...',
+    },
+    // 추가 게임 데이터
+  ];
 }
