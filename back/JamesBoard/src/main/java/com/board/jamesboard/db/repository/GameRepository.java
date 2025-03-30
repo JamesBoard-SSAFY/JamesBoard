@@ -12,6 +12,9 @@ import com.board.jamesboard.db.entity.Game;
 public interface GameRepository extends JpaRepository<Game,Long> {
     List<Game> findTop30ByGameIdInOrderByGameRank(List<Long> gameIds);
 
+    @Query("SELECT g FROM Game g LEFT JOIN FETCH g.gameCategories")
+    List<Game> findAllWithCategories();
+
     // 게임 ID로 게임정보 조회
     Optional<Game> findByGameId(Long gameId);
 
