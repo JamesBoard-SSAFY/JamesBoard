@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/survey/screen/SurveyBoardGameScreen.dart';
+import 'package:jamesboard/feature/survey/viewmodel/SurveyViewModel.dart';
 import 'package:jamesboard/feature/survey/widget/ImageSurveyCategory.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
+import 'package:provider/provider.dart';
 
 import '../../../main.dart';
+import '../../../repository/SurveyRepository.dart';
 
 class SurveyCategoryScreen extends StatefulWidget {
   const SurveyCategoryScreen({super.key});
@@ -18,6 +21,18 @@ class SurveyCategoryScreen extends StatefulWidget {
 
 class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
   String? selectedId;
+
+  final Map<String, String> categoryMap = {
+    '1': '파티',
+    '2': '전략',
+    '3': '경제',
+    '4': '모험',
+    '5': '롤플레잉',
+    '6': '가족',
+    '7': '추리',
+    '8': '전쟁',
+    '9': '추상전략',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +110,19 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
         child: ButtonCommonPrimaryBottom(
           text: '선택',
           onPressed: selectedId != null
-              ? () {
+              ? () async {
                   logger.d('selectedId : $selectedId');
+
+                  final category = categoryMap[selectedId] ?? 'etc';
+
+                  final viewModel = context.read<SurveyViewModel>();
+                  await viewModel.getTop30BoardGameByGenre(category);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SurveyBoardGameScreen(
-                        selectedBoardGameId: selectedId!,
+                        selectedCategory: category,
                       ),
                     ),
                   );
