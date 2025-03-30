@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 import models
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from sentence_transformers import SentenceTransformer
 import os
 import time
@@ -15,6 +15,9 @@ from collections import defaultdict
 import faiss
 from sklearn.preprocessing import StandardScaler
 import gc
+import pandas as pd
+from scipy.sparse import csr_matrix
+from sklearn.neighbors import NearestNeighbors
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -27,8 +30,21 @@ class RecommendationEngine:
         self.model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
         self.embeddings = None  # 명시적으로 초기화
         self._initialize_embeddings()
-        self.n_clusters = 10  # 클러스터 수 설정
-        self.batch_size = 1000  # 미니 배치 크기
+        self.n_clusters = 10  # 클러스터 수 복원
+        self.batch_size = 1000  # 배치 사이즈 복원
+        self.reviews_df = None
+        self.kmeans_model = None
+        self.user_clusters = {}
+        self._load_reviews_data()
+
+    def _load_reviews_data(self):
+        """리뷰 데이터를 CSV 파일에서 로드합니다."""
+        try:
+            self.reviews_df = pd.read_csv('filtered_reviews_korea_patch.csv')
+            print(f"Loaded {len(self.reviews_df)} reviews from CSV")
+        except Exception as e:
+            print(f"Error loading reviews data: {str(e)}")
+            self.reviews_df = None
 
     def _load_items_from_db(self) -> List[Dict]:
         """게임 데이터를 데이터베이스에서 로드합니다."""
@@ -185,61 +201,57 @@ class RecommendationEngine:
             raise
 
     def get_content_recommendations(self, game_id: int, top_n: int = 30) -> List[Dict]:
-        """콘텐츠 기반 추천을 위한 메서드"""
+        """콘텐츠 기반 추천을 생성합니다."""
         try:
-            # 추천 결과 조회
-            recommendations = (
-                self.db.query(models.RecommendContent, models.Game)
-                .join(models.Game, models.RecommendContent.recommend_game_id == models.Game.game_id)
-                .filter(models.RecommendContent.game_id == game_id)
-                .order_by(models.RecommendContent.recommend_content_rank)
-            .limit(top_n)
-            .all()
-        )
-        
-            if recommendations:
-                return [{
-                    "game_id": rec.RecommendContent.game_id,
-                    "recommend_game_id": rec.RecommendContent.recommend_game_id,
-                    "recommend_content_rank": rec.RecommendContent.recommend_content_rank,
-                    "game_title": rec.Game.game_title,
-                    "game_description": rec.Game.game_description,
-                    "game_image": rec.Game.game_image,
-                    "game_year": rec.Game.game_year,
-                    "game_difficulty": rec.Game.game_difficulty,
-                    "game_avg_rating": rec.Game.game_avg_rating,
-                    "game_review_count": rec.Game.game_review_count
-                } for rec in recommendations]
-        
-            # 추천이 없는 경우 새로 계산
-            new_recommendations = self.calculate_content_recommendations(game_id, top_n)
-            self.save_recommendations(new_recommendations, game_id)
+            # 게임 정보 조회
+            game = self.db.query(models.Game).filter(models.Game.game_id == game_id).first()
+            if not game:
+                return []
+
+            # 게임의 임베딩 가져오기
+            game_idx = next(i for i, item in enumerate(self.items) if item['game_id'] == game_id)
             
-            # 저장된 추천 다시 조회
-            recommendations = (
-                self.db.query(models.RecommendContent, models.Game)
-                .join(models.Game, models.RecommendContent.recommend_game_id == models.Game.game_id)
-                .filter(models.RecommendContent.game_id == game_id)
-                .order_by(models.RecommendContent.recommend_content_rank)
-                .limit(top_n)
+            # 코사인 유사도 계산 (배치 처리)
+            batch_size = 100
+            cosine_sim = np.zeros(len(self.embeddings))
+            
+            for i in range(0, len(self.embeddings), batch_size):
+                batch_end = min(i + batch_size, len(self.embeddings))
+                batch_sim = cosine_similarity(
+                    self.embeddings[game_idx:game_idx+1],
+                    self.embeddings[i:batch_end]
+                )[0]
+                cosine_sim[i:batch_end] = batch_sim
+            
+            # 자기 자신 제외하고 상위 N개 선택
+            sim_scores = list(enumerate(cosine_sim))
+            sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
+            
+            # 상세 정보 조회 (한 번의 쿼리로 모든 게임 정보 가져오기)
+            similar_game_ids = [self.items[idx]['game_id'] for idx, _ in sim_scores]
+            similar_games = {
+                game.game_id: game 
+                for game in self.db.query(models.Game)
+                .filter(models.Game.game_id.in_(similar_game_ids))
                 .all()
-            )
+            }
             
-            return [{
-                "game_id": rec.RecommendContent.game_id,
-                "recommend_game_id": rec.RecommendContent.recommend_game_id,
-                "recommend_content_rank": rec.RecommendContent.recommend_content_rank,
-                "game_title": rec.Game.game_title,
-                "game_description": rec.Game.game_description,
-                "game_image": rec.Game.game_image,
-                "game_year": rec.Game.game_year,
-                "game_difficulty": rec.Game.game_difficulty,
-                "game_avg_rating": rec.Game.game_avg_rating,
-                "game_review_count": rec.Game.game_review_count
-            } for rec in recommendations]
+            # 추천 결과 생성
+            recommendations = []
+            for idx, similarity in sim_scores:
+                similar_game_id = self.items[idx]['game_id']
+                if similar_game_id in similar_games:
+                    recommendations.append({
+                        "game_id": game_id,
+                        "recommend_game_id": similar_game_id,
+                        "recommend_content_rank": len(recommendations) + 1,
+                        "similarity_score": float(similarity)
+                    })
+
+            return recommendations
             
         except Exception as e:
-            print(f"Error in get_content_recommendations: {str(e)}")
+            print(f"Error getting content recommendations: {str(e)}")
             return []
 
     def generate_user_clusters(self):
@@ -468,44 +480,400 @@ class RecommendationEngine:
             self.db.rollback()
             raise
 
+    def get_collaborative_recommendations(
+        self, 
+        user_id: int, 
+        user_activities: pd.DataFrame,
+        top_n: int = 30
+    ) -> List[Dict]:
+        """협업 필터링 기반 추천을 생성합니다."""
+        try:
+            # 사용자의 클러스터 찾기
+            user_cluster = self.get_user_cluster(user_id)
+            if user_cluster is None:
+                # 클러스터링이 실패한 경우, 모든 사용자의 리뷰를 사용
+                cluster_reviews = self.reviews_df
+            else:
+                # 같은 클러스터의 사용자들의 리뷰 데이터 추출
+                cluster_users = [uid for uid, cluster in self.user_clusters.items() if cluster == user_cluster]
+                cluster_reviews = self.reviews_df[self.reviews_df['user'].isin(cluster_users)]
+            
+            if cluster_reviews.empty:
+                return []
+            
+            # 게임별 평균 평점과 평가 수 계산
+            game_ratings = cluster_reviews.groupby('ID').agg({
+                'rating': ['mean', 'count']
+            }).reset_index()
+            
+            # 컬럼명 변경
+            game_ratings.columns = ['game_id', 'mean_rating', 'review_count']
+            
+            # 최소 1개 이상의 평가가 있는 게임만 선택 (조건 완화)
+            game_ratings = game_ratings[game_ratings['review_count'] >= 1]
+            
+            # 상위 N개 게임 선택
+            top_games = game_ratings.nlargest(top_n, 'mean_rating')
+            
+            # 추천 결과 생성
+            recommendations = []
+            for rank, (_, row) in enumerate(top_games.iterrows(), 1):
+                recommendations.append({
+                    'game_id': row['game_id'],
+                    'score': row['mean_rating'],
+                    'rank': rank
+                })
+            
+            return recommendations
+
+        except Exception as e:
+            print(f"Error getting collaborative recommendations: {str(e)}")
+            return []
+
+    def save_hybrid_recommendations(self, recommendations: List[Dict]):
+        """하이브리드 추천 결과를 데이터베이스에 저장합니다."""
+        try:
+            if not recommendations:
+                return
+
+            print(f"Saving {len(recommendations)} hybrid recommendations")
+            
+            # 기존 추천 결과 삭제
+            user_id = recommendations[0]['user_id']
+            
+            # 트랜잭션 재시도를 위한 루프
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    # 새로운 트랜잭션 시작
+                    self.db.begin()
+                    
+                    # 기존 추천 결과 삭제
+                    self.db.execute(
+                        text("DELETE FROM recommend WHERE user_id = :user_id"),
+                        {"user_id": user_id}
+                    )
+                    
+                    # 새로운 추천 결과 저장
+                    for rec in recommendations:
+                        self.db.execute(
+                            text("""
+                                INSERT INTO recommend 
+                                (user_id, game_id, recommend_rank, recommend_at) 
+                                VALUES (:user_id, :game_id, :recommend_rank, NOW())
+                            """),
+                            {
+                                "user_id": rec['user_id'],
+                                "game_id": rec['game_id'],
+                                "recommend_rank": rec['recommend_rank']
+                            }
+                        )
+                    
+                    # 트랜잭션 커밋
+                    self.db.commit()
+                    
+                    # 저장 확인
+                    count = self.db.execute(
+                        text("SELECT COUNT(*) FROM recommend WHERE user_id = :user_id"),
+                        {"user_id": user_id}
+                    ).scalar()
+                    print(f"Verified {count} recommendations saved for user_id: {user_id}")
+                    
+                    # 성공적으로 저장되면 루프 종료
+                    break
+                    
+                except Exception as e:
+                    print(f"Attempt {attempt + 1} failed: {str(e)}")
+                    self.db.rollback()
+                    
+                    # 마지막 시도가 아니면 잠시 대기 후 재시도
+                    if attempt < max_retries - 1:
+                        time.sleep(1)
+                    else:
+                        raise
+            
+        except Exception as e:
+            print(f"Error saving hybrid recommendations: {str(e)}")
+            self.db.rollback()
+            raise
+
     def generate_all_hybrid_recommendations(self):
-        """모든 사용자에 대한 하이브리드 추천 생성"""
+        """모든 사용자에 대한 하이브리드 추천을 생성합니다."""
         try:
             print("Starting hybrid recommendations generation...")
             
-            # 1. 기존 추천 결과 삭제
-            self.db.execute(text("TRUNCATE TABLE recommend"))
-            self.db.commit()
+            # 사용자 ID 목록 가져오기
+            user_ids = self.db.query(models.UserActivity.user_id).distinct().all()
+            if not user_ids:
+                print("No users found in user_activity table")
+                return {"message": "No users found"}
             
-            # 2. 사용자 클러스터링 및 협업 필터링 추천 생성
-            cluster_results = self.generate_user_clusters()
-            if not cluster_results:
-                return
+            print(f"Found {len(user_ids)} users")
             
-            # 3. 각 클러스터별 협업 필터링 추천 생성 및 저장
-            all_recommendations = []
-            for cluster_id, cluster_users in cluster_results.items():
-                print(f"Processing cluster {cluster_id} with {len(cluster_users)} users")
-                cluster_recommendations = self.generate_collaborative_recommendations_for_cluster(cluster_users)
-                if cluster_recommendations:
-                    for user_recs in cluster_recommendations.values():
-                        all_recommendations.extend(user_recs)
+            # 각 사용자별로 추천 생성
+            for user_id in user_ids:
+                try:
+                    print(f"\nProcessing user_id: {user_id[0]}")
+                    
+                    # 사용자의 활동 데이터 가져오기
+                    user_activities = self.get_user_activity_data(user_id[0])
+                    if user_activities.empty:
+                        print(f"No activities found for user {user_id[0]}")
+                        continue
+                    
+                    # 사용자가 가장 선호하는 게임 찾기
+                    favorite_game = user_activities.nlargest(1, 'rating').iloc[0]
+                    favorite_game_id = favorite_game['game_id']
+                    
+                    # 협업 필터링 추천 (70%)
+                    collaborative_recs = self.get_collaborative_recommendations(
+                        user_id[0], 
+                        user_activities,
+                        30
+                    )
+                    
+                    # 콘텐츠 기반 추천 (30%)
+                    content_recs = self.get_content_recommendations(favorite_game_id, 30)
+                    
+                    # 추천 결과 통합 및 정규화
+                    hybrid_scores = defaultdict(float)
+                    
+                    # 협업 필터링 점수 (70%)
+                    for rec in collaborative_recs:
+                        rank_score = 1.0 / rec['rank']
+                        hybrid_scores[rec['game_id']] += rank_score * 0.7
+                    
+                    # 콘텐츠 기반 점수 (30%)
+                    for rec in content_recs:
+                        rank_score = 1.0 / rec['recommend_content_rank']
+                        hybrid_scores[rec['recommend_game_id']] += rank_score * 0.3
+                    
+                    # 최종 순위 생성
+                    final_rankings = sorted(
+                        hybrid_scores.items(),
+                        key=lambda x: x[1],
+                        reverse=True
+                    )[:30]
+                    
+                    # 추천 결과 저장
+                    recommendations = [
+                        {
+                            'user_id': user_id[0],
+                            'game_id': game_id,
+                            'recommend_rank': rank
+                        }
+                        for rank, (game_id, _) in enumerate(final_rankings, 1)
+                    ]
+                    
+                    self.save_hybrid_recommendations(recommendations)
+                    print(f"Generated and saved recommendations for user {user_id[0]}")
+                    
+                except Exception as e:
+                    print(f"Error processing user {user_id[0]}: {str(e)}")
+                    continue
             
-            # 4. 초기 추천 결과 저장
-            if all_recommendations:
-                self.db.bulk_insert_mappings(models.Recommend, all_recommendations)
-                self.db.commit()
-                print(f"Initial recommendations saved: {len(all_recommendations)}")
-            
-            # 5. 하이브리드 추천 업데이트
-            self.update_hybrid_recommendations()
-            
-            # 6. 최종 결과 확인
-            total_recommendations = self.db.query(func.count(models.Recommend.recommend_id)).scalar()
-            print(f"Completed hybrid recommendations generation. Total recommendations: {total_recommendations}")
-            return {"message": f"Successfully generated {total_recommendations} recommendations for all users"}
+            print("\nHybrid recommendations generation completed")
+            return {"message": "Successfully generated hybrid recommendations"}
             
         except Exception as e:
             print(f"Error in generate_all_hybrid_recommendations: {str(e)}")
             self.db.rollback()
-            raise 
+            return {"message": f"Error generating recommendations: {str(e)}"}
+
+    def get_user_activity_data(self, user_id: int) -> pd.DataFrame:
+        """사용자의 활동 데이터를 가져옵니다."""
+        try:
+            user_activities = self.db.query(models.UserActivity).filter(
+                models.UserActivity.user_id == user_id
+            ).all()
+            
+            activities_data = []
+            for activity in user_activities:
+                activities_data.append({
+                    'user_id': activity.user_id,
+                    'game_id': activity.game_id,
+                    'rating': activity.user_activity_rating,
+                    'created_at': activity.created_at
+                })
+            
+            return pd.DataFrame(activities_data)
+        except Exception as e:
+            print(f"Error getting user activity data: {str(e)}")
+            return pd.DataFrame()
+
+    def create_collaborative_matrix(self, user_activities: pd.DataFrame) -> Tuple[csr_matrix, Dict]:
+        """협업 필터링을 위한 사용자-게임 매트릭스를 생성합니다."""
+        try:
+            # 사용자 활동 데이터와 리뷰 데이터 병합
+            merged_data = pd.merge(
+                user_activities,
+                self.reviews_df,
+                left_on='game_id',
+                right_on='ID'
+            )
+            
+            # 사용자-게임 매트릭스 생성
+            user_game_matrix = merged_data.pivot(
+                index='user',
+                columns='ID',
+                values='rating'
+            ).fillna(0)
+            
+            # 매트릭스를 sparse matrix로 변환
+            sparse_matrix = csr_matrix(user_game_matrix.values)
+            
+            # 게임 ID 매핑 생성
+            game_mapping = {
+                idx: game_id 
+                for idx, game_id in enumerate(user_game_matrix.columns)
+            }
+            
+            return sparse_matrix, game_mapping
+            
+        except Exception as e:
+            print(f"Error creating collaborative matrix: {str(e)}")
+            return None, None
+
+    def get_user_cluster(self, user_id: int) -> Optional[int]:
+        """사용자의 클러스터를 반환합니다."""
+        try:
+            if user_id in self.user_clusters:
+                return self.user_clusters[user_id]
+            
+            # 사용자의 리뷰 데이터 가져오기
+            user_reviews = self.reviews_df[self.reviews_df['user'] == user_id]
+            if user_reviews.empty:
+                return None
+            
+            # 사용자의 평균 평점 계산
+            user_rating = user_reviews['rating'].mean()
+            
+            # 데이터 정규화
+            scaler = StandardScaler()
+            user_data = np.array([[user_rating]])
+            user_data_scaled = scaler.fit_transform(user_data)
+            
+            # 클러스터 예측
+            cluster = self.kmeans_model.predict(user_data_scaled)[0]
+            self.user_clusters[user_id] = cluster
+            
+            return cluster
+            
+        except Exception as e:
+            print(f"Error getting user cluster: {str(e)}")
+            return None
+
+    def _train_clustering_model(self) -> bool:
+        """클러스터링 모델을 학습시킵니다."""
+        try:
+            if self.reviews_df is None or self.reviews_df.empty:
+                print("No review data available for clustering")
+                return False
+            
+            print("Starting clustering model training...")
+            print(f"Total reviews: {len(self.reviews_df)}")
+            
+            # 사용자별 평균 평점과 평가 수 계산
+            user_ratings = self.reviews_df.groupby('user').agg({
+                'rating': ['mean', 'count']
+            }).reset_index()
+            
+            # 컬럼명 변경
+            user_ratings.columns = ['user', 'mean_rating', 'review_count']
+            
+            # 최소 1개 이상의 평가가 있는 사용자만 선택 (조건 완화)
+            user_ratings = user_ratings[user_ratings['review_count'] >= 1]
+            
+            print(f"Users with reviews: {len(user_ratings)}")
+            
+            if len(user_ratings) < self.n_clusters:
+                print(f"Not enough users for {self.n_clusters} clusters")
+                return False
+            
+            # 데이터 정규화
+            X = user_ratings[['mean_rating', 'review_count']].values
+            scaler = StandardScaler()
+            X_scaled = scaler.fit_transform(X)
+            
+            # MiniBatchKMeans 모델 학습
+            self.kmeans_model = MiniBatchKMeans(
+                n_clusters=self.n_clusters,
+                batch_size=self.batch_size,
+                random_state=42
+            )
+            self.kmeans_model.fit(X_scaled)
+            
+            # 사용자별 클러스터 할당
+            for _, row in user_ratings.iterrows():
+                user_data = row[['mean_rating', 'review_count']].values.reshape(1, -1)
+                user_data_scaled = scaler.transform(user_data)
+                cluster = self.kmeans_model.predict(user_data_scaled)[0]
+                self.user_clusters[row['user']] = cluster
+            
+            print(f"Clustering model trained successfully with {len(user_ratings)} users")
+            return True
+            
+        except Exception as e:
+            print(f"Error training clustering model: {str(e)}")
+            return False
+
+    def get_hybrid_recommendations(self, user_id: int, top_n: int = 30) -> List[Dict]:
+        """하이브리드 추천을 생성합니다."""
+        try:
+            # 사용자 활동 데이터 가져오기
+            user_activities = self.get_user_activity_data(user_id)
+            if user_activities.empty:
+                return []
+
+            # 사용자가 가장 선호하는 게임 찾기 (평점이 가장 높은 게임)
+            favorite_game = user_activities.nlargest(1, 'rating').iloc[0]
+            favorite_game_id = favorite_game['game_id']
+
+            # 협업 필터링 추천 (70%)
+            collaborative_recs = self.get_collaborative_recommendations(
+                user_id, 
+                user_activities,
+                top_n
+            )
+
+            # 콘텐츠 기반 추천 (30%)
+            content_recs = self.get_content_recommendations(favorite_game_id, top_n)
+
+            # 추천 결과 통합 및 정규화
+            hybrid_scores = defaultdict(float)
+            
+            # 협업 필터링 점수 (70%)
+            for rec in collaborative_recs:
+                rank_score = 1.0 / rec['rank']
+                hybrid_scores[rec['game_id']] += rank_score * 0.7
+
+            # 콘텐츠 기반 점수 (30%)
+            for rec in content_recs:
+                rank_score = 1.0 / rec['recommend_content_rank']
+                hybrid_scores[rec['recommend_game_id']] += rank_score * 0.3
+
+            # 최종 순위 생성
+            final_rankings = sorted(
+                hybrid_scores.items(),
+                key=lambda x: x[1],
+                reverse=True
+            )[:top_n]
+
+            # 추천 결과 생성
+            recommendations = [
+                {
+                    'user_id': user_id,
+                    'game_id': game_id,
+                    'recommend_rank': rank
+                }
+                for rank, (game_id, _) in enumerate(final_rankings, 1)
+            ]
+
+            # 데이터베이스에 저장
+            self.save_hybrid_recommendations(recommendations)
+            
+            return recommendations
+
+        except Exception as e:
+            print(f"Error getting hybrid recommendations: {str(e)}")
+            return [] 

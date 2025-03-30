@@ -90,152 +90,26 @@ async def startup_event():
 def read_root():
     return {"message": "보드게임 추천 시스템 API"}
 
-@app.get("/recommend/content/{game_id}", response_model=List[RecommendContentResponse])
-def get_content_recommendations(game_id: int, db: Session = Depends(get_db)):
-    """
-    특정 게임에 대한 콘텐츠 기반 추천을 반환합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        recommendations = recommendation_engine.get_content_recommendations(game_id)
-        if not recommendations:
-            raise HTTPException(
-                status_code=404,
-                detail="추천 데이터가 없습니다. 새벽 3시에 생성되거나 수동으로 생성해주세요."
-            )
-        return recommendations
-    except Exception as e:
-        print(f"Error in get_content_recommendations: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/recommend/hybrid/{game_id}", response_model=List[RecommendResponse])
-def get_hybrid_recommendations(game_id: int, user_id: int, db: Session = Depends(get_db)):
-    """
-    특정 게임에 대한 하이브리드 추천을 반환합니다.
-    """
+@app.put("/fastapi/hybrid-recommendations")
+async def generate_all_hybrid_recommendations(db: Session = Depends(get_db)):
+    """모든 사용자에 대한 하이브리드 추천을 생성합니다."""
     try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        recommendations = recommendation_engine.get_hybrid_recommendations(game_id, user_id)
-        if not recommendations:
-            raise HTTPException(
-                status_code=404,
-                detail="추천 데이터가 없습니다. 새벽 3시에 생성되거나 수동으로 생성해주세요."
-            )
-        return recommendations
-    except Exception as e:
-        print(f"Error in get_hybrid_recommendations: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/recommend/content/{game_id}/rank", response_model=List[RecommendContentResponse])
-def get_content_recommendations_by_rank(
-    game_id: int,
-    start_rank: int = 1,
-    end_rank: int = 30,
-    db: Session = Depends(get_db)
-):
-    """
-    특정 게임에 대한 콘텐츠 기반 추천을 지정된 순위 범위로 반환합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        recommendations = recommendation_engine.get_recommendations_by_rank(game_id, start_rank, end_rank)
-        return recommendations
-    except Exception as e:
-        print(f"Error in get_content_recommendations_by_rank: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/trigger-recommendations")
-async def trigger_recommendations(db: Session = Depends(get_db)):
-    """수동으로 추천 생성을 트리거합니다."""
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+        # 추천 엔진 초기화
+        recommendation_engine = RecommendationEngine(db)
         
-        success = recommendation_engine.generate_hybrid_recommendations()
-        
-        if success:
-            return {"message": "추천 생성이 완료되었습니다."}
-        else:
-            raise HTTPException(status_code=500, detail="추천 생성 중 오류가 발생했습니다.")
-            
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/trigger-hybrid-recommendations/{user_id}")
-def trigger_hybrid_recommendations(user_id: int, db: Session = Depends(get_db)):
-    """
-    특정 사용자에 대한 하이브리드 추천을 수동으로 생성합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        # 기존 추천 데이터 삭제
-        db.execute(text(f"DELETE FROM recommend WHERE user_id = {user_id}"))
+        # recommend 테이블 초기화
+        db.execute(text("TRUNCATE TABLE recommend"))
         db.commit()
         
-        success = recommendation_engine.generate_hybrid_recommendations()
+        # 하이브리드 추천 생성
+        result = recommendation_engine.generate_all_hybrid_recommendations()
         
-        if success:
-            return {"message": "하이브리드 추천 생성이 완료되었습니다."}
-        else:
-            raise HTTPException(status_code=500, detail="하이브리드 추천 생성 중 오류가 발생했습니다.")
+        if "message" in result and "Error" in result["message"]:
+            raise HTTPException(status_code=500, detail=result["message"])
             
-    except Exception as e:
-        print(f"Error in trigger_hybrid_recommendations: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/initialize-clusters")
-def initialize_clusters(n_clusters: int = 10, batch_size: int = 100, db: Session = Depends(get_db)):
-    """
-    클러스터링을 초기화합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        success = recommendation_engine._initialize_clusters(n_clusters, batch_size)
-        
-        if success:
-            return {"message": "클러스터링이 초기화되었습니다."}
-        else:
-            raise HTTPException(status_code=500, detail="클러스터링 초기화 중 오류가 발생했습니다.")
-            
-    except Exception as e:
-        print(f"Error in initialize_clusters: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/cluster-stats")
-def get_cluster_stats(db: Session = Depends(get_db)):
-    """
-    클러스터 통계를 반환합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        stats = recommendation_engine.analyze_cluster_stats()
-        
-        if isinstance(stats, str):
-            raise HTTPException(status_code=404, detail=stats)
-            
-        return stats
-        
-    except Exception as e:
-        print(f"Error in get_cluster_stats: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/generate-all-hybrid-recommendations")
-async def generate_all_hybrid_recommendations():
-    try:
-        success = recommendation_engine.generate_all_hybrid_recommendations()
         return {"message": "Successfully generated hybrid recommendations"}
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -263,30 +137,8 @@ async def generate_recommendations_scheduler():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/recommendations/{user_id}")
-def get_recommendations(user_id: int, limit: int = 30, db: Session = Depends(get_db)):
-    """
-    특정 사용자의 추천 목록을 반환합니다.
-    """
-    try:
-        if recommendation_engine is None:
-            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
-            
-        recommendations = recommendation_engine.get_recommendations_for_user(user_id, limit)
-        
-        if not recommendations:
-            raise HTTPException(
-                status_code=404,
-                detail="추천 데이터가 없습니다. 새벽 3시에 생성되거나 수동으로 생성해주세요."
-            )
-            
-        return recommendations
-        
-    except Exception as e:
-        print(f"Error in get_recommendations: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.put("/trigger-content-recommendations")
+@app.put("/fastapi/content-recommendations")
 async def trigger_content_recommendations(db: Session = Depends(get_db)):
     """콘텐츠 기반 추천을 수동으로 생성합니다."""
     try:
