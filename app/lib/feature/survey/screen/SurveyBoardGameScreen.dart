@@ -115,6 +115,7 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
         ),
         child: ButtonCommonPrimaryBottom(
           text: '등록',
+          disableWithOpacity: true,
           onPressed: selectedGameId != null
               ? () async {
                   final userId = await storage.read(key: 'userId');

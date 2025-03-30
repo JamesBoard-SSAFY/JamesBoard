@@ -109,6 +109,7 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
         ),
         child: ButtonCommonPrimaryBottom(
           text: '선택',
+          disableWithOpacity: true,
           onPressed: selectedId != null
               ? () async {
                   logger.d('selectedId : $selectedId');

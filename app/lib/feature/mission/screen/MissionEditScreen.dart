@@ -339,6 +339,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                   ButtonCommonPrimaryBottom(
                     text: AppString.register,
                     onPressed: () {},
+                    disableWithOpacity: false,
                   ),
                 ],
               ),
