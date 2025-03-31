@@ -10,7 +10,7 @@ class ArchiveDetailResponse {
   final String archiveContent;
   final String gameTitle;
   final int archiveGamePlayTime;
-  final List<ArchiveImageList> archiveImageList;
+  final List<String> archiveImageList;
 
   ArchiveDetailResponse({
     required this.archiveId,
@@ -26,18 +26,4 @@ class ArchiveDetailResponse {
       _$ArchiveDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveDetailResponseToJson(this);
-}
-
-@JsonSerializable()
-class ArchiveImageList {
-  final String archiveImageUrl;
-
-  ArchiveImageList({
-    required this.archiveImageUrl,
-  });
-
-  factory ArchiveImageList.fromJson(Map<String, dynamic> json) =>
-      _$ArchiveImageListFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ArchiveImageListToJson(this);
 }
