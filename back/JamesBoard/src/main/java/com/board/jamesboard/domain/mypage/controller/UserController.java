@@ -141,7 +141,9 @@ public class UserController {
                     "<b>[오류]</b> 존재하지 않는 사용자 ID 요청 시 404 오류가 발생.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게임 목록 조회 성공",
-                    content = @Content(schema = @Schema(implementation = UserGameResponseDto.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserGameResponseDto.class),
+                            examples = @ExampleObject(value = "[ { \"gameId\": 1, \"gameImage\": \"https://example.com/images/davinci.jpg\" }, { \"gameId\": 2, \"gameImage\": \"https://example.com/images/chess.jpg\" } ]"))),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 요청입니다. (JWT 토큰 누락 또는 유효하지 않을 시)",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(value = "{\"status\":401,\"message\":\"인증되지 않은 요청입니다.\"}"))),
