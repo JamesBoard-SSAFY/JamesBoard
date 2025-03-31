@@ -57,6 +57,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
             );
           }),
           ListTopTenGame(
+            queryParameters: {'sortBy': 'game_avg_rating'},
             title: AppString.agentTop,
             onImageTap: onImageTap,
             imageUrls: AppDummyData.imageUrls,
@@ -73,6 +74,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
             );
           }),
           ListBGGRankGame(
+            queryParameters: {'sortBy': 'game_rank'},
             imageUrls: AppDummyData.imageUrls,
             title: AppString.bggRank,
             onImageTap: onImageTap,

@@ -6,22 +6,24 @@ import '../../../theme/Colors.dart';
 import 'CardHomeTopTen.dart';
 
 class ListTopTenGame extends StatefulWidget {
-  final List<String> imageUrls; // 게임 이미지 URL 리스트
+  final List<String> imageUrls;
   final String title;
-  final Function(String id) onImageTap; // 클릭 시 수행할 작업
+  final Function(String id) onImageTap;
+  final Map<String, dynamic> queryParameters;
 
-  const ListTopTenGame(
-      {Key? key,
-      required this.imageUrls,
-      required this.title,
-      required this.onImageTap})
-      : super(key: key);
+  const ListTopTenGame({
+    Key? key,
+    required this.imageUrls,
+    required this.title,
+    required this.onImageTap,
+    required this.queryParameters,
+  }) : super(key: key);
 
   @override
-  State<ListTopTenGame> createState() => _ListHomeHorizontalGameState();
+  State<ListTopTenGame> createState() => _ListTopTenGameState();
 }
 
-class _ListHomeHorizontalGameState extends State<ListTopTenGame> {
+class _ListTopTenGameState extends State<ListTopTenGame> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,8 +45,10 @@ class _ListHomeHorizontalGameState extends State<ListTopTenGame> {
           ),
           SizedBox(height: 20),
           CardHomeTopTen(
+            title: widget.title,
             images: AppDummyData.images,
             onImageTap: (String id) => widget.onImageTap(id),
+            queryParameters: widget.queryParameters,
           )
         ],
       ),
