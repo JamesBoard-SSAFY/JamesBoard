@@ -38,119 +38,115 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   @override
   Widget build(BuildContext context) {
-    final storage = FlutterSecureStorage();
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.loadUserId();
 
-    return ChangeNotifierProvider(
-      create: (_) => MyPageViewModel(MyPageRepository.create(), storage),
-      child: Consumer<MyPageViewModel>(
-        builder: (context, viewModel, _) {
-          return Scaffold(
-          backgroundColor: mainBlack,
-          body: Column(
+    return Scaffold(
+      backgroundColor: mainBlack,
+      body: Column(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
+              SizedBox(
+                height: 16,
+              ),
+              CircleAvatar(
+                radius: 35,
+                backgroundImage: viewModel.userInfo?.userProfile != null
+                    ? NetworkImage(viewModel.userInfo!.userProfile!)
+                    : AssetImage('assets/image/image_default_profile.png')
+                        as ImageProvider,
+                backgroundColor: mainBlack,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundImage: viewModel.userInfo?.userProfile != null
-                        ? NetworkImage(viewModel.userInfo!.userProfile!)
-                        : AssetImage('assets/image/image_default_profile.png') as ImageProvider,
-                    backgroundColor: mainBlack,
+                  Text(
+                    viewModel.userInfo?.userNickname ?? "",
+                    style: TextStyle(
+                      color: mainWhite,
+                      fontSize: 20,
+                      fontFamily: 'PretendardBold',
+                    ),
                   ),
                   SizedBox(
-                    height: 8,
+                    width: 4,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        viewModel.userInfo?.userNickname ?? "장킨스",
-                        style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: 'PretendardBold',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MyPageUserEditScreen(
-                                title: "요원 정보 변경",
-                                userName: "장킨스",
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: secondaryBlack,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(6),
-                            child: SvgPicture.asset(
-                              'assets/image/icon_pen.svg',
-                              width: 24,
-                              height: 24,
-                            ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyPageUserEditScreen(
+                            title: "요원 정보 변경",
+                            userName: viewModel.userInfo?.userNickname ?? "",
+                            userImg: viewModel.userInfo!.userProfile,
                           ),
                         ),
+                      );
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: secondaryBlack,
+                        shape: BoxShape.circle,
                       ),
-                    ],
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: SvgPicture.asset(
+                          'assets/image/icon_pen.svg',
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 20),
                 ],
               ),
-              TabBar(
-                controller: _tabController,
-                labelColor: mainGold,
-                // 선택된 탭 텍스트 색
-                unselectedLabelColor: mainGrey,
-                // 선택되지 않은 탭 텍스트 색
-                indicatorColor: mainGold,
-                // 인디케이터 색
-                indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: Colors.transparent,
-                labelStyle: TextStyle(
-                  // 선택된 탭 텍스트 스타일
-                  fontSize: 16,
-                  color: mainGold,
-                  fontFamily: 'PretendardBold',
-                ),
-                unselectedLabelStyle: TextStyle(
-                  fontSize: 16,
-                  color: mainGrey,
-                  fontFamily: 'Pretendard',
-                ),
-                tabs: [
-                  Tab(text: "임무 보고"),
-                  Tab(text: "임무 통계"),
-                ],
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTabContentMissionReport(),
-                    _buildTabContentMissionStatistics(),
-                  ],
-                ),
-              ),
+              SizedBox(height: 20),
             ],
           ),
-        );
-  },
+          TabBar(
+            controller: _tabController,
+            labelColor: mainGold,
+            // 선택된 탭 텍스트 색
+            unselectedLabelColor: mainGrey,
+            // 선택되지 않은 탭 텍스트 색
+            indicatorColor: mainGold,
+            // 인디케이터 색
+            indicatorSize: TabBarIndicatorSize.tab,
+            dividerColor: Colors.transparent,
+            labelStyle: TextStyle(
+              // 선택된 탭 텍스트 스타일
+              fontSize: 16,
+              color: mainGold,
+              fontFamily: 'PretendardBold',
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontSize: 16,
+              color: mainGrey,
+              fontFamily: 'Pretendard',
+            ),
+            tabs: [
+              Tab(text: "임무 보고"),
+              Tab(text: "임무 통계"),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildTabContentMissionReport(),
+                _buildTabContentMissionStatistics(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

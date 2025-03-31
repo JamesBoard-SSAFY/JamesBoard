@@ -5,14 +5,12 @@ import 'package:jamesboard/datasource/model/response/MyPage/MyPageUserInfoRespon
 import 'package:jamesboard/datasource/model/response/MyPage/MyPageMissionRecordResponse.dart';
 import 'package:jamesboard/datasource/model/response/MyPage/MyPagePlayedGames.dart';
 import 'package:jamesboard/datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
-import 'package:logger/logger.dart';
-
 import '../../../datasource/model/request/MyPage/MyPageUserInfoRequest.dart';
 import '../../../main.dart';
 
 class MyPageViewModel extends ChangeNotifier {
   final MyPageRepository _myPageRepository;
-  final FlutterSecureStorage storage;
+  final FlutterSecureStorage _storage;
 
   int? userId;
   MyPageUserInfoResponse? userInfo;
@@ -21,97 +19,109 @@ class MyPageViewModel extends ChangeNotifier {
   MyPageGameStatsResponse? gameStats;
   bool isLoading = false;
 
-  // 생성자
-  MyPageViewModel(this._myPageRepository, this.storage) {
-    _loadUserId();
-  }
+  // 생성자: userId를 직접 불러오지 않고, main.dart에서 설정
+  MyPageViewModel(this._myPageRepository, this._storage);
 
-  // 저장된 userId 불러오기
-  Future<void> _loadUserId() async {
-    String? storedUserId = await storage.read(key: "userId");
-    if (storedUserId != null) {
-      userId = int.tryParse(storedUserId);
-      notifyListeners();
-      getUserInfo(); // userId 설정 후 사용자 정보 불러오기
+  /// 저장된 userId 불러오기 (main.dart에서 사용)
+  Future<void> loadUserId() async {
+    try {
+      String? storedUserId = await _storage.read(key: "userId");
+      if (storedUserId != null) {
+        userId = int.tryParse(storedUserId);
+        notifyListeners();
+        await getUserInfo(); // userId 설정 후 사용자 정보 불러오기
+      }
+    } catch (e) {
+      logger.e("flutter - loadUserId: $e");
     }
   }
 
-  // 사용자 정보 조회
+  /// 사용자 정보 조회
   Future<void> getUserInfo() async {
-    if (userId == null) return; // userId가 없으면 요청하지 않음
+    if (userId == null) return;
     try {
+      isLoading = true;
+      notifyListeners();
       userInfo = await _myPageRepository.getUserInfo(userId!);
       logger.d("flutter - getUserInfo: $userInfo");
-      notifyListeners();
     } catch (e) {
       logger.e("flutter - getUserInfo: $e");
-    }
-  }
-
-  // 사용자 정보 수정
-  Future<void> editUserInfo(int userId, MyPageUserInfoRequest request) async {
-    try {
-      isLoading = true;
-      notifyListeners();
-      await _myPageRepository.editUserInfo(userId, request);
-    } catch (e) {
-      // 에러 처리
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  // 사용자의 특정 게임 아카이브 조회
-  Future<void> getMissionRecord(int userId, int gameId) async {
+  /// 사용자 정보 수정
+  Future<void> editUserInfo(MyPageUserInfoRequest request) async {
+    if (userId == null) return;
     try {
       isLoading = true;
       notifyListeners();
-      missionRecord = await _myPageRepository.getMissionRecord(userId, gameId);
+      await _myPageRepository.editUserInfo(userId!, request);
+      await getUserInfo(); // 업데이트 후 정보 다시 로드
     } catch (e) {
-      // 에러 처리
+      logger.e("flutter - editUserInfo: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  // 사용자 플레이 게임 목록 조회
-  Future<void> getAllPlayedGames(int userId) async {
+  /// 사용자의 특정 게임 미션 기록 조회
+  Future<void> getMissionRecord(int gameId) async {
+    if (userId == null) return;
     try {
       isLoading = true;
       notifyListeners();
-      playedGames = await _myPageRepository.getAllPlayedGames(userId);
+      missionRecord = await _myPageRepository.getMissionRecord(userId!, gameId);
     } catch (e) {
-      // 에러 처리
+      logger.e("flutter - getMissionRecord: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  // 사용자 게임 통계 및 순위 조회
-  Future<void> getTopPlayedGame(int userId) async {
+  /// 사용자 플레이한 게임 목록 조회
+  Future<void> getAllPlayedGames() async {
+    if (userId == null) return;
     try {
       isLoading = true;
       notifyListeners();
-      gameStats = await _myPageRepository.getTopPlayedGame(userId);
+      playedGames = await _myPageRepository.getAllPlayedGames(userId!);
     } catch (e) {
-      // 에러 처리
+      logger.e("flutter - getAllPlayedGames: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  // 유저 선호게임 여부 조회
-  Future<void> getPreferGame(int userId) async {
+  /// 사용자 게임 통계 및 순위 조회
+  Future<void> getTopPlayedGame() async {
+    if (userId == null) return;
     try {
       isLoading = true;
       notifyListeners();
-      await _myPageRepository.getPreferGame(userId);
+      gameStats = await _myPageRepository.getTopPlayedGame(userId!);
     } catch (e) {
-      // 에러 처리
+      logger.e("flutter - getTopPlayedGame: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// 유저 선호 게임 여부 조회
+  Future<void> getPreferGame() async {
+    if (userId == null) return;
+    try {
+      isLoading = true;
+      notifyListeners();
+      await _myPageRepository.getPreferGame(userId!);
+    } catch (e) {
+      logger.e("flutter - getPreferGame: $e");
     } finally {
       isLoading = false;
       notifyListeners();

@@ -8,15 +8,19 @@ import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/MyPageRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+
+import 'feature/user/viewmodel/MyPageViewModel.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
@@ -44,8 +48,22 @@ void main() async {
   final accessToken = prefs.getString('accessToken');
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
+  final myPageRepository = MyPageRepository.create();
+  final myPageViewModel = MyPageViewModel(myPageRepository, storage);
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MyPageViewModel>(
+          create: (context) => MyPageViewModel(
+            MyPageRepository.create(),
+            storage,
+          ),
+        ),
+      ],
+      child: MyApp(isLoggedIn: false),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

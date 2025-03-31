@@ -10,11 +10,13 @@ import '../../../widget/button/ButtonCommonPrimaryBottom.dart';
 class MyPageUserEditScreen extends StatefulWidget {
   final String title;
   final String userName;
+  final String userImg;
 
   const MyPageUserEditScreen({
     super.key,
     required this.title,
     required this.userName,
+    required this.userImg,
   });
 
   @override
@@ -43,15 +45,16 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ImageUserProfile(
-                  imageUrl:
-                      "https://cf.geekdo-images.com/wLto-xaabHwKQe_Bc4iD1Q__micro/img/IcevtuHa5wbYSpkiPp4vFOqrDVo=/fit-in/64x64/filters:strip_icc()/pic3458036.png",
+                  imageUrl: widget.userImg,
                 ),
               ],
             ),
             SizedBox(
               height: 24,
             ),
-            TextFieldUserNickname(),
+            TextFieldUserNickname(
+              userName: widget.userName,
+            ),
             SizedBox(
               height: 8,
             ),
