@@ -4,7 +4,6 @@ import 'package:jamesboard/feature/boardgame/widget/ListBGGRankGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListHomeHorizontalGame.dart';
 import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
-
 import '../widget/CardHomeSuggestion.dart';
 import 'BoardGameDetailScreen.dart';
 
@@ -16,20 +15,16 @@ class BoardGameHomeScreen extends StatefulWidget {
 }
 
 class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
-  void onImageTap(String id) {
-    // id로 수행할 작업을 여기에 작성
-    print('Image $id clicked!');
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  void onImageTap(String id) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => BoardGameDetailScreen()),
     );
-  }
-
-  List<String> makeImageUrlOrder() {
-    List<String> shuffledList = List.from(AppDummyData.imageUrls);
-    shuffledList.shuffle();
-    return shuffledList;
   }
 
   void updateFilter(String key, String value) {
@@ -40,8 +35,6 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AppDummyData.imageUrls.shuffle();
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -54,42 +47,50 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
           ),
           ...AppDummyData.genreTitles.map((title) {
             return ListHomeHorizontalGame(
-              imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
-              title: title, // 각 제목을 전달
+              queryParameters: {
+                'category': AppDummyData.titleCategoryMap[title],
+              },
+              title: title,
               updateFilter: updateFilter,
               updateCategory: AppString.genre,
               selectedFilters: AppDummyData.selectedFilters,
             );
           }),
           ListTopTenGame(
-            imageUrls: AppDummyData.imageUrls,
+            queryParameters: {'sortBy': 'game_avg_rating'},
             title: AppString.agentTop,
             onImageTap: onImageTap,
+            imageUrls: AppDummyData.imageUrls,
           ),
-          ...AppDummyData.numOfPersonTitles.map((title) {
+          ...AppDummyData.numOfPersonTitles.map((numTitle) {
             return ListHomeHorizontalGame(
-              imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
-              title: title, // 각 제목을 전달
+              queryParameters: {
+                'minPlayers': AppDummyData.gamePersonMap[numTitle],
+              },
+              title: numTitle,
               updateFilter: updateFilter,
               updateCategory: AppString.numOfPerson,
               selectedFilters: AppDummyData.selectedFilters,
             );
           }),
           ListBGGRankGame(
+            queryParameters: {'sortBy': 'game_rank'},
             imageUrls: AppDummyData.imageUrls,
             title: AppString.bggRank,
             onImageTap: onImageTap,
           ),
           ...AppDummyData.missionLevelTitles.map((title) {
             return ListHomeHorizontalGame(
-              imageUrls: makeImageUrlOrder(), // 섞인 이미지 URL 리스트
-              title: title, // 각 제목을 전달
+              queryParameters: {
+                'difficulty': AppDummyData.missionLevelMap[title],
+              },
+              title: title,
               updateFilter: updateFilter,
               updateCategory: AppString.level,
               selectedFilters: AppDummyData.selectedFilters,
             );
           }),
-          SizedBox(height: 20)
+          SizedBox(height: 20),
         ],
       ),
     );

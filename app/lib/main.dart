@@ -4,12 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/SurveyRepository.dart';
+import 'package:jamesboard/repository/BoardGameRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
@@ -58,10 +61,18 @@ void main() async {
             LoginRepository.create(),
           ),
         ),
+        ChangeNotifierProvider<CategoryGameViewModel>(
+          create: (context) => CategoryGameViewModel(
+            BoardGameRepository.create(),
+          ),
+        ),
+        ChangeNotifierProvider<BoardGameViewModel>(
+          create: (context) => BoardGameViewModel(
+            BoardGameRepository.create(),
+          ),
+        ),
       ],
-      child: MyApp(
-        isLoggedIn: isLoggedIn,
-      ),
+      child: MyApp(isLoggedIn: false),
     ),
   );
 }
@@ -144,66 +155,67 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _pages[_selectedIndex],
       backgroundColor: mainBlack,
       bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          backgroundColor: mainBlack,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedItemColor: mainWhite,
-          unselectedItemColor: mainWhite,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(IconPath.homeUnselected,
-                    width: 24,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-                activeIcon: SvgPicture.asset(IconPath.homeSelected,
-                    width: 24,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-                label: AppString.labelHome),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(IconPath.recommendUnselected,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: mainBlack,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: mainWhite,
+        unselectedItemColor: mainWhite,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+              icon: SvgPicture.asset(IconPath.homeUnselected,
                   width: 24,
                   height: 24,
                   colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(IconPath.recommendSelected,
+              activeIcon: SvgPicture.asset(IconPath.homeSelected,
                   width: 24,
                   height: 24,
                   colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: AppString.labelRecommend,
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(IconPath.registerUnselected,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: AppString.labelSearch,
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(IconPath.archiveUnselected,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(IconPath.archiveSelected,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: AppString.labelArchive,
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(IconPath.myPageUnselected,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              activeIcon: SvgPicture.asset(IconPath.myPageSelected,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
-              label: AppString.labelMyPage,
-            ),
-          ]),
+              label: AppString.labelHome),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(IconPath.recommendUnselected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(IconPath.recommendSelected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: AppString.labelRecommend,
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(IconPath.registerUnselected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: AppString.labelSearch,
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(IconPath.archiveUnselected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(IconPath.archiveSelected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: AppString.labelArchive,
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(IconPath.myPageUnselected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(IconPath.myPageSelected,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn)),
+            label: AppString.labelMyPage,
+          ),
+        ],
+      ),
     );
   }
 }
