@@ -20,7 +20,8 @@ class _BoardGameService implements BoardGameService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<BoardGameResponse>> getRecommendedGames({int limit = 10}) async {
+  Future<List<BoardGameRecommendResponse>> getRecommendedGames(
+      {int limit = 10}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};
     final _headers = <String, dynamic>{};
@@ -36,12 +37,12 @@ class _BoardGameService implements BoardGameService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<BoardGameResponse> _value;
+    late List<BoardGameRecommendResponse> _value;
     try {
       _value = _result.data!
           .map(
             (dynamic i) =>
-                BoardGameResponse.fromJson(i as Map<String, dynamic>),
+                BoardGameRecommendResponse.fromJson(i as Map<String, dynamic>),
           )
           .toList();
     } on Object catch (e, s) {
