@@ -1,3 +1,5 @@
+import 'package:jamesboard/datasource/model/response/BoardGameTopResponse.dart';
+
 import '../datasource/api/BoardGameService.dart';
 import '../datasource/model/response/BoardGameResponse.dart';
 import '../util/DioProviderUtil.dart';
@@ -25,6 +27,14 @@ class BoardGameRepository {
       minPlayers: queryParameters['minPlayers'] ?? null,
       category: queryParameters['category'] ?? null,
       boardgameName: queryParameters['boardgameName'] ?? null,
+    );
+  }
+
+  Future<List<BoardGameTopResponse>> getTopGames(
+      Map<String, dynamic> queryParameters) {
+    return _service.getTopGames(
+      sortBy: queryParameters['sortBy'] ?? null,
+      limit: queryParameters['limit'] ?? null,
     );
   }
 }
