@@ -10,7 +10,7 @@ import com.board.jamesboard.core.constant.ErrorCode;
 import com.board.jamesboard.core.exception.CustomException;
 import com.board.jamesboard.db.entity.Game;
 import com.board.jamesboard.db.repository.GameRepository;
-import com.board.jamesboard.domain.boardgame.dto.BoardgameDetailDto;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameDetailResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardgameDetailServiceImpl implements BoardgameDetailService {
+public class BoardGameDetailServiceImpl implements BoardGameDetailService {
 
     private final GameRepository gameRepository;
 
     @Override
-    public BoardgameDetailDto getBoardgameDetail(Long gameId) {
+    public BoardGameDetailResponseDto getBoardGameDetail(Long gameId) {
         // 게임 정보 조회
         Game game = gameRepository.findByGameId(gameId)
                 .orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
@@ -43,7 +43,7 @@ public class BoardgameDetailServiceImpl implements BoardgameDetailService {
                 .collect(Collectors.toList());
 
         // DTO 생성 및 반환
-        return new BoardgameDetailDto(
+        return new BoardGameDetailResponseDto(
                 game.getGameId(),
                 game.getGameTitle(),
                 game.getGameImage(),

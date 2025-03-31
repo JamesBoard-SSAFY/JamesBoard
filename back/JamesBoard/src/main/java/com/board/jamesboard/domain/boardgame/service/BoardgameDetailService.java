@@ -1,7 +1,7 @@
 package com.board.jamesboard.domain.boardgame.service;
 
-import com.board.jamesboard.domain.boardgame.dto.BoardgameDetailDto;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameDetailResponseDto;
 
-public interface BoardgameDetailService {
-    BoardgameDetailDto getBoardgameDetail(Long gameId);
+public interface BoardGameDetailService {
+    BoardGameDetailResponseDto getBoardGameDetail(Long gameId);
 }

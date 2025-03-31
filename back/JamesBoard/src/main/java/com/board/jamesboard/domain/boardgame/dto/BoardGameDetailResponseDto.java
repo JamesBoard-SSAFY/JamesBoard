@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardgameDetailDto {
+public class BoardGameDetailResponseDto {
     private Long gameId;
     private String gameTitle;
     private String gameImage;

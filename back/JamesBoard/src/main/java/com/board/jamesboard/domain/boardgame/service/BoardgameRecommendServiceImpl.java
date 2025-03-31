@@ -14,7 +14,7 @@ import com.board.jamesboard.db.repository.RecommendRepository;
 import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
 import com.board.jamesboard.db.repository.GameThemeRepository;
-import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameRecommendResponseDto;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BoardgameRecommendServiceImpl implements BoardgameRecommendService {
+public class BoardgameRecommendServiceImpl implements BoardGameRecommendService {
 
     private final UserRepository userRepository;
     private final RecommendContentRepository recommendContentRepository;
@@ -31,7 +31,7 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
     private final GameThemeRepository gameThemeRepository;
 
     @Override
-    public List<BoardgameRecommendDto> getBoardgameRecommends(Long userId, Integer limit) {
+    public List<BoardGameRecommendResponseDto> getBoardGameRecommends(Long userId, Integer limit) {
         // 사용자와 선호 게임 조회
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("user_id를 찾지 못했습니다"));
@@ -54,7 +54,7 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
                     .map(rc -> {
                         Game recommendGame = rc.getRecommendGame();
                         List<String> themes = gameThemeRepository.findThemeByGameId(recommendGame.getGameId());
-                        return new BoardgameRecommendDto(
+                        return new BoardGameRecommendResponseDto(
                                 recommendGame.getGameId(),
                                 recommendGame.getGameTitle(),
                                 recommendGame.getGameImage(),
@@ -77,7 +77,7 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
                     .map(recommend -> {
                         Game recommendGame = recommend.getGame();
                         List<String> themes = gameThemeRepository.findThemeByGameId(recommendGame.getGameId());
-                        return new BoardgameRecommendDto(
+                        return new BoardGameRecommendResponseDto(
                                 recommendGame.getGameId(),
                                 recommendGame.getGameTitle(),
                                 recommendGame.getGameImage(),

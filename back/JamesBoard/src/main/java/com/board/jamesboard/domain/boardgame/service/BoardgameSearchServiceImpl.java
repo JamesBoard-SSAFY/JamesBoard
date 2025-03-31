@@ -20,12 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class BoardgameSearchServiceImpl implements BoardgameSearchService {
+public class BoardgameSearchServiceImpl implements BoardGameSearchService {
 
     private final GameRepository gameRepository;
 
     @Override
-    public List<BoardGameResponseDto> searchBoardgames(Integer difficulty, Integer minPlayers, String name, String category) {
+    public List<BoardGameResponseDto> searchBoardGames(Integer difficulty, Integer minPlayers, String name, String category) {
 
 //        List<Game> gamesWithFilter = gameRepository.searchGamesWithCategoryOnly(difficulty, minPlayers, name, category);
 //        List<Long> gameIds = gamesWithFilter.stream().map(Game::getGameId).toList();

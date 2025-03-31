@@ -1,10 +1,9 @@
 package com.board.jamesboard.domain.boardgame.service;
 
-import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameRecommendResponseDto;
 
 import java.util.List;
 
-public interface BoardgameRecommendService {
-    List<BoardgameRecommendDto> getBoardgameRecommends(Long userId, Integer limit);
+public interface BoardGameRecommendService {
+    List<BoardGameRecommendResponseDto> getBoardGameRecommends(Long userId, Integer limit);
 }

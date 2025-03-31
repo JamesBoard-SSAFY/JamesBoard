@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardgameTopDto {
+public class BoardGameTopResponseDto {
     private Long gameId;
     private String gameImage;
 }

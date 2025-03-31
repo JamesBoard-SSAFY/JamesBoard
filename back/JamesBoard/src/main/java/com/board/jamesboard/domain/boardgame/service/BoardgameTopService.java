@@ -2,8 +2,8 @@ package com.board.jamesboard.domain.boardgame.service;
 
 import java.util.List;
 
-import com.board.jamesboard.domain.boardgame.dto.BoardgameTopDto;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameTopResponseDto;
 
-public interface BoardgameTopService {
-    List<BoardgameTopDto> getBoardgameTop(String sortBy, Integer limit);
+public interface BoardGameTopService {
+    List<BoardGameTopResponseDto> getBoardGameTop(String sortBy, Integer limit);
 }
