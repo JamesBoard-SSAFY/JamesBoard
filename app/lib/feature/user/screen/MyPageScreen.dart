@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
-
-import '../../../util/CommonUtils.dart';
+import 'package:provider/provider.dart';
+import '../../../repository/MyPageRepository.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
+import '../viewmodel/MyPageViewModel.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
 import 'MyPagePlayTimeScreen.dart';
 
@@ -36,109 +38,119 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainBlack,
-      body: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    final storage = FlutterSecureStorage();
+
+    return ChangeNotifierProvider(
+      create: (_) => MyPageViewModel(MyPageRepository.create(), storage),
+      child: Consumer<MyPageViewModel>(
+        builder: (context, viewModel, _) {
+          return Scaffold(
+          backgroundColor: mainBlack,
+          body: Column(
             children: [
-              SizedBox(
-                height: 16,
-              ),
-              CircleAvatar(
-                radius: 35,
-                backgroundImage:
-                    AssetImage('assets/image/image_default_profile.png'),
-                backgroundColor: mainBlack,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "장킨스",
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: 'PretendardBold',
-                    ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  CircleAvatar(
+                    radius: 35,
+                    backgroundImage: viewModel.userInfo?.userProfile != null
+                        ? NetworkImage(viewModel.userInfo!.userProfile!)
+                        : AssetImage('assets/image/image_default_profile.png') as ImageProvider,
+                    backgroundColor: mainBlack,
                   ),
                   SizedBox(
-                    width: 4,
+                    height: 8,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyPageUserEditScreen(
-                            title: "요원 정보 변경",
-                            userName: "장킨스",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        viewModel.userInfo?.userNickname ?? "장킨스",
+                        style: TextStyle(
+                          color: mainWhite,
+                          fontSize: 20,
+                          fontFamily: 'PretendardBold',
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyPageUserEditScreen(
+                                title: "요원 정보 변경",
+                                userName: "장킨스",
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: secondaryBlack,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(6),
+                            child: SvgPicture.asset(
+                              'assets/image/icon_pen.svg',
+                              width: 24,
+                              height: 24,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: secondaryBlack,
-                        shape: BoxShape.circle,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: SvgPicture.asset(
-                          'assets/image/icon_pen.svg',
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
-              SizedBox(height: 20),
+              TabBar(
+                controller: _tabController,
+                labelColor: mainGold,
+                // 선택된 탭 텍스트 색
+                unselectedLabelColor: mainGrey,
+                // 선택되지 않은 탭 텍스트 색
+                indicatorColor: mainGold,
+                // 인디케이터 색
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Colors.transparent,
+                labelStyle: TextStyle(
+                  // 선택된 탭 텍스트 스타일
+                  fontSize: 16,
+                  color: mainGold,
+                  fontFamily: 'PretendardBold',
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontSize: 16,
+                  color: mainGrey,
+                  fontFamily: 'Pretendard',
+                ),
+                tabs: [
+                  Tab(text: "임무 보고"),
+                  Tab(text: "임무 통계"),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildTabContentMissionReport(),
+                    _buildTabContentMissionStatistics(),
+                  ],
+                ),
+              ),
             ],
           ),
-          TabBar(
-            controller: _tabController,
-            labelColor: mainGold,
-            // 선택된 탭 텍스트 색
-            unselectedLabelColor: mainGrey,
-            // 선택되지 않은 탭 텍스트 색
-            indicatorColor: mainGold,
-            // 인디케이터 색
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: Colors.transparent,
-            labelStyle: TextStyle(
-              // 선택된 탭 텍스트 스타일
-              fontSize: 16,
-              color: mainGold,
-              fontFamily: 'PretendardBold',
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 16,
-              color: mainGrey,
-              fontFamily: 'Pretendard',
-            ),
-            tabs: [
-              Tab(text: "임무 보고"),
-              Tab(text: "임무 통계"),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildTabContentMissionReport(),
-                _buildTabContentMissionStatistics(),
-              ],
-            ),
-          ),
-        ],
+        );
+  },
       ),
     );
   }
