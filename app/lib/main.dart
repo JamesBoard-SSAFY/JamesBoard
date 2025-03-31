@@ -8,6 +8,7 @@ import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/MyPageRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -48,8 +49,10 @@ void main() async {
   final accessToken = prefs.getString('accessToken');
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
+
+  final loginRepository = LoginRepository.create();
   final myPageRepository = MyPageRepository.create();
-  final myPageViewModel = MyPageViewModel(myPageRepository, storage);
+  final myPageViewModel = MyPageViewModel(myPageRepository, loginRepository, storage);
 
   runApp(
     MultiProvider(
@@ -57,6 +60,7 @@ void main() async {
         ChangeNotifierProvider<MyPageViewModel>(
           create: (context) => MyPageViewModel(
             MyPageRepository.create(),
+            LoginRepository.create(),
             storage,
           ),
         ),

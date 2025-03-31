@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/user/screen/MissionRecordScreen.dart';
 
+import '../../datasource/model/response/MyPage/MyPagePlayedGames.dart';
+
 class ImageCommonMyPageGameCard extends StatelessWidget {
-  final List<Map<String, String>> images;
+  final List<MyPagePlayedGames> images;
   final Function(String id) onTap;
 
   const ImageCommonMyPageGameCard({
@@ -31,16 +33,22 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    MissionRecordScreen(id: int.parse(item['id']!)),
+                    MissionRecordScreen(id: int.parse(item.gameId as String)),
               ),
             );
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            child: Image.network(
-              item['img']!,
+            child: item.gameImage != null
+                ? Image.network(
+              item.gameImage!,
+              fit: BoxFit.cover,
+            )
+                : Image.asset(
+              'assets/image/sample.png', // gameImage가 null일 때 에셋 이미지 사용
               fit: BoxFit.cover,
             ),
+
           ),
         );
       },

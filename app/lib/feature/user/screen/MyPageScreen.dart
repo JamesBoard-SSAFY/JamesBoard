@@ -153,6 +153,9 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // 임무 보고
   Widget _buildTabContentMissionReport() {
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.getAllPlayedGames();
+
     void handleImageTap(String id) {
       print('클릭한 이미지 ID: $id');
       // 여기에 원하는 동작 추가
@@ -160,7 +163,7 @@ class _MyPageScreenState extends State<MyPageScreen>
 
     return Expanded(
       child: ImageCommonMyPageGameCard(
-        images: AppDummyData.missionReportimages,
+        images: viewModel.playedGames ?? [],
         onTap: handleImageTap,
       ),
     );
