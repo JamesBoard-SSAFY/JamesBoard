@@ -94,6 +94,12 @@ class AppDummyData {
     "임무 난이도 : 고급",
   ];
 
+  static final Map<String, int> missionLevelMap = {
+    "임무 난이도 : 초급": 0,
+    "임무 난이도 : 중급": 1,
+    "임무 난이도 : 고급": 2,
+  };
+
   static Map<String, String> selectedFilters = {
     '장르': '장르',
     '인원': '인원',
