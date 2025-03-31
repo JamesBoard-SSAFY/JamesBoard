@@ -80,7 +80,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
           ...AppDummyData.missionLevelTitles.map((title) {
             return ListHomeHorizontalGame(
               queryParameters: {
-                'category': AppDummyData.titleCategoryMap[title],
+                'difficulty': AppDummyData.missionLevelMap[title],
               },
               title: title,
               updateFilter: updateFilter,
