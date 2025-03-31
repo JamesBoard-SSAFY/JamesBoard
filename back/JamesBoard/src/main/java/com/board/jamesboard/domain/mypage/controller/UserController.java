@@ -133,7 +133,7 @@ public class UserController {
         }
 
     }
-    @Operation(summary = "사용자 플레이 게임 목록 조회",
+    @Operation(summary = "사용자 임무보고 목록 조회",
             description = "<b>[설명]</b> 사용자가 아카이브를 작성한 게임 목록을 조회함.<br/>" +
                     "<b>[요청]</b> 사용자 ID를 {Path Variable}로 전달.<br/>" +
                     "<b>[응답]</b> 성공시 게임 ID와 이미지 URL이 포함된 게임 목록을 반환.<br/>" +
