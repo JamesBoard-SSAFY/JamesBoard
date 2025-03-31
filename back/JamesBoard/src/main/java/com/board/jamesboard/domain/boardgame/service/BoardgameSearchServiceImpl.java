@@ -27,10 +27,15 @@ public class BoardgameSearchServiceImpl implements BoardgameSearchService {
     @Override
     public List<BoardGameResponseDto> searchBoardgames(Integer difficulty, Integer minPlayers, String name, String category) {
 
-        List<Game> gamesWithFilter = gameRepository.searchGamesWithCategoryOnly(difficulty, minPlayers, name, category);
-        List<Long> gameIds = gamesWithFilter.stream().map(Game::getGameId).toList();
-        List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIds);
-        List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIds);
+//        List<Game> gamesWithFilter = gameRepository.searchGamesWithCategoryOnly(difficulty, minPlayers, name, category);
+//        List<Long> gameIds = gamesWithFilter.stream().map(Game::getGameId).toList();
+//        List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIds);
+//        List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIds);
+
+        List<Long> gameIdsFiltered = gameRepository.findFilteredGameIds(difficulty, minPlayers, name, category);
+
+        List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIdsFiltered);
+        List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIdsFiltered);
 
         // Theme 데이터: gameId → themeName 리스트 맵핑
         Map<Long, List<String>> themeMap = gamesWithTheme.stream()
@@ -49,17 +54,8 @@ public class BoardgameSearchServiceImpl implements BoardgameSearchService {
                                 .toList()
                 ));
 
-        gameWithCategory.forEach(game -> {
-            List<String> categories = game.getGameCategories().stream()
-                    .map(GameCategory::getGameCategoryName)
-                    .toList();
-
-            log.info("GameId: {}, Title: {}, Categories: {}", game.getGameId(), game.getGameTitle(), categories);
-        });
-
-
         // Dto 매핑
-        return gamesWithFilter.stream()
+        return gameWithCategory.stream()
                 .map(game -> new BoardGameResponseDto(
                         game.getGameId(),
                         game.getGameTitle(),
