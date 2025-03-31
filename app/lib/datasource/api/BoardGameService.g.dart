@@ -1,4 +1,12 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'BoardGameService.dart';
+
+// **************************************************************************
+// RetrofitGenerator
+// **************************************************************************
+
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _BoardGameService implements BoardGameService {
   _BoardGameService(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -14,35 +22,30 @@ class _BoardGameService implements BoardGameService {
   @override
   Future<List<BoardGameResponse>> getRecommendedGames({int limit = 10}) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{'limit': limit};
+    final queryParameters = <String, dynamic>{r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-
-    final _options = Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    ).compose(
-      _dio.options,
-      'api/games/recommendations',
-      queryParameters: queryParameters,
-      data: _data,
+    final _options = _setStreamType<List<BoardGameResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/games/recommendations',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<BoardGameResponse> _value;
-
-    logger.d("result: $_result");
-
     try {
       _value = _result.data!
-          .map((dynamic i) =>
-              BoardGameResponse.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                BoardGameResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
-
-      logger.d("getRecommendedGames: $_value");
     } on Object catch (e, s) {
-      print('Error fetching recommended games: $e');
+      errorLogger?.logError(e, s, _options);
       rethrow;
     }
     return _value;
@@ -56,41 +59,98 @@ class _BoardGameService implements BoardGameService {
     String? category,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-
-    if (difficulty != null) queryParameters['difficulty'] = difficulty;
-    if (minPlayers != null) queryParameters['minPlayers'] = minPlayers;
-    if (boardgameName != null && boardgameName.isNotEmpty) {
-      queryParameters['boardgameName'] = boardgameName;
-    }
-    if (category != null && category.isNotEmpty) {
-      queryParameters['category'] = category;
-    }
-
+    final queryParameters = <String, dynamic>{
+      r'difficulty': difficulty,
+      r'minPlayers': minPlayers,
+      r'boardgameName': boardgameName,
+      r'category': category,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-
-    final _options = Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    ).compose(
-      _dio.options,
-      'api/games',
-      queryParameters: queryParameters,
-      data: _data,
+    final _options = _setStreamType<List<BoardGameResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/games',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<BoardGameResponse> _value;
     try {
-      final _result = await _dio.fetch<List<dynamic>>(_options);
-      logger.d("getBoardGames result: $_result");
-
-      return _result.data!
-          .map((dynamic i) =>
-              BoardGameResponse.fromJson(i as Map<String, dynamic>))
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                BoardGameResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
-    } catch (e, s) {
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
       rethrow;
     }
+    return _value;
+  }
+
+  @override
+  Future<List<BoardGameTopResponse>> getTopGames({
+    String? sortBy,
+    int? limit,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      if (sortBy != null) 'sortBy': sortBy,
+      if (limit != null) 'limit': limit,
+    };
+    final _headers = <String, dynamic>{};
+    const _data = null;
+    final _options = _setStreamType<List<BoardGameTopResponse>>(
+      Options(
+        method: 'GET',
+        headers: _headers,
+        extra: _extra,
+      )
+          .compose(
+            _dio.options,
+            'api/games/top',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    return _result.data!
+        .map((dynamic i) =>
+            BoardGameTopResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
+  }
+
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
+      if (T == String) {
+        requestOptions.responseType = ResponseType.plain;
+      } else {
+        requestOptions.responseType = ResponseType.json;
+      }
+    }
+    return requestOptions;
+  }
+
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

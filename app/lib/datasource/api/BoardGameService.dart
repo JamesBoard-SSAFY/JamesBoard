@@ -3,6 +3,8 @@ import 'package:jamesboard/datasource/model/response/BoardGameResponse.dart';
 import 'package:jamesboard/main.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../model/response/BoardGameTopResponse.dart';
+
 part 'BoardGameService.g.dart';
 
 @RestApi(baseUrl: "https://j12d205.p.ssafy.io/")
@@ -19,5 +21,11 @@ abstract class BoardGameService {
     @Query("minPlayers") int? minPlayers,
     @Query("boardgameName") String? boardgameName,
     @Query("category") String? category,
+  });
+
+  @GET("api/games/top")
+  Future<List<BoardGameTopResponse>> getTopGames({
+    @Query("sortBy") String? sortBy,
+    @Query("limit") int? limit,
   });
 }
