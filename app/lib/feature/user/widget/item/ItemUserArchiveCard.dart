@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
-
+import '../../../../datasource/model/response/MyPage/MyPageArchiveResponse.dart';
 import '../../../../util/CommonUtils.dart';
 
 class ItemUserArchiveCard extends StatelessWidget {
-  final List<Map<String, dynamic>> missionDataList;
+  final List<MyPageArchiveResponse> missionDataList;
 
   const ItemUserArchiveCard({super.key, required this.missionDataList});
 
   @override
   Widget build(BuildContext context) {
     // 월별로 그룹화된 데이터
-    Map<String, List<Map<String, dynamic>>> groupedData = {};
+    Map<String, List<MyPageArchiveResponse>> groupedData = {};
 
     // missionDataList를 월별로 그룹화
     for (var missionData in missionDataList) {
-      String month = CommonUtils.extractMonth(missionData['createdAt'] ?? '');
+      String month = CommonUtils.extractMonth(missionData.createdAt);
       if (groupedData.containsKey(month)) {
         groupedData[month]!.add(missionData);
       } else {
@@ -28,7 +28,8 @@ class ItemUserArchiveCard extends StatelessWidget {
     return Column(
       children: groupedData.entries.map((entry) {
         String month = entry.key;
-        List<Map<String, dynamic>> items = entry.value;
+        List<MyPageArchiveResponse> items = entry.value;
+
         // 월별 텍스트와 해당 월에 속하는 아이템들 출력
         return Column(
           children: [
@@ -55,9 +56,9 @@ class ItemUserArchiveCard extends StatelessWidget {
               child: Column(
                 children: items.map((missionData) {
                   String day =
-                      CommonUtils.extractDay(missionData['createdAt'] ?? '');
+                  CommonUtils.extractDay(missionData.createdAt);
                   String dayOfWeek = CommonUtils.extractDayOfWeek(
-                      missionData['createdAt'] ?? '');
+                      missionData.createdAt);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
@@ -106,7 +107,7 @@ class ItemUserArchiveCard extends StatelessWidget {
                                     topRight: Radius.circular(16),
                                   ),
                                   child: Image.network(
-                                    missionData['archiveImage'] ?? '',
+                                    missionData.archiveImage,
                                     height: 300,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
@@ -118,23 +119,23 @@ class ItemUserArchiveCard extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Text(
-                                        missionData['archiveContent'] ?? '',
+                                        missionData.archiveContent,
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: mainWhite,
                                           fontFamily:
-                                              FontString.pretendardMedium,
+                                          FontString.pretendardMedium,
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(top: 16),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                          MainAxisAlignment.start,
                                           children: [
                                             ButtonCommonGameTag(
                                                 text:
-                                                    '${missionData['archiveGamePlayCount'] ?? 0}판'),
+                                                '${missionData.archiveGamePlayCount}판'),
                                           ],
                                         ),
                                       ),

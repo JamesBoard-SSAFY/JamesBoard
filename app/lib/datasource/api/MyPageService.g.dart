@@ -83,7 +83,7 @@ class _MyPageService implements MyPageService {
     int gameId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'gameId': gameId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<MyPageMissionRecordResponse>(

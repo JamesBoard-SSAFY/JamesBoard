@@ -31,7 +31,7 @@ abstract class MyPageService {
   @GET("/api/users/{userId}/archives")
   Future<MyPageMissionRecordResponse> getMissionRecord(
     @Path("userId") int userId,
-    @Path("gameId") int gameId,
+    @Query("gameId") int gameId,
   );
 
   // 사용자 플레이 게임 목록 조회

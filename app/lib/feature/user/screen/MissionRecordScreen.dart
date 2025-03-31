@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/util/dummy/AppDummyData.dart';
+import 'package:provider/provider.dart';
 import '../../../constants/FontString.dart';
+import '../../../datasource/model/response/MyPage/MyPageArchiveResponse.dart';
+import '../../../datasource/model/response/MyPage/MyPageMissionRecordResponse.dart';
 import '../../../util/CommonUtils.dart';
 import '../../../widget/bottomsheet/BottomSheetCommonFilter.dart';
+import '../viewmodel/MyPageViewModel.dart';
 import '../widget/image/ImageMissionGameInformation.dart';
 import '../widget/item/ItemUserArchiveCard.dart';
 
@@ -18,25 +21,60 @@ class MissionRecordScreen extends StatefulWidget {
 }
 
 class _MissionRecordScreenState extends State<MissionRecordScreen> {
-  var dummyData = AppDummyData.missionReportGameData;
-  int selectedIndex = 0; // '전체' 선택
-  String selectedText = '전체'; // 선택된 버튼 텍스트
+  late final MyPageViewModel viewModel;
+
+  MyPageMissionRecordResponse missionRecord = MyPageMissionRecordResponse(
+    gameTitle: '',
+    gameImage: '',
+    gameCategoryList: [],
+    minAge: 0,
+    gameYear: 0,
+    minPlayer: 0,
+    maxPlayer: 0,
+    difficulty: 0,
+    playTime: 0,
+    archiveList: [],
+  );
+  late int selectedIndex; // '전체' 선택
+  late String selectedText; // 선택된 버튼 텍스트
   late String selectedYear; // 선택된 연도
   late List<String> availableYears; // 선택 가능한 연도 목록
   late List<String> availableMonths; // 선택 가능한 월 목록
-  late List<Map<String, dynamic>> filteredArchiveList; // 필터링된 리스트
+  late List<MyPageArchiveResponse> filteredArchiveList; // 필터링된 리스트
 
   @override
   void initState() {
     super.initState();
+    viewModel = Provider.of<MyPageViewModel>(context, listen: false);
 
-    availableYears =
-        CommonUtils.extractAvailableYears(dummyData["archiveList"]);
-    selectedYear = availableYears.isNotEmpty ? availableYears.first : "2025년";
-    availableMonths = CommonUtils.extractAvailableMonths(
-        dummyData["archiveList"], selectedYear);
-    filteredArchiveList = CommonUtils.filterArchiveList(
-        dummyData["archiveList"], selectedYear, selectedText);
+    // 선택된 연도 및 월 초기화
+    selectedYear = '전체'; // 기본값을 '전체'로 설정
+    selectedText = '전체'; // 기본값을 '전체'로 설정
+    selectedIndex = 0; // 기본값을 0으로 설정
+
+    // 초기화 가능한 연도 목록과 월 목록을 가져오기
+    availableYears = [];
+    availableMonths = ['전체'];
+
+    // 필터링된 리스트를 비어있는 리스트로 초기화
+    filteredArchiveList = [];
+
+    loadMissionRecord();
+  }
+
+  // 데이터 로딩 함수
+  Future<void> loadMissionRecord() async {
+    await viewModel.getMissionRecord(widget.id);  // id 전달
+    setState(() {
+      missionRecord = viewModel.missionRecord ?? missionRecord;  // missionRecord가 null이면 빈 값으로 대체
+      availableYears =
+          CommonUtils.extractAvailableYears(missionRecord.archiveList);
+      selectedYear = availableYears.isNotEmpty ? availableYears.first : "2025년";
+      availableMonths = CommonUtils.extractAvailableMonths(
+          missionRecord.archiveList, selectedYear);
+      filteredArchiveList = CommonUtils.filterArchiveList(
+          missionRecord.archiveList, selectedYear, selectedText);
+    });
   }
 
   void updateYear(String newYear) {
@@ -45,9 +83,9 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
       selectedIndex = 0;
       selectedText = '전체';
       availableMonths = CommonUtils.extractAvailableMonths(
-          dummyData["archiveList"], selectedYear);
+          missionRecord.archiveList, selectedYear);
       filteredArchiveList = CommonUtils.filterArchiveList(
-          dummyData["archiveList"], selectedYear, selectedText);
+          missionRecord.archiveList, selectedYear, selectedText);
     });
   }
 
@@ -56,7 +94,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
       selectedIndex = index;
       selectedText = index == 0 ? '전체' : "${index}월"; // 0은 '전체', 나머지는 1~12월
       filteredArchiveList = CommonUtils.filterArchiveList(
-          dummyData["archiveList"], selectedYear, selectedText);
+          missionRecord.archiveList, selectedYear, selectedText);
     });
   }
 
@@ -73,7 +111,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                   Column(
                     children: [
                       // 게임 정보 출력
-                      ImageMissionGameInformation(gameData: dummyData),
+                      ImageMissionGameInformation(gameData: missionRecord),
                     ],
                   ),
                   Positioned(
@@ -156,7 +194,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                           onPressed: () => updateMonth(index),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(mainBlack),
+                            MaterialStateProperty.all(mainBlack),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -188,24 +226,24 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 8, 20),
                 child: filteredArchiveList.isEmpty
                     ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '등록된 임무 보고가 없습니다.',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: mainWhite,
-                              fontFamily: FontString.pretendardSemiBold,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          ItemUserArchiveCard(
-                              missionDataList: filteredArchiveList),
-                        ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '등록된 임무 보고가 없습니다.',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: mainWhite,
+                        fontFamily: FontString.pretendardSemiBold,
                       ),
+                    ),
+                  ],
+                )
+                    : Column(
+                  children: [
+                    ItemUserArchiveCard(
+                        missionDataList: filteredArchiveList),
+                  ],
+                ),
               ),
             ],
           ),

@@ -33,7 +33,7 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    MissionRecordScreen(id: int.parse(item.gameId as String)),
+                    MissionRecordScreen(id: item.gameId),
               ),
             );
           },

@@ -47,7 +47,6 @@ class MyPageViewModel extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       userInfo = await _myPageRepository.getUserInfo(userId!);
-      logger.d("flutter - getUserInfo: $userInfo");
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         logger.e('401 에러 발생. 로그아웃 처리');
@@ -89,22 +88,32 @@ class MyPageViewModel extends ChangeNotifier {
     if (userId == null) return;
     try {
       isLoading = true;
+      logger.d('Mission Record - $userId - $gameId');
       notifyListeners();
       missionRecord = await _myPageRepository.getMissionRecord(userId!, gameId);
+      // 성공적으로 데이터를 받은 경우
+      logger.d('Mission Record: $missionRecord');
     } on DioException catch (e) {
+      // DioException 처리
       if (e.response?.statusCode == 401) {
         logger.e('401 에러 발생. 로그아웃 처리');
         await _loginRepository.logout();
       } else {
         logger.e('기타 DIO 에러: $e');
       }
+      // DioException 발생 시에도 로그
+      logger.d('DioException: $e');
     } catch (e) {
+      // 다른 예외 처리
       logger.e("flutter - getMissionRecord: $e");
+      // 예외 발생 시에도 로그
+      logger.d('Error: $e');
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
+
 
   Future<void> getAllPlayedGames() async {
     if (userId == null) return;
