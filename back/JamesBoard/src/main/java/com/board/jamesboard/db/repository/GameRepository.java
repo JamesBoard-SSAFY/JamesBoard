@@ -25,6 +25,14 @@ public interface GameRepository extends JpaRepository<Game,Long>, GameRepository
             "WHERE g.gameId IN :gameIds")
     List<Game> findGamesByGameIdsWithCategories(@Param("gameIds") List<Long> gameIds);
 
+    @Query("SELECT DISTINCT g.gameId FROM Game g " +
+            "JOIN g.gameCategories gc " +
+            "WHERE (:difficulty IS NULL OR g.gameDifficulty = :difficulty) AND " +
+            "(:minPlayers IS NULL OR g.minPlayer >= :minPlayers) AND " +
+            "(:name IS NULL OR g.gameTitle LIKE %:name%) AND " +
+            "(:category IS NULL OR gc.gameCategoryName = :category)")
+    List<Long> findFilteredGameIds(Integer difficulty, Integer minPlayers, String name, String category);
+
 
     // 게임 순위로 정렬하여 상위 게임 조회
     @Query(value = "SELECT * FROM game ORDER BY game_rank ASC LIMIT :limit", nativeQuery = true)
