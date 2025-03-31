@@ -3,7 +3,6 @@ package com.board.jamesboard.domain.boardgame.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.board.jamesboard.db.entity.Game;
@@ -12,6 +11,7 @@ import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +41,7 @@ public class BoardgameSearchServiceImpl implements BoardgameSearchService {
                         game.getGameTitle(),
                         game.getGameImage(),
                         game.getGameCategories().isEmpty() ? null : game.getGameCategories().get(0).getGameCategoryName(),
+                        game.getGameThemes().isEmpty() ? null : game.getGameThemes().get(0).getGameThemeName(),
                         game.getMinPlayer(),
                         game.getMaxPlayer(),
                         game.getGameDifficulty(),

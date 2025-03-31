@@ -14,6 +14,7 @@ public class BoardgameRecommendDto {
     private String gameTitle;
     private String gameImage;
     private String gameCategory;
+    private String gameTheme;
     private Integer minPlayer;
     private Integer maxPlayer;
     private Integer difficulty;

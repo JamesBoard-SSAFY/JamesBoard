@@ -13,6 +13,7 @@ import com.board.jamesboard.db.repository.RecommendContentRepository;
 import com.board.jamesboard.db.repository.RecommendRepository;
 import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
+import com.board.jamesboard.db.repository.GameThemeRepository;
 import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +28,7 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
     private final RecommendContentRepository recommendContentRepository;
     private final RecommendRepository recommendRepository;
     private final UserActivityRepository userActivityRepository;
+    private final GameThemeRepository gameThemeRepository;
 
     @Override
     public List<BoardgameRecommendDto> getBoardgameRecommends(Long userId, Integer limit) {
@@ -51,11 +53,13 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
             return recommendContents.stream()
                     .map(rc -> {
                         Game recommendGame = rc.getRecommendGame();
+                        List<String> themes = gameThemeRepository.findThemeByGameId(recommendGame.getGameId());
                         return new BoardgameRecommendDto(
                                 recommendGame.getGameId(),
                                 recommendGame.getGameTitle(),
                                 recommendGame.getGameImage(),
                                 recommendGame.getGameCategories().isEmpty() ? null : recommendGame.getGameCategories().get(0).getGameCategoryName(),
+                                themes.isEmpty() ? null : themes.get(0),
                                 recommendGame.getMinPlayer(),
                                 recommendGame.getMaxPlayer(),
                                 recommendGame.getGameDifficulty(),
@@ -72,11 +76,13 @@ public class BoardgameRecommendServiceImpl implements BoardgameRecommendService 
             return recommends.stream()
                     .map(recommend -> {
                         Game recommendGame = recommend.getGame();
+                        List<String> themes = gameThemeRepository.findThemeByGameId(recommendGame.getGameId());
                         return new BoardgameRecommendDto(
                                 recommendGame.getGameId(),
                                 recommendGame.getGameTitle(),
                                 recommendGame.getGameImage(),
                                 recommendGame.getGameCategories().isEmpty() ? null : recommendGame.getGameCategories().get(0).getGameCategoryName(),
+                                themes.isEmpty() ? null : themes.get(0),
                                 recommendGame.getMinPlayer(),
                                 recommendGame.getMaxPlayer(),
                                 recommendGame.getGameDifficulty(),
