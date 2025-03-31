@@ -1,3 +1,4 @@
+import 'package:jamesboard/datasource/model/response/BoardGameRecommendResponse.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameTopResponse.dart';
 
 import '../datasource/api/BoardGameService.dart';
@@ -17,7 +18,8 @@ class BoardGameRepository {
   }
 
   // 추천 보드게임 리스트를 반환하는 메서드
-  Future<List<BoardGameResponse>> getRecommendedGames({int limit = 10}) =>
+  Future<List<BoardGameRecommendResponse>> getRecommendedGames(
+          {int limit = 10}) =>
       _service.getRecommendedGames(limit: limit);
 
   Future<List<BoardGameResponse>> getBoardGames(
