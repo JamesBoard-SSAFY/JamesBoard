@@ -2,6 +2,7 @@ package com.board.jamesboard.domain.boardgame.controller;
 
 import java.util.List;
 
+import com.board.jamesboard.domain.boardgame.dto.BoardGameResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +53,7 @@ public class BoardgameController {
 
     @GetMapping("")
     @Operation(summary = "보드게임 조회(검색)", description = "난이도, 최소유저, 보드게임 이름, 카테고리로 구별")
-    public ResponseEntity<List<BoardgameRecommendDto>> searchBoardgame(
+    public ResponseEntity<List<BoardGameResponseDto>> searchBoardgame(
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) Integer minPlayers,
             @RequestParam(required = false) String boardgameName,
