@@ -5,6 +5,7 @@ import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -51,13 +52,18 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<CategoryGameViewModel>(
+          create: (context) => CategoryGameViewModel(
+            BoardGameRepository.create(),
+          ),
+        ),
         ChangeNotifierProvider<BoardGameViewModel>(
           create: (context) => BoardGameViewModel(
             BoardGameRepository.create(),
           ),
         ),
       ],
-      child: MyApp(isLoggedIn: true), // App을 여기서 시작
+      child: MyApp(isLoggedIn: false),
     ),
   );
 }
