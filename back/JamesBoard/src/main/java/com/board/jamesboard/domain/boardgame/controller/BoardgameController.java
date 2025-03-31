@@ -39,6 +39,7 @@ public class BoardgameController {
     private final BoardgameTopService boardgameTopService;
     private final BoardgameDetailService boardgameDetailService;
 
+
     @GetMapping("/recommendations")
     @Operation(summary = "추천 보드게임 조회", description = "default 10으로 설정")
     public ResponseEntity<List<BoardgameRecommendDto>> getBoardgameRecommendation(@RequestParam(defaultValue = "10") Integer limit) {

@@ -14,6 +14,6 @@ import com.board.jamesboard.db.entity.User;
 public interface RecommendRepository extends JpaRepository<Recommend, Long> {
 
     // 사용자 기준으로 limit 숫자만큼 게임을 추천
-    @Query("SELECT r FROM Recommend r WHERE r.user = :user AND r.recommendRank BETWEEN 1 AND 30 ORDER BY r.recommendRank ASC")
+    @Query("SELECT r FROM Recommend r JOIN FETCH r.game g LEFT JOIN FETCH g.gameThemes WHERE r.user = :user AND r.recommendRank BETWEEN 1 AND 30 ORDER BY r.recommendRank ASC")
     List<Recommend> findTopNByUserOrderByRecommendRankAsc(User user, Integer limit);
 }
