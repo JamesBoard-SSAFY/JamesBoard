@@ -1,13 +1,16 @@
 package com.board.jamesboard.domain.boardgame.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.board.jamesboard.db.entity.GameCategory;
+import com.board.jamesboard.db.entity.GameTheme;
+import com.board.jamesboard.domain.boardgame.dto.BoardGameResponseDto;
 import org.springframework.stereotype.Service;
 
 import com.board.jamesboard.db.entity.Game;
 import com.board.jamesboard.db.repository.GameRepository;
-import com.board.jamesboard.domain.boardgame.dto.BoardgameRecommendDto;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,26 +25,47 @@ public class BoardgameSearchServiceImpl implements BoardgameSearchService {
     private final GameRepository gameRepository;
 
     @Override
-    public List<BoardgameRecommendDto> searchBoardgames(Integer difficulty, Integer minPlayers, String name, String category) {
-        // N+1 방지용 fetch join 사용된 메서드
-        List<Game> games = gameRepository.findAllWithCategories();
+    public List<BoardGameResponseDto> searchBoardgames(Integer difficulty, Integer minPlayers, String name, String category) {
 
-        log.debug("{} games found", games.size());
+        List<Game> gamesWithFilter = gameRepository.searchGamesWithCategoryOnly(difficulty, minPlayers, name, category);
+        List<Long> gameIds = gamesWithFilter.stream().map(Game::getGameId).toList();
+        List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIds);
+        List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIds);
 
-        return games.stream()
-                .filter(game -> difficulty == null || game.getGameDifficulty().equals(difficulty))
-                .filter(game -> minPlayers == null || game.getMinPlayer() >= minPlayers)
-                .filter(game -> name == null || game.getGameTitle().contains(name))
-                .filter(game -> category == null ||
-                        (game.getGameCategories() != null &&
-                                game.getGameCategories().stream()
-                                        .anyMatch(c -> c.getGameCategoryName().equalsIgnoreCase(category))))
-                .map(game -> new BoardgameRecommendDto(
+        // Theme 데이터: gameId → themeName 리스트 맵핑
+        Map<Long, List<String>> themeMap = gamesWithTheme.stream()
+                .collect(Collectors.toMap(
+                        Game::getGameId,
+                        g -> g.getGameThemes().stream()
+                                .map(GameTheme::getGameThemeName)
+                                .toList()
+                ));
+
+        Map<Long, List<String>> categoryMap = gameWithCategory.stream()
+                .collect(Collectors.toMap(
+                        Game::getGameId,
+                        g -> g.getGameCategories().stream()
+                                .map(GameCategory::getGameCategoryName)
+                                .toList()
+                ));
+
+        gameWithCategory.forEach(game -> {
+            List<String> categories = game.getGameCategories().stream()
+                    .map(GameCategory::getGameCategoryName)
+                    .toList();
+
+            log.info("GameId: {}, Title: {}, Categories: {}", game.getGameId(), game.getGameTitle(), categories);
+        });
+
+
+        // Dto 매핑
+        return gamesWithFilter.stream()
+                .map(game -> new BoardGameResponseDto(
                         game.getGameId(),
                         game.getGameTitle(),
-                        game.getGameImage(),
-                        game.getGameCategories().isEmpty() ? null : game.getGameCategories().get(0).getGameCategoryName(),
-                        game.getGameThemes().isEmpty() ? null : game.getGameThemes().get(0).getGameThemeName(),
+                        game.getSmallThumbnail(),
+                        categoryMap.getOrDefault(game.getGameId(), List.of()),
+                        themeMap.getOrDefault(game.getGameId(), List.of()),  // 없는 경우 빈 리스트
                         game.getMinPlayer(),
                         game.getMaxPlayer(),
                         game.getGameDifficulty(),
@@ -49,5 +73,6 @@ public class BoardgameSearchServiceImpl implements BoardgameSearchService {
                         game.getGameDescription()
                 ))
                 .collect(Collectors.toList());
+
     }
 }
