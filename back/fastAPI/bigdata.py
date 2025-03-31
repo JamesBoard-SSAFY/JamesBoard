@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 class RecommendationEngine:
     def __init__(self, db: Session):
         self.db = db
-        # 다국어 SBERT 모델 사용
+        # 다국어 SBERT 모델
         self.model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-        self.embeddings = None  # 명시적으로 초기화
+        self.embeddings = None
         self._initialize_embeddings()
-        self.n_clusters = 10  # 클러스터 수 복원
-        self.batch_size = 1000  # 배치 사이즈 복원
+        self.n_clusters = 100
+        self.batch_size = 1000
         self.reviews_df = None
         self.kmeans_model = None
         self.user_clusters = {}
@@ -49,7 +49,7 @@ class RecommendationEngine:
     def _load_items_from_db(self) -> List[Dict]:
         """게임 데이터를 데이터베이스에서 로드합니다."""
         try:
-            # 상위 1000개의 게임 데이터 로드 (리뷰 수 기준)
+            # 모든 게임 데이터 로드
             games = self.db.query(
                 models.Game.game_id,
                 models.Game.game_title,
@@ -58,8 +58,8 @@ class RecommendationEngine:
                 models.Game.game_avg_rating,
                 models.Game.game_review_count
             ).order_by(
-                models.Game.game_review_count.desc()
-            ).limit(1000).all()
+                models.Game.game_id  # game_id 순으로 정렬하여 일관성 유지
+            ).all()
             
             # 모든 게임 데이터를 리스트로 변환
             items = [{
@@ -107,7 +107,6 @@ class RecommendationEngine:
                     embeddings_list.append(batch_embeddings)
                 
                 self.embeddings = np.vstack(embeddings_list)
-                # 임베딩 저장
                 np.save(embedding_file, self.embeddings)
                 print("New embeddings computed and saved")
             else:
@@ -126,14 +125,27 @@ class RecommendationEngine:
             if not game:
                 return []
 
-            # 게임의 임베딩 가져오기
-            game_idx = next(i for i, item in enumerate(self.items) if item['game_id'] == game_id)
+            # 게임의 임베딩 가져오기 (game_id 1에 대한 특별 처리)
+            try:
+                game_idx = next(i for i, item in enumerate(self.items) if item['game_id'] == game_id)
+            except StopIteration:
+                print(f"Warning: game_id {game_id} not found in items list")
+                return []
+
+            # 배치 처리로 코사인 유사도 계산 (메모리 효율성 향상)
+            batch_size = 100
+            cosine_sim = np.zeros(len(self.embeddings))
             
-            # 전체 임베딩 행렬의 코사인 유사도 계산
-            cosine_sim = cosine_similarity(self.embeddings, self.embeddings)
+            for i in range(0, len(self.embeddings), batch_size):
+                batch_end = min(i + batch_size, len(self.embeddings))
+                batch_sim = cosine_similarity(
+                    self.embeddings[game_idx:game_idx+1],
+                    self.embeddings[i:batch_end]
+                )[0]
+                cosine_sim[i:batch_end] = batch_sim
             
             # 자기 자신 제외하고 상위 N개 선택
-            sim_scores = list(enumerate(cosine_sim[game_idx]))
+            sim_scores = list(enumerate(cosine_sim))
             sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
             
             # 상세 정보 조회 (한 번의 쿼리로 모든 게임 정보 가져오기)
@@ -155,6 +167,11 @@ class RecommendationEngine:
                         "recommend_game_id": similar_game_id,
                         "recommend_content_rank": len(recommendations) + 1
                     })
+
+            # game_id 1에 대한 추가 검증
+            if game_id == 1 and not recommendations:
+                print(f"Warning: No recommendations generated for game_id 1")
+                return []
 
             return recommendations
 
@@ -189,11 +206,24 @@ class RecommendationEngine:
             # 명시적으로 커밋
             self.db.commit()
             
-            # 저장 확인
-            count = self.db.execute(
-                text(f"SELECT COUNT(*) FROM recommend_content WHERE game_id = {game_id}")
-            ).scalar()
-            print(f"Verified {count} recommendations saved for game_id: {game_id}")
+            # 저장 확인 (game_id 1인 경우 추가 검증)
+            if game_id == 1:
+                count = self.db.execute(
+                    text(f"SELECT COUNT(*) FROM recommend_content WHERE game_id = {game_id}")
+                ).scalar()
+                print(f"Verified {count} recommendations saved for game_id: {game_id}")
+                if count == 0:
+                    print("Warning: No recommendations saved for game_id 1")
+                    # 재시도 로직
+                    self.db.rollback()
+                    time.sleep(1)  # 잠시 대기
+                    self.db.execute(text(delete_stmt))
+                    self.db.execute(text(insert_stmt))
+                    self.db.commit()
+                    count = self.db.execute(
+                        text(f"SELECT COUNT(*) FROM recommend_content WHERE game_id = {game_id}")
+                    ).scalar()
+                    print(f"After retry - Verified {count} recommendations saved for game_id: {game_id}")
             
         except Exception as e:
             print(f"Error saving recommendations for game_id {game_id}: {str(e)}")
@@ -208,10 +238,8 @@ class RecommendationEngine:
             if not game:
                 return []
 
-            # 게임의 임베딩 가져오기
             game_idx = next(i for i, item in enumerate(self.items) if item['game_id'] == game_id)
             
-            # 코사인 유사도 계산 (배치 처리)
             batch_size = 100
             cosine_sim = np.zeros(len(self.embeddings))
             
@@ -257,8 +285,6 @@ class RecommendationEngine:
     def generate_user_clusters(self):
         """사용자 그룹화를 위한 K-means 클러스터링 수행"""
         try:
-            print("Starting user clustering...")
-            
             # 사용자-게임 매트릭스 생성
             user_activities = self.db.query(
                 models.UserActivity.user_id,
@@ -278,9 +304,9 @@ class RecommendationEngine:
             user_vectors = []
             user_ids = []
             for user_id, ratings in user_ratings.items():
-                vector = np.zeros(1000)  # 상위 1000개 게임에 대해서만 고려
+                vector = np.zeros(1000)
                 for game_id, rating in ratings.items():
-                    if game_id <= 1000:  # 상위 1000개 게임만 고려
+                    if game_id <= 1000:
                         vector[game_id - 1] = rating
                 user_vectors.append(vector)
                 user_ids.append(user_id)

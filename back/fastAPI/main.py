@@ -1,42 +1,18 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List, Optional, Dict
-import pandas as pd
-import models
-import bigdata
-from config import engine, get_db, test_mysql_connection, test_sqlalchemy_connection
+from config import get_db, test_mysql_connection, test_sqlalchemy_connection
 from bigdata import RecommendationEngine
-from pydantic import BaseModel
 from datetime import datetime
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from sqlalchemy.sql import text
+import models
 
 # 전역 RecommendationEngine 인스턴스
 recommendation_engine = None
 
 app = FastAPI(title="보드게임 추천 시스템 API")
-
-# Pydantic 모델
-class RecommendContentResponse(BaseModel):
-    recommend_content_id: Optional[int] = None
-    game_id: int
-    recommend_game_id: int
-    recommend_content_rank: int
-
-    class Config:
-        from_attributes = True
-
-class RecommendResponse(BaseModel):
-    recommend_id: Optional[int] = None
-    recommend_at: Optional[datetime] = None
-    recommend_rank: int
-    game_id: int
-    user_id: int
-
-    class Config:
-        from_attributes = True
 
 def generate_recommendations_job():
     """스케줄된 추천 생성 작업"""
@@ -91,56 +67,9 @@ def read_root():
     return {"message": "보드게임 추천 시스템 API"}
 
 
-@app.put("/fastapi/hybrid-recommendations")
-async def generate_all_hybrid_recommendations(db: Session = Depends(get_db)):
-    """모든 사용자에 대한 하이브리드 추천을 생성합니다."""
-    try:
-        # 추천 엔진 초기화
-        recommendation_engine = RecommendationEngine(db)
-        
-        # recommend 테이블 초기화
-        db.execute(text("TRUNCATE TABLE recommend"))
-        db.commit()
-        
-        # 하이브리드 추천 생성
-        result = recommendation_engine.generate_all_hybrid_recommendations()
-        
-        if "message" in result and "Error" in result["message"]:
-            raise HTTPException(status_code=500, detail=result["message"])
-            
-        return {"message": "Successfully generated hybrid recommendations"}
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/generate-recommendations")
-async def generate_recommendations():
-    try:
-        success = recommendation_engine.generate_all_hybrid_recommendations()
-        return {"message": "Successfully generated recommendations"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/generate-recommendations-job")
-async def generate_recommendations_job():
-    try:
-        success = recommendation_engine.generate_all_hybrid_recommendations()
-        return {"message": "Successfully generated recommendations"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/generate-recommendations-scheduler")
-async def generate_recommendations_scheduler():
-    try:
-        success = recommendation_engine.generate_all_hybrid_recommendations()
-        return {"message": "Successfully generated recommendations"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 @app.put("/fastapi/content-recommendations")
 async def trigger_content_recommendations(db: Session = Depends(get_db)):
-    """콘텐츠 기반 추천을 수동으로 생성합니다."""
+    """모든 사용자에 대한 콘텐츠 기반 추천을 생성(기존 테이블 초기화 동시 진행)"""
     try:
         if recommendation_engine is None:
             raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
@@ -218,6 +147,30 @@ async def trigger_content_recommendations(db: Session = Depends(get_db)):
             status_code=500,
             detail=f"Failed to generate content recommendations: {str(e)}"
         )
+
+
+@app.put("/fastapi/hybrid-recommendations")
+async def generate_all_hybrid_recommendations(db: Session = Depends(get_db)):
+    """모든 사용자에 대한 하이브리드 추천을 생성(기존 테이블 초기화 동시 진행)"""
+    try:
+        # 추천 엔진 초기화
+        recommendation_engine = RecommendationEngine(db)
+        
+        # recommend 테이블 초기화
+        db.execute(text("TRUNCATE TABLE recommend"))
+        db.commit()
+        
+        # 하이브리드 추천 생성
+        result = recommendation_engine.generate_all_hybrid_recommendations()
+        
+        if "message" in result and "Error" in result["message"]:
+            raise HTTPException(status_code=500, detail=result["message"])
+            
+        return {"message": "Successfully generated hybrid recommendations"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn

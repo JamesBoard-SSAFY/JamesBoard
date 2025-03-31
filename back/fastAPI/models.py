@@ -1,11 +1,7 @@
 from sqlalchemy import Column, Integer, Float, DateTime, String, Text, BigInteger, ForeignKey, JSON, Boolean, Date, UniqueConstraint
 from sqlalchemy.orm import relationship
 from config import Base
-import enum
 from datetime import datetime
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
 
 class Game(Base):
     __tablename__ = "game"
