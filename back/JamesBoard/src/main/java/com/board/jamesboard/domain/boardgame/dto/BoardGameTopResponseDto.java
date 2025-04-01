@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BoardGameTopResponseDto {
     private Long gameId;
-    private String gameImage;
+    private String bigThumbnail;
 }
