@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameResponse.dart';
+import 'package:jamesboard/main.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../model/response/BoardGameDetailResponse.dart';
 import '../model/response/BoardGameRecommendResponse.dart';
 import '../model/response/BoardGameTopResponse.dart';
 
@@ -28,4 +30,8 @@ abstract class BoardGameService {
     @Query("sortBy") String? sortBy,
     @Query("limit") int? limit,
   });
+
+  @GET("api/games/{gameId}")
+  Future<BoardGameDetailResponse> getBoardGameDetail(
+      @Path("gameId") int gameId);
 }

@@ -128,6 +128,39 @@ class _BoardGameService implements BoardGameService {
         .toList();
   }
 
+  @override
+  Future<BoardGameDetailResponse> getBoardGameDetail(int gameId) async {
+    final _extra = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const _data = null;
+
+    final _options = _setStreamType<BoardGameDetailResponse>(
+      Options(
+        method: 'GET',
+        headers: _headers,
+        extra: _extra,
+      )
+          .compose(
+            _dio.options,
+            'api/games/$gameId',
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+
+    try {
+      logger.d("gameservice result data : ${_result.data!}");
+      final _data = BoardGameDetailResponse.fromJson(_result.data!);
+      logger.d("gameservice : ${_data}");
+      return _data;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
