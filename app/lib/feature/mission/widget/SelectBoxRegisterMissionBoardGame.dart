@@ -6,11 +6,11 @@ import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class SelectBoxRegisterMissionBoardGame extends StatelessWidget {
-  final String? selectedGame;
+  final String? selectedGameTitle;
 
   const SelectBoxRegisterMissionBoardGame({
     super.key,
-    required this.selectedGame,
+    required this.selectedGameTitle,
   });
 
   @override
@@ -25,9 +25,9 @@ class SelectBoxRegisterMissionBoardGame extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            selectedGame ?? AppString.selectBoardGame,
+            selectedGameTitle ?? AppString.selectBoardGame,
             style: TextStyle(
-              color: selectedGame != null ? mainWhite : mainGrey,
+              color: selectedGameTitle != null ? mainWhite : mainGrey,
               fontSize: 16,
               fontFamily: FontString.pretendardMedium,
             ),
