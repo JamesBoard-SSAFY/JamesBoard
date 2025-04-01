@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
+import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionBoardGameCount.dart';
@@ -15,7 +16,9 @@ import 'package:jamesboard/feature/mission/widget/ImageItemRegisterMission.dart'
 import 'package:jamesboard/feature/mission/widget/SelectBoxRegisterMissionBoardGame.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/AppString.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
@@ -144,6 +147,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MissionViewModel>();
+
     return Scaffold(
       backgroundColor: mainBlack,
       appBar: DefaultCommonAppBar(
@@ -161,7 +166,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => BoardGameSearchScreen(),
+                    builder: (_) => BoardGameSearchScreen(
+                      purpose: BoardGameSearchPurpose.fromMission,
+                    ),
                   ),
                 );
               },
@@ -181,7 +188,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                     ),
                     const SizedBox(height: 12.0),
                     SelectBoxRegisterMissionBoardGame(
-                      selectedGame: null,
+                      selectedGameTitle: viewModel.selectedGameTitle,
                     ),
                   ],
                 ),
