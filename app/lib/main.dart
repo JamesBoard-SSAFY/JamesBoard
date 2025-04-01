@@ -17,12 +17,14 @@ import 'package:jamesboard/repository/BoardGameRepository.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/MyPageRepository.dart';
 import 'package:jamesboard/repository/S3Repository.dart';
+import 'package:jamesboard/repository/UserActivityRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
+import 'feature/boardgame/viewmodel/UserActivityViewModel.dart';
 import 'feature/mission/viewmodel/MissionViewModel.dart';
 import 'feature/survey/viewmodel/SurveyViewModel.dart';
 import 'feature/user/screen/MyPageScreen.dart';
@@ -96,7 +98,12 @@ void main() async {
             S3Repository.create(),
             storage,
           ),
-        )
+        ),
+        ChangeNotifierProvider<UserActivityViewModel>(
+          create: (context) => UserActivityViewModel(
+            UserActivityRepository.create(),
+          ),
+        ),
       ],
       child: MyApp(isLoggedIn: false),
     ),
