@@ -87,6 +87,7 @@ public class ArchiveServiceImpl implements ArchiveService {
                 archive.getArchiveContent(),
                 playedGame.getGameTitle(),
                 archive.getArchiveGamePlayTime(),
+                archive.getArchiveGamePlayCount(),
                 archiveImageUrlList
         );
 

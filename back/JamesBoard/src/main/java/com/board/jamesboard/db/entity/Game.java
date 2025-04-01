@@ -31,8 +31,7 @@ public class Game {
     @Column(name = "game_title")
     private String gameTitle;
 
-    @Size(max = 255)
-    @Column(name = "game_description")
+    @Column(name = "game_description", columnDefinition = "TEXT")
     private String gameDescription;
 
     @Size(max = 255)

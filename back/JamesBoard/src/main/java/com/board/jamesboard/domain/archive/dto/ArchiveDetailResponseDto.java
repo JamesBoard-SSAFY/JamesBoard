@@ -18,5 +18,6 @@ public class ArchiveDetailResponseDto {
     private String archiveContent;
     private String gameTitle;
     private Integer archiveGamePlayTime;
+    private Integer archiveGamePlayCount;
     private List<String> archiveImageList;
 }
