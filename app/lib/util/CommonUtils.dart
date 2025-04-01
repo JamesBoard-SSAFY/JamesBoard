@@ -1,14 +1,20 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../datasource/model/response/MyPage/GenreStats.dart';
 import '../datasource/model/response/MyPage/MyPageArchiveResponse.dart';
+import '../feature/user/viewmodel/MyPageViewModel.dart';
 import '../feature/user/widget/chart/ChartUserGenrePercent.dart';
+import '../main.dart';
 import '../theme/Colors.dart';
 
 class CommonUtils {
+  static final ImagePicker _picker = ImagePicker();
+
   // 시간을 '오전 08:13' 형식으로 반환하는 메소드
   static String formatTime(DateTime currentTime) {
     // 'a'는 'AM/PM'을 반환하므로, 이를 한국어로 변환
@@ -140,5 +146,55 @@ class CommonUtils {
         getGenreColor(genreInfo.gameCategoryName),
       );
     }).toList();
+  }
+
+  // 이미지 선택 및 S3 업로드
+  static Future<String?> pickAndUploadImage(MyPageViewModel viewModel) async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      String? fileName = pickedFile.name;
+      logger.i("로컬 이미지 이름 $fileName");
+
+      // S3 Presigned URL 발급
+      String? presignedUrl = await viewModel.issuePresignedUrl(fileName);
+
+      if (presignedUrl != null) {
+        // S3에 업로드하고, 업로드된 이미지 URL 반환
+        return await _uploadImageToS3(pickedFile, presignedUrl);
+      }
+    }
+    return null;
+  }
+
+  // S3 업로드
+  static Future<String?> _uploadImageToS3(XFile pickedFile, String presignedUrl) async {
+    try {
+      final dio = Dio();
+
+      final fileBytes = await pickedFile.readAsBytes();
+
+      final response = await dio.put(
+        presignedUrl,
+        data: fileBytes,
+        options: Options(
+          headers: {
+            'Content-Type': 'image/jpeg',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        String uploadedImageUrl = presignedUrl.split("?").first;
+        logger.i("업로드된 이미지 URL: $uploadedImageUrl");
+        return uploadedImageUrl;
+      } else {
+        logger.e("업로드 실패: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      logger.e("S3 업로드 중 에러 발생: $e");
+      return null;
+    }
   }
 }

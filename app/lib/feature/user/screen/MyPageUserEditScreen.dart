@@ -38,18 +38,29 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
     _userImage = widget.userImg; // 초기 프로필 이미지 설정
   }
 
+  void _onProfileImageChanged(String imagePath) {
+    setState(() {
+      _userImage = imagePath;
+      _validateForm(); // 닉네임과 이미지 변경 상태를 함께 확인
+    });
+  }
+
   void _onNicknameChanged(String nickname, bool isValid) {
     setState(() {
       _nickname = nickname;
       _isNicknameValid = isValid;
+      _validateForm(); // 닉네임이 바뀔 때도 폼 유효성 검사
     });
   }
 
-  void _onProfileImageChanged(String imagePath) {
+  void _validateForm() {
+    // 닉네임이 유효하고, 이미지가 기존 값에서 변경되었을 경우만 활성화
+    bool isImageChanged = _userImage != widget.userImg;
     setState(() {
-      _userImage = imagePath; // 선택한 이미지로 상태 업데이트
+      _isNicknameValid = _isNicknameValid && isImageChanged;
     });
   }
+
 
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyPageViewModel>(context);
@@ -76,6 +87,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                   ImageUserProfile(
                     imageUrl: _userImage,
                     onImagePicked: _onProfileImageChanged,
+                    viewModel: viewModel,
                   ),
                 ],
               ),
@@ -107,30 +119,30 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isNicknameValid
+                  onPressed: (_isNicknameValid && _userImage != widget.userImg) // 버튼 활성화 조건 추가
                       ? () {
-                          viewModel.editUserInfo(MyPageUserInfoRequest(
-                              userName: _nickname,
-                              userProfile: _userImage)); // 선택한 이미지 전달
-                          print("닉네임 변경 완료: $_nickname");
-                          print("프로필 이미지 변경 완료: $_userImage");
+                    viewModel.editUserInfo(MyPageUserInfoRequest(
+                        userName: _nickname, userProfile: _userImage));
 
-                          Navigator.pop(context);
-                        }
+                    print("닉네임 변경 완료: $_nickname");
+                    print("프로필 이미지 변경 완료: $_userImage");
+
+                    Navigator.pop(context);
+                  }
                       : null, // 유효하지 않으면 버튼 비활성화
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: secondaryBlack, // 배경색
+                    backgroundColor: secondaryBlack,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // radius 10
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 20), // 상하 패딩 12
+                    padding: EdgeInsets.symmetric(vertical: 20),
                   ),
                   child: Text(
                     '변경',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: FontString.pretendardSemiBold,
-                      color: mainWhite, // 텍스트 색상
+                      color: mainWhite,
                     ),
                   ),
                 ),

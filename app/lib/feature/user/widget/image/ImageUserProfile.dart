@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import '../../../../util/CommonUtils.dart';
+import '../../viewmodel/MyPageViewModel.dart';
 
 class ImageUserProfile extends StatelessWidget {
   final double imageSize;
   final String imageUrl;
   final Function(String) onImagePicked;
+  final MyPageViewModel viewModel;
 
   const ImageUserProfile({
     super.key,
     this.imageSize = 120,
     required this.imageUrl,
     required this.onImagePicked,
+    required this.viewModel,
   });
 
-  Future<void> _pickImage(BuildContext context) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+  void _onPickImage() async {
+    String? uploadedImageUrl = await CommonUtils.pickAndUploadImage(viewModel);
 
-    if (pickedFile != null) {
-      onImagePicked(pickedFile.path); // 선택한 이미지 경로 전달
+    if (uploadedImageUrl != null) {
+      onImagePicked(uploadedImageUrl);
+    } else {
+      debugPrint("이미지 업로드 실패");
     }
   }
 
@@ -39,7 +42,7 @@ class ImageUserProfile extends StatelessWidget {
           right: 0,
           bottom: 0,
           child: GestureDetector(
-            onTap: () => _pickImage(context), // 클릭 시 이미지 선택 실행
+            onTap: _onPickImage,
             child: Container(
               width: 30,
               height: 30,

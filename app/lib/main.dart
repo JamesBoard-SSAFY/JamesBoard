@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/MyPageRepository.dart';
+import 'package:jamesboard/repository/S3Repository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
@@ -52,7 +53,9 @@ void main() async {
 
   final loginRepository = LoginRepository.create();
   final myPageRepository = MyPageRepository.create();
-  final myPageViewModel = MyPageViewModel(myPageRepository, loginRepository, storage);
+  final s3Repository = S3Repository.create();
+  final myPageViewModel =
+      MyPageViewModel(myPageRepository, loginRepository, s3Repository, storage);
 
   runApp(
     MultiProvider(
@@ -61,6 +64,7 @@ void main() async {
           create: (context) => MyPageViewModel(
             MyPageRepository.create(),
             LoginRepository.create(),
+            S3Repository.create(),
             storage,
           ),
         ),
