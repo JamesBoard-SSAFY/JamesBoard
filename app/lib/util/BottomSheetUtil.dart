@@ -3,31 +3,33 @@ import 'package:jamesboard/theme/Colors.dart';
 
 import '../constants/AppString.dart';
 import '../constants/FontString.dart';
+import '../datasource/model/response/BoardGameDetailResponse.dart';
 import '../feature/boardgame/widget/BottomSheetBoardGameDetailDetail.dart';
 import '../feature/boardgame/widget/BottomSheetBoardGameEvaluation.dart';
 import '../feature/boardgame/widget/RatingBarBoardGameDetailReview.dart';
 
 class BottomSheetUtil {
-  static void showBoardGameDetailBottomSheet(BuildContext context) {
+  static void showBoardGameDetailBottomSheet(BuildContext context,
+      {required BoardGameDetailResponse boardGameDetail}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return BottomSheetBoardGameDetailDetail(
-          gameTitle: '보드게임 이름',
-          gameReleaseYear: 2022,
-          gameCategories: ['전략', '가족'],
-          gameThemes: ['중세', '판타지'],
-          gameAverageRating: 8.5,
-          gameDifficulty: 1,
-          gameAge: 12,
-          gameMinPlayer: 2,
-          gameMaxPlayer: 4,
-          gamePlayTime: 90,
-          gameDescription: '이 보드게임은 전략과 재미를 동시에 제공합니다.',
-          gamePublisher: 'ABC Games',
-          gameDesigners: ['John Doe', 'Jane Doe'],
+          gameTitle: boardGameDetail.gameTitle,
+          gameReleaseYear: boardGameDetail.gameYear,
+          gameCategories: boardGameDetail.gameCategories,
+          gameThemes: boardGameDetail.gameThemes,
+          gameAverageRating: boardGameDetail.gameRating,
+          gameDifficulty: boardGameDetail.difficulty,
+          gameAge: boardGameDetail.gameMinAge,
+          gameMinPlayer: boardGameDetail.minPlayers,
+          gameMaxPlayer: boardGameDetail.maxPlayers,
+          gamePlayTime: boardGameDetail.playTime,
+          gameDescription: boardGameDetail.description,
+          gamePublisher: boardGameDetail.gamePublisher,
+          gameDesigners: boardGameDetail.gameDesigners,
         );
       },
     );

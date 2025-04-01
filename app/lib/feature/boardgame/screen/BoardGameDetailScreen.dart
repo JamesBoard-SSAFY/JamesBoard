@@ -242,7 +242,9 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                           GestureDetector(
                             onTap: () {
                               BottomSheetUtil.showBoardGameDetailBottomSheet(
-                                  context);
+                                context,
+                                boardGameDetail: boardGameDetail,
+                              );
                             },
                             child: Text(
                               "더보기",
