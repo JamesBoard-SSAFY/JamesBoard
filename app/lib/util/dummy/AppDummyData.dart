@@ -257,16 +257,17 @@ class AppDummyData {
     {'genre': '추리', 'percent': 19, 'count': 95, 'color': CommonUtils.getGenreColor('추리')},
     {'genre': '경제', 'percent': 17.5, 'count': 80, 'color': CommonUtils.getGenreColor('경제')},
     {'genre': '모험', 'percent': 16.5, 'count': 70, 'color': CommonUtils.getGenreColor('모험')},
-    {'genre': '전쟁', 'percent': 0, 'count': 0, 'color': CommonUtils.getGenreColor('전쟁')},
+    {'genre': '전쟁', 'percent': 25, 'count': 0, 'color': CommonUtils.getGenreColor('전쟁')},
   ];
+
   static final List<ChartData> missionStatisticsChartData = missionStatisticsGenres.map((genre) {
     return ChartData(
       genre['genre'] as String,
       (genre['percent'] as num).toDouble(),
       genre['color'] as Color,
-      genre['count'] as int, // count 추가
     );
   }).toList();
+
   static final List<Map<String, String>> missionCumulativeGameData = [
     {
       'id': '1',

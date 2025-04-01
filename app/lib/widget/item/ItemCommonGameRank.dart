@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
-import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
+import '../../datasource/model/response/MyPage/TopPlayedGame.dart';
+
 class ItemCommonGameRank extends StatelessWidget {
-  final List<Map<String, String>> gameData;
+  final List<TopPlayedGame> gameData;
 
   const ItemCommonGameRank({super.key, required this.gameData});
 
@@ -18,7 +19,7 @@ class ItemCommonGameRank extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-            print("게임 ID: ${game['id']} 클릭됨"); // 클릭 이벤트
+            print("게임 ID: ${game.gameId} 클릭됨"); // 클릭 이벤트
           },
           child: Container(
             margin: EdgeInsets.only(bottom: 12),
@@ -33,20 +34,23 @@ class ItemCommonGameRank extends StatelessWidget {
                 ListTile(
                   leading: ClipOval(
                     child: Image.network(
-                      game['img']!,
+                      game.gameImage,
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
                     ),
                   ),
                   title: Text(
-                    game['title']!,
+                    game.gameTitle,
                     style: TextStyle(
                       fontSize: 20,
                       fontFamily: FontString.pretendardSemiBold,
                       color: mainWhite,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis, // 초과 시 ... 표시
                   ),
+
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -57,7 +61,7 @@ class ItemCommonGameRank extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "${game['round']}판",
+                        "${game.totalPlayCount}판",
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: FontString.pretendardSemiBold,

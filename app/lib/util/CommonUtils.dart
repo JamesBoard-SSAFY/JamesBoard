@@ -40,7 +40,7 @@ class CommonUtils {
         return mainFamily;
       case '전쟁':
         return mainWar;
-      case '추상전략':
+      case '추상 전략':
         return mainAbstractStrategy;
       default:
         return Colors.black; // 기본 색상 (알 수 없는 장르에 대한 색상)

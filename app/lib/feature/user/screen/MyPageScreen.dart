@@ -6,6 +6,7 @@ import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dar
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:provider/provider.dart';
+import '../../../datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
 import '../../../repository/MyPageRepository.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
@@ -171,6 +172,9 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // 임무 통계
   Widget _buildTabContentMissionStatistics() {
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.getTopPlayedGame();
+    
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -194,9 +198,14 @@ class _MyPageScreenState extends State<MyPageScreen>
               ],
             ),
             ChartUserGenrePercent(
-                chartData: AppDummyData.missionStatisticsChartData),
+              chartData: viewModel.gameStats ?? MyPageGameStatsResponse(
+                totalPlayed: 0,
+                genreStats: [],
+                topPlayedGames: [],
+              ),
+            ),
             ItemUserGenrePercentInfo(
-                genres: AppDummyData.missionStatisticsGenres),
+                genres: viewModel.gameStats?.genreStats ?? []),
             SizedBox(
               height: 32,
             ),
@@ -218,7 +227,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                       MaterialPageRoute(
                         builder: (context) => MyPagePlayTimeScreen(
                           title: "작전 누적 판수 순위",
-                          gameData: AppDummyData.missionCumulativeGameData,
+                          gameData: viewModel.gameStats?.topPlayedGames ?? [],
                         ),
                       ),
                     );
@@ -239,7 +248,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             ),
             ItemCommonGameRank(
                 gameData:
-                    AppDummyData.missionCumulativeGameData.take(5).toList()),
+                viewModel.gameStats?.topPlayedGames.take(5).toList() ?? []),
           ],
         ),
       ),
