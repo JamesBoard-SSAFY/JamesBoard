@@ -4,6 +4,7 @@ import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/HashTagMissionDetail.dart';
 import 'package:jamesboard/feature/mission/widget/ProfileMissionDetail.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +33,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
   void initState() {
     super.initState();
     context.read<MissionViewModel>().getArchiveById(widget.archiveId);
+    context.read<MissionViewModel>().loadLoginUserId();
   }
 
   @override
@@ -47,7 +49,9 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
       );
     }
 
-    if (viewModel.hasError || viewModel.archiveDetailResponse == null) {
+    if (viewModel.hasError ||
+        viewModel.archiveDetailResponse == null ||
+        viewModel.loginUserId == null) {
       return const Scaffold(
         backgroundColor: mainBlack,
         body: Center(
@@ -74,8 +78,11 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ProfileMissionDetail(
-                imageUrl: archiveDetailResponse.userProfile,
-                userName: archiveDetailResponse.userNickName),
+              imageUrl: archiveDetailResponse.userProfile,
+              userName: archiveDetailResponse.userNickName,
+              archiveUserId: archiveDetailResponse.userId,
+              loginUserId: viewModel.loginUserId!,
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -142,9 +149,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                       width: 8,
                     ),
                     HashTagMissionDetail(
-                        info:
-                            '${archiveDetailResponse.archiveGamePlayTime}' // 이거 playCount로 변경할 것.
-                        )
+                        info: '${archiveDetailResponse.archiveGamePlayCount}판')
                   ],
                 )
               ],
