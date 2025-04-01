@@ -22,7 +22,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                git branch: 'infra',
+                git branch: 'recommend',
                     url: 'https://lab.ssafy.com/s12-bigdata-recom-sub1/S12P21D205.git',
                     credentialsId: 'GitLab-PAT'
             }
