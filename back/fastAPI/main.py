@@ -62,7 +62,7 @@ async def startup_event():
         print(f"Error during startup: {e}")
         raise
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def read_root():
     return {"message": "보드게임 추천 시스템 API"}
 

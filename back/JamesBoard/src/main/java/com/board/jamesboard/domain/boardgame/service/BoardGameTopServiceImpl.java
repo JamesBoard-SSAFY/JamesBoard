@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.board.jamesboard.db.entity.Game;
 import com.board.jamesboard.db.repository.GameRepository;
 import com.board.jamesboard.domain.boardgame.dto.BoardGameTopResponseDto;
-import com.board.jamesboard.db.entity.Game;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +40,7 @@ public class BoardGameTopServiceImpl implements BoardGameTopService {
         return games.stream()
                 .map(game -> new BoardGameTopResponseDto(
                     game.getGameId(),
-                    game.getGameImage()
+                    game.getBigThumbnail()
                 ))
                 .collect(Collectors.toList());
     }

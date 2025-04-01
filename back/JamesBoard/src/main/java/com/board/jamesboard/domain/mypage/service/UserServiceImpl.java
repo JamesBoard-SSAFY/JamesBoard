@@ -214,14 +214,19 @@ public class UserServiceImpl implements UserService {
                 }
             }
 
+            // 모든 카테고리 카운트 합 계산
+            int totalCategoryCount = categoryCountMap.values().stream()
+                    .mapToInt(Integer::intValue)
+                    .sum();
+
             List<UserStatsResponseDto.GenreStats> genres = standardCategories.stream()
                     .map(category -> {
                         // 해당 카테고리 플레이 횟수 (없으면 0)
                         Integer count = categoryCountMap.getOrDefault(category, 0);
 
                         // 퍼센티지 계산 (총 플레이 횟수 0일시 퍼센티지도 0)
-                        Double percentage = totalPlayed > 0
-                                ? Math.round((double) count / totalPlayed * 1000) / 10.0
+                        Double percentage = totalCategoryCount > 0
+                                ? Math.round((double) count / totalCategoryCount * 1000) / 10.0
                                 : 0.0;
 
                         return UserStatsResponseDto.GenreStats.builder()
