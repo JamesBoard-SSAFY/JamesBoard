@@ -211,7 +211,12 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                       ),
                       child: ButtonCommonPrimaryBottom(
                         text: AppString.evaluation,
-                        onPressed: () {},
+                        onPressed: () {
+                          BottomSheetUtil.showRatingBottomSheet(
+                            context,
+                            gameId: boardGameDetail.gameId,
+                          );
+                        },
                         disableWithOpacity: false,
                       ),
                     ),

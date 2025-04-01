@@ -7,6 +7,7 @@ import '../datasource/model/response/BoardGameDetailResponse.dart';
 import '../feature/boardgame/widget/BottomSheetBoardGameDetailDetail.dart';
 import '../feature/boardgame/widget/BottomSheetBoardGameEvaluation.dart';
 import '../feature/boardgame/widget/RatingBarBoardGameDetailReview.dart';
+import '../main.dart';
 
 class BottomSheetUtil {
   static void showBoardGameDetailBottomSheet(BuildContext context,
@@ -35,13 +36,21 @@ class BottomSheetUtil {
     );
   }
 
-  static void showRatingBottomSheet(BuildContext context) {
+  static void showRatingBottomSheet(BuildContext context,
+      {required int gameId}) async {
+    String userIdStr = await storage.read(key: 'userId') ?? '';
+
+    int userId = int.parse(userIdStr);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return BottomSheetBoardGameEvaluation();
+        return BottomSheetBoardGameEvaluation(
+          gameId: gameId,
+          userId: userId,
+        );
       },
     );
   }

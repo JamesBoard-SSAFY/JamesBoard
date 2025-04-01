@@ -5,11 +5,23 @@ import '../../../constants/FontString.dart';
 import '../../../theme/Colors.dart';
 import 'RatingBarBoardGameDetailReview.dart';
 
-class BottomSheetBoardGameEvaluation extends StatelessWidget {
+class BottomSheetBoardGameEvaluation extends StatefulWidget {
+  final int gameId;
+  final int userId;
+
   const BottomSheetBoardGameEvaluation({
     super.key,
+    required this.gameId,
+    required this.userId,
   });
 
+  @override
+  State<BottomSheetBoardGameEvaluation> createState() =>
+      _BottomSheetBoardGameEvaluationState();
+}
+
+class _BottomSheetBoardGameEvaluationState
+    extends State<BottomSheetBoardGameEvaluation> {
   @override
   Widget build(BuildContext context) {
     return Container(
