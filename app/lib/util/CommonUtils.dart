@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -11,6 +13,9 @@ import '../feature/user/viewmodel/MyPageViewModel.dart';
 import '../feature/user/widget/chart/ChartUserGenrePercent.dart';
 import '../main.dart';
 import '../theme/Colors.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class CommonUtils {
   static final ImagePicker _picker = ImagePicker();
@@ -138,7 +143,8 @@ class CommonUtils {
     }).toList();
   }
 
-  static List<ChartData> convertGenreStatsToChartData(List<GenreStats> genreStats) {
+  static List<ChartData> convertGenreStatsToChartData(
+      List<GenreStats> genreStats) {
     return genreStats.map((genreInfo) {
       return ChartData(
         genreInfo.gameCategoryName,
@@ -148,52 +154,129 @@ class CommonUtils {
     }).toList();
   }
 
-  // 이미지 선택 및 S3 업로드
+  // 이미지 선택 및 WebP 변환 후 S3 업로드
   static Future<String?> pickAndUploadImage(MyPageViewModel viewModel) async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      String? fileName = pickedFile.name;
-      logger.i("로컬 이미지 이름 $fileName");
+      String originalFileName = pickedFile.name;
+      logger.i("원본 이미지 이름 $originalFileName");
+      String newFileName =
+          '${path.basenameWithoutExtension(originalFileName)}.webp';
+      logger.i("변환 이미지 이름 $newFileName");
 
-      // S3 Presigned URL 발급
-      String? presignedUrl = await viewModel.issuePresignedUrl(fileName);
+      // 이미지 압축 및 WebP 변환
+      File? compressedImage =
+          await _compressAndConvertToWebP(File(pickedFile.path), newFileName);
+      logger.i("WebP 변환 완료: ${compressedImage?.path}");
 
-      if (presignedUrl != null) {
-        // S3에 업로드하고, 업로드된 이미지 URL 반환
-        return await _uploadImageToS3(pickedFile, presignedUrl);
+      if (compressedImage != null) {
+        // S3 Presigned URL 요청
+        String? presignedUrl = await viewModel.issuePresignedUrl(newFileName);
+
+        if (presignedUrl != null) {
+          // 변환된 WebP 이미지 업로드
+          return await _uploadImageToS3(compressedImage, presignedUrl);
+        }
       }
     }
     return null;
   }
 
+  // 이미지 압축 및 WebP 변환
+  // 이미지 압축 및 WebP 변환 (크기에 따른 품질 조정)
+  static Future<File?> _compressAndConvertToWebP(
+      File imageFile, String newFileName) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final outputPath = path.join(tempDir.path, newFileName);
+
+      // 이미지 크기 확인 (바이트 단위)
+      int fileSize = imageFile.lengthSync();
+
+      // 압축 품질 설정 (파일 크기에 따라 품질을 다르게 설정)
+      int quality = 80; // 기본 품질
+
+      // 크기에 따른 품질 분기
+      if (fileSize < 100000) {
+        // 100KB 이하 작은 이미지
+        quality = 100;
+      } else if (fileSize < 500000) {
+        // 500KB 이하 작은 이미지
+        quality = 95;
+      } else if (fileSize < 1000000) {
+        // 500KB ~ 1MB 이미지
+        quality = 90;
+      } else if (fileSize < 2000000) {
+        // 1MB ~ 2MB 이미지
+        quality = 80;
+      } else if (fileSize < 5000000) {
+        // 2MB ~ 5MB 이미지
+        quality = 70;
+      } else if (fileSize < 10000000) {
+        // 5MB ~ 10MB 이미지
+        quality = 60;
+      } else if (fileSize < 50000000) {
+        // 10MB ~ 50MB 이미지
+        quality = 50;
+      } else if (fileSize < 50000000) {
+        // 10MB ~ 50MB 이미지
+        quality = 40;
+      } else {
+        // 50MB 이상 크기 이미지
+        quality = 30;
+      }
+
+      var compressedImage = await FlutterImageCompress.compressAndGetFile(
+        imageFile.absolute.path,
+        outputPath,
+        format: CompressFormat.webp, // WebP 변환
+        quality: quality, // 설정된 압축 품질
+        minWidth: 800, // 최소 너비 (설정 가능)
+        minHeight: 800, // 최소 높이 (설정 가능)
+      );
+
+      if (compressedImage == null) {
+        return null;
+      }
+
+      return File(compressedImage.path);
+    } catch (e) {
+      print("이미지 변환 중 에러 발생: $e");
+      return null;
+    }
+  }
+
   // S3 업로드
-  static Future<String?> _uploadImageToS3(XFile pickedFile, String presignedUrl) async {
+  static Future<String?> _uploadImageToS3(
+      File compressedFile, String presignedUrl) async {
     try {
       final dio = Dio();
 
-      final fileBytes = await pickedFile.readAsBytes();
+      // 바이트 배열로 파일을 읽어들임
+      final fileBytes = await compressedFile.readAsBytes();
 
       final response = await dio.put(
         presignedUrl,
-        data: fileBytes,
+        data: fileBytes, // 바이트 배열을 직접 전달
         options: Options(
           headers: {
-            'Content-Type': 'image/jpeg',
+            'Content-Type': 'image/webp', // WebP로 설정
           },
         ),
       );
 
       if (response.statusCode == 200) {
         String uploadedImageUrl = presignedUrl.split("?").first;
-        logger.i("업로드된 이미지 URL: $uploadedImageUrl");
+        print("업로드된 이미지 URL: $uploadedImageUrl");
         return uploadedImageUrl;
       } else {
-        logger.e("업로드 실패: ${response.statusCode}");
+        print("업로드 실패: ${response.statusCode}");
         return null;
       }
     } catch (e) {
-      logger.e("S3 업로드 중 에러 발생: $e");
+      print("S3 업로드 중 에러 발생: $e");
       return null;
     }
   }
