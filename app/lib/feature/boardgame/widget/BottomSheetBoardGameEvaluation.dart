@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/UserActivityViewModel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/FontString.dart';
+import '../../../datasource/model/request/user/UserActivityRequest.dart';
+import '../../../main.dart';
 import '../../../theme/Colors.dart';
 import 'RatingBarBoardGameDetailReview.dart';
 
@@ -22,6 +26,23 @@ class BottomSheetBoardGameEvaluation extends StatefulWidget {
 
 class _BottomSheetBoardGameEvaluationState
     extends State<BottomSheetBoardGameEvaluation> {
+  late UserActivityViewModel viewModel;
+
+  double _rating = 0.0;
+
+  void _updateRating(double rating) {
+    setState(() {
+      _rating = rating;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,9 +69,9 @@ class _BottomSheetBoardGameEvaluationState
           ),
           const SizedBox(height: 20),
           RatingBarBoardGameDetailReview(
-            initialRating: 0,
+            initialRating: _rating,
             onRatingUpdate: (rating) {
-              print("사용자 평가: $rating");
+              _updateRating(rating);
             },
           ),
           const SizedBox(height: 20),
@@ -66,7 +87,34 @@ class _BottomSheetBoardGameEvaluationState
               ),
             ),
             child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () async {
+                if (_rating == 0.0) {
+                  logger.d("rating $_rating");
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("평점을 선택해주세요.")),
+                  );
+                  return;
+                }
+
+                final request = UserActivityRequest(
+                  gameId: widget.gameId,
+                  userId: widget.userId,
+                  rating: _rating,
+                );
+
+                final success = await viewModel.addUserActivity(request);
+
+                logger.d('활동 추가 성공 여부: $success');
+
+                if (success) {
+                  Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("활동 추가에 실패했습니다. 다시 시도해주세요.")),
+                  );
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
                 padding: const EdgeInsets.symmetric(vertical: 24),

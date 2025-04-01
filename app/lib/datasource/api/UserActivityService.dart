@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:jamesboard/main.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../model/request/user/UserActivityRequest.dart';
