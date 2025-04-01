@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
+import '../../../../datasource/model/response/MyPage/GenreStats.dart';
 
 class ItemUserGenrePercentInfo extends StatelessWidget {
-  final List<Map<String, dynamic>> genres;
+  final List<GenreStats> genres;
 
   const ItemUserGenrePercentInfo({
     super.key,
@@ -17,9 +19,9 @@ class ItemUserGenrePercentInfo extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0), // 간격 조정
           child: _buildGenreItem(
-            genreInfo['genre'],
-            genreInfo['percent'],
-            genreInfo['color'],
+            genreInfo.gameCategoryName,
+            genreInfo.percentage,
+            CommonUtils.getGenreColor(genreInfo.gameCategoryName),
           ),
         );
       }).toList(),
