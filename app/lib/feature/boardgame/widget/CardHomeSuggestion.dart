@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
+import '../../../constants/FontString.dart';
+
 class CardHomeSuggestion extends StatefulWidget {
   final List<Map<String, String>> images; // {id: imageUrl}
   final Function(String id) onImageTap; // 클릭 시 수행할 작업
 
-  const CardHomeSuggestion({super.key, required this.images, required this.onImageTap});
+  const CardHomeSuggestion(
+      {super.key, required this.images, required this.onImageTap});
 
   @override
   _CardHomeSuggestionState createState() => _CardHomeSuggestionState();
@@ -101,7 +104,7 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                           style: TextStyle(
                             color: mainGold,
                             fontSize: 16,
-                            fontFamily: 'PretendardBold',
+                            fontFamily: FontString.pretendardBold,
                           ),
                         ),
                         TextSpan(
@@ -109,7 +112,7 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                           style: TextStyle(
                             color: mainWhite,
                             fontSize: 16,
-                            fontFamily: 'PretendardBold',
+                            fontFamily: FontString.pretendardBold,
                           ),
                         ),
                       ],

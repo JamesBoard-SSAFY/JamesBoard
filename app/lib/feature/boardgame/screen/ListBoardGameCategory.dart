@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategoryPage.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/appbar/DefaultCommonAppBar.dart';
@@ -9,7 +10,7 @@ class ListBoardGameCategory extends StatelessWidget {
   final String updateCategory;
   final Map<String, String> selectedFilters;
 
-  ListBoardGameCategory(
+  const ListBoardGameCategory(
       {required this.updateFilter,
       required this.title,
       required this.updateCategory,
@@ -19,7 +20,7 @@ class ListBoardGameCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: mainBlack,
-        appBar: DefaultCommonAppBar(title: "전체임무보기"),
+        appBar: DefaultCommonAppBar(title: AppString.listBoardCategoryTitle),
         body: ListBoardGameCategoryPage(
             title: title,
             updateFilter: updateFilter,

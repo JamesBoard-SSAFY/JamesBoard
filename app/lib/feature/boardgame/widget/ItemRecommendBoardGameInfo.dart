@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 
@@ -7,7 +8,6 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
   final String imageUrl;
   final String gameName;
   final String gameCategory;
-  final String gameTheme;
   final int gameMinPlayer;
   final int gameMaxPlayer;
   final int gameDifficulty;
@@ -19,7 +19,6 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
       required this.imageUrl,
       required this.gameName,
       required this.gameCategory,
-      required this.gameTheme,
       required this.gameMinPlayer,
       required this.gameMaxPlayer,
       required this.gameDifficulty,
@@ -72,7 +71,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
+            child: Image.network(
               imageUrl,
               height: 180,
               width: double.infinity,
@@ -101,7 +100,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     gameName,
                     style: TextStyle(
                       fontSize: 32,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                       color: mainWhite,
                     ),
                   ),
@@ -115,7 +114,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     runSpacing: 8.0,
                     children: [
                       ButtonCommonGameTag(text: gameCategory),
-                      ButtonCommonGameTag(text: gameTheme),
+                      // ButtonCommonGameTag(text: gameTheme),
                       ButtonCommonGameTag(
                           text: '$gameMinPlayer ~ $gameMaxPlayer명'),
                       ButtonCommonGameTag(
@@ -135,7 +134,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 16,
-                        fontFamily: 'PretendardMedium',
+                        fontFamily: FontString.pretendardMedium,
                         color: mainWhite),
                   ),
                 ),

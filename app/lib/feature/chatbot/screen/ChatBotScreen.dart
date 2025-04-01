@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/chatbot/widget/ChatBubbleChatBot.dart';
 import 'package:jamesboard/feature/chatbot/widget/TextFieldChatBotMessage.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/widget/appbar/DefaultCommonAppBar.dart';
 
 class ChatBotScreen extends StatefulWidget {
@@ -17,19 +18,6 @@ class ChatBotScreen extends StatefulWidget {
 class _ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController _chatController = TextEditingController();
 
-  final List<_ChatMessage> _messages = [
-    _ChatMessage(
-      message: '요원 hyuun, Q입니다. 임무 계획 수립을 위해 다음 정보를 한 번에 전달해 주시기 바랍니다.',
-      isMe: false,
-      time: '오전 08:13',
-    ),
-    _ChatMessage(
-      message: '장르, 참여 인원, 난이도, 게임당 플레이 시간 등 이 정보를 바탕으로, 최적화 보드게임 작전을 준비하겠습니다.',
-      isMe: false,
-      time: '오전 08:14',
-    ),
-  ];
-
   // 임시 메시지 보내기.
   void _sendMessage() {
     final text = _chatController.text.trim();
@@ -37,7 +25,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     if (text.isEmpty) return;
 
     setState(() {
-      _messages.add(_ChatMessage(
+      AppDummyData.messages.add(ChatMessage(
         message: text,
         isMe: true,
         time: _getCurrentTime(),
@@ -72,9 +60,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 32),
                 reverse: false,
-                itemCount: _messages.length,
+                itemCount: AppDummyData.messages.length,
                 itemBuilder: (context, index) {
-                  final msg = _messages[index];
+                  final msg = AppDummyData.messages[index];
                   return ChatBubbleChatBot(
                     message: msg.message,
                     isMe: msg.isMe,
@@ -88,8 +76,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             TextFieldChatBotMessage(
               onSend: (message) {
                 setState(() {
-                  _messages.add(
-                    _ChatMessage(
+                  AppDummyData.messages.add(
+                    ChatMessage(
                       message: message,
                       isMe: true,
                       time: _getCurrentTime(),
@@ -105,12 +93,12 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   }
 }
 
-class _ChatMessage {
+class ChatMessage {
   final String message;
   final bool isMe;
   final String time;
 
-  _ChatMessage({
+  ChatMessage({
     required this.message,
     required this.isMe,
     required this.time,

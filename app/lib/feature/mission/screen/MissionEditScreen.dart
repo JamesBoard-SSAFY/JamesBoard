@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionBoardGameCount.dart';
@@ -14,6 +16,7 @@ import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 
+import '../../../constants/AppString.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionEditScreen extends StatefulWidget {
@@ -39,7 +42,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   Future<void> _pickImage() async {
     if (_images.length >= 9) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('최대 9장의 사진만 업로드할 수 있습니다.'),
+        content: Text(AppString.uploadLimit),
         duration: Duration(seconds: 2),
       ));
       return;
@@ -55,7 +58,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: '이미지 자르기',
+            toolbarTitle: AppString.imageIncision,
             toolbarColor: Colors.black,
             toolbarWidgetColor: Colors.white,
             hideBottomControls: true, // 하단 컨트롤 숨기기
@@ -87,7 +90,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   Future<void> _pickImageFromCamera() async {
     if (_images.length >= 9) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('최대 9장의 사진만 업로드할 수 있습니다.'),
+        content: Text(AppString.uploadLimit),
         duration: Duration(seconds: 2),
       ));
       return;
@@ -103,7 +106,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: '이미지 자르기',
+            toolbarTitle: AppString.imageIncision,
             toolbarColor: Colors.black,
             toolbarWidgetColor: Colors.white,
             hideBottomControls: true, // 하단 컨트롤 숨기기
@@ -159,11 +162,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '임무 선택',
+                    AppString.missionChoice,
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 20,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                     ),
                   ),
                   const SizedBox(height: 12.0),
@@ -180,11 +183,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '진행한 임무 수',
+                    AppString.missionCompletedCount,
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 20,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                     ),
                   ),
                   const SizedBox(height: 12.0),
@@ -201,11 +204,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    '임무 스틸샷',
+                    AppString.missionPhotoTitle,
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 20,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                     ),
                   ),
                   const SizedBox(height: 12.0),
@@ -219,7 +222,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
                           child: ButtonRegisterArchivePicture(
-                            icon: 'assets/image/ic_add_picture.svg',
+                            icon: IconPath.addPicture,
                             onTap: _pickImage,
                           ),
                         ),
@@ -232,7 +235,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
                           child: ButtonRegisterArchivePicture(
-                            icon: 'assets/image/ic_camera.svg',
+                            icon: IconPath.camera,
                             onTap: _pickImageFromCamera,
                           ),
                         ),
@@ -281,7 +284,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             style: TextStyle(
                               color: mainGrey,
                               fontSize: 16,
-                              fontFamily: 'PretendardSemiBold',
+                              fontFamily: FontString.pretendardSemiBold,
                             ),
                           )
                         ],
@@ -303,19 +306,19 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        '임무 결과 ',
+                        AppString.missionResultTitle,
                         style: TextStyle(
                           color: mainWhite,
                           fontSize: 20,
-                          fontFamily: 'PretendardSemiBold',
+                          fontFamily: FontString.pretendardSemiBold,
                         ),
                       ),
                       Text(
-                        '255자까지 입력 가능합니다.',
+                        AppString.missionResultLimit,
                         style: TextStyle(
                           color: mainGrey,
                           fontSize: 14,
-                          fontFamily: 'PretendardSemiBold',
+                          fontFamily: FontString.pretendardSemiBold,
                         ),
                       )
                     ],
@@ -333,7 +336,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ButtonCommonPrimaryBottom(text: '등록'),
+                  ButtonCommonPrimaryBottom(
+                    text: AppString.register,
+                    onPressed: () {},
+                    disableWithOpacity: false,
+                  ),
                 ],
               ),
             ),

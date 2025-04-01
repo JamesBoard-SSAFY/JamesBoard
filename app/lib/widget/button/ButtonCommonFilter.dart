@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 
 class ButtonCommonFilter extends StatelessWidget {
   final String text;
@@ -33,7 +34,7 @@ class ButtonCommonFilter extends StatelessWidget {
         text,
         style: TextStyle(
           fontSize: 16,
-          fontFamily: 'PretendardMedium',
+          fontFamily: FontString.pretendardMedium,
         ),
       ),
     );

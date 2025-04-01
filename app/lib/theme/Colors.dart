@@ -18,3 +18,5 @@ const Color mainFamily = Color(0xFF4E9CDA);
 const Color mainReasoning = Color(0xFF92A9F5);
 const Color mainWar = Color(0xFFAD83F3);
 const Color mainAbstractStrategy = Color(0xFF96A2B0);
+
+const Color shadowBlack = Color(0x990C0F14);

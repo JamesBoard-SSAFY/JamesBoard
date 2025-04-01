@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class SearchBarCommonTitle extends StatelessWidget {
@@ -13,27 +15,20 @@ class SearchBarCommonTitle extends StatelessWidget {
           Expanded(
             child: TextField(
               style: TextStyle(
-                fontFamily: 'PretendardMedium',
+                fontFamily: FontString.pretendardMedium,
                 color: mainWhite, // 텍스트 색상 설정
               ),
               decoration: InputDecoration(
-                hintText: "어떤 보드게임을 찾으시나요?",
-                hintStyle: TextStyle(
-                  fontFamily: 'PretendardMedium',
-                  color: mainGrey
-                ),
-                filled: true,
-                fillColor: secondaryBlack,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: 30,
-                  color: mainGrey
-                )
-              ),
+                  hintText: AppString.searchBarHint,
+                  hintStyle: TextStyle(
+                      fontFamily: FontString.pretendardMedium, color: mainGrey),
+                  filled: true,
+                  fillColor: secondaryBlack,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: Icon(Icons.search, size: 30, color: mainGrey)),
             ),
           ),
           SizedBox(width: 1),
@@ -42,12 +37,11 @@ class SearchBarCommonTitle extends StatelessWidget {
               FocusScope.of(context).unfocus();
             },
             child: Text(
-              "취소",
+              AppString.cancel,
               style: TextStyle(
-                color: mainWhite,
-                fontSize: 18,
-                fontFamily: 'PretendardSemiBold'
-              ),
+                  color: mainWhite,
+                  fontSize: 18,
+                  fontFamily: FontString.pretendardSemiBold),
             ),
           ),
         ],

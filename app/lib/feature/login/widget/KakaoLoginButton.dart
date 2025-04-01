@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class KakaoLoginButton extends StatelessWidget {
@@ -26,17 +29,17 @@ class KakaoLoginButton extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: SvgPicture.asset(
-                'assets/image/kakao_icon.svg',
+                IconPath.kakaoIcon,
                 width: 24,
                 height: 24,
               ),
             ),
             const Text(
-              '카카오 로그인',
+              AppString.kakaoLogin,
               style: TextStyle(
                 color: mainBlack,
                 fontSize: 16,
-                fontFamily: 'PretendardBold',
+                fontFamily: FontString.pretendardBold,
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/mission/widget/HashTagMissionDetail.dart';
 import 'package:jamesboard/feature/mission/widget/ProfileMissionDetail.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -117,7 +118,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                   '${widget.userName} ${widget.missionDescription}',
                   style: TextStyle(
                     fontSize: 16,
-                    fontFamily: 'PretendardMedium',
+                    fontFamily: FontString.pretendardMedium,
                     color: mainWhite,
                   ),
                 ),

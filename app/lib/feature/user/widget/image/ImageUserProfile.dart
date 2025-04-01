@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ImageUserProfile extends StatelessWidget {
   final double imageSize;
+  final String imageUrl;
 
   const ImageUserProfile({
     super.key,
     this.imageSize = 120,
+    required this.imageUrl,
   });
 
   @override
@@ -16,7 +19,7 @@ class ImageUserProfile extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: imageSize / 2,
-          backgroundImage: AssetImage('assets/image/image_default_profile.png'),
+          backgroundImage: NetworkImage(imageUrl),
           backgroundColor: mainBlack,
         ),
         Positioned(
@@ -32,7 +35,7 @@ class ImageUserProfile extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(6),
               child: SvgPicture.asset(
-                'assets/image/icon_pen.svg',
+                IconPath.pen,
                 width: 24,
                 height: 24,
               ),

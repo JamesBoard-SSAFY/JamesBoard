@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/image/ImageCommonGameCard.dart';
 import 'package:jamesboard/widget/item/ItemCommonRecentSearch.dart';
@@ -74,7 +76,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 20,
-                    fontFamily: 'PretendardSemiBold',
+                    fontFamily: FontString.pretendardSemiBold,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -91,7 +93,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         // 바로 검색 로직 실행하기. 리스트 쫙 뿌려주기.
                       },
                       child: ItemCommonRecentSearch(
-                          title: item, iconPath: 'assets/image/icon_close.svg'),
+                          title: item, iconPath: IconPath.close),
                     );
                   },
                 )

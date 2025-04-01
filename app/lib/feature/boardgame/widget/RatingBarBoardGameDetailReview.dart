@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:jamesboard/icons/ic_star.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 
 import 'package:jamesboard/theme/Colors.dart';
 
@@ -23,19 +24,38 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RatingBar.builder(
-      initialRating: initialRating,
-      minRating: 0,
-      direction: Axis.horizontal,
-      allowHalfRating: allowHalfRating,
-      itemCount: itemCount,
-      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-      itemBuilder: (context, _) => Icon(
-        IcStar as IconData?,
-        color: mainGold,
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.4,
       ),
-      unratedColor: mainGrey,
-      onRatingUpdate: onRatingUpdate ?? (rating) {},
+      decoration: BoxDecoration(
+        color: secondaryBlack,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: RatingBar(
+        initialRating: 0,
+        minRating: 0,
+        maxRating: 5,
+        allowHalfRating: true,
+        itemSize: 48,
+        ratingWidget: RatingWidget(
+          full: SvgPicture.asset(
+            IconPath.starSelected,
+            color: mainGold,
+          ),
+          half: SvgPicture.asset(
+            IconPath.starHalfFilled,
+            color: mainGold,
+          ),
+          empty: SvgPicture.asset(
+            IconPath.starSelected,
+            color: mainGrey,
+          ),
+        ),
+        onRatingUpdate: (rating) {
+          // Rating is updated
+        },
+      ),
     );
   }
 }

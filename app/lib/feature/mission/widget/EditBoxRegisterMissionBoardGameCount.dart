@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class EditBoxRegisterMissionBoardGameCount extends StatefulWidget {
@@ -49,12 +51,15 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionBoardGameCount> {
         style: TextStyle(
           color: _hasInput ? mainWhite : mainGrey,
           fontSize: 16,
-          fontFamily: 'PretendardMedium',
+          fontFamily: FontString.pretendardMedium,
         ),
         decoration: InputDecoration(
-            hintText: '판수 입력',
+            hintText: AppString.gameCountInput,
             hintStyle: TextStyle(
-                color: mainGrey, fontSize: 16, fontFamily: 'PretendardMedium'),
+              color: mainGrey,
+              fontSize: 16,
+              fontFamily: FontString.pretendardMedium,
+            ),
             border: InputBorder.none,
             isDense: true,
             contentPadding: EdgeInsets.zero),

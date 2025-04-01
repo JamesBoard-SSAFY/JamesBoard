@@ -29,12 +29,6 @@ def test_mysql_connection():
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             print("Direct MySQL connection successful!")
-            # 테이블 존재 여부 확인
-            cursor.execute("SHOW TABLES LIKE 'recommend_content'")
-            if not cursor.fetchone():
-                print("recommend_content table not found!")
-            else:
-                print("recommend_content table exists")
         connection.close()
         return True
     except Exception as e:
@@ -44,14 +38,12 @@ def test_mysql_connection():
 # SQLAlchemy 데이터베이스 URL
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{MYSQL_USER}:{quote_plus(MYSQL_PASSWORD)}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
 
-print(f"Database URL: {SQLALCHEMY_DATABASE_URL}")
-
 # SQLAlchemy 엔진 생성
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_pre_ping=True,
     pool_recycle=3600,
-    echo=True,  # SQL 쿼리 로깅 활성화
+    echo=True,
     pool_size=5,
     max_overflow=10
 )
@@ -61,7 +53,7 @@ SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine,
-    expire_on_commit=False  # 세션 만료 방지
+    expire_on_commit=False
 )
 
 # Base 클래스 생성
@@ -71,16 +63,8 @@ Base = declarative_base()
 def test_sqlalchemy_connection():
     try:
         with engine.connect() as connection:
-            # 기본 연결 테스트
             result = connection.execute(text("SELECT 1"))
             print("SQLAlchemy connection successful!")
-            
-            # recommend_content 테이블 테스트
-            result = connection.execute(text("SHOW TABLES LIKE 'recommend_content'"))
-            if not result.fetchone():
-                print("recommend_content table not found in SQLAlchemy connection!")
-            else:
-                print("recommend_content table exists in SQLAlchemy connection")
             return True
     except Exception as e:
         print(f"SQLAlchemy connection failed: {str(e)}")
@@ -90,7 +74,6 @@ def test_sqlalchemy_connection():
 def get_db():
     db = SessionLocal()
     try:
-        # 연결 테스트
         db.execute(text("SELECT 1"))
         yield db
     except Exception as e:

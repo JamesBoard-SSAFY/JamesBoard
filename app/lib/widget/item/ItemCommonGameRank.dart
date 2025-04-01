@@ -1,93 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ItemCommonGameRank extends StatelessWidget {
-  const ItemCommonGameRank({super.key});
+  final List<Map<String, String>> gameData;
+
+  const ItemCommonGameRank({super.key, required this.gameData});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: secondaryBlack,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none, // Stack 내에서의 크기 초과를 허용
-        children: [
-          ListTile(
-            leading: ClipOval( // ClipOval을 이용해 원형으로 만듦
-              child: Image.asset(
-                'assets/image/bang.png',
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover, // 이미지 비율 유지
-              ),
+    return Column(
+      children: gameData.asMap().entries.map((entry) {
+        final index = entry.key;
+        final game = entry.value;
+
+        return GestureDetector(
+          onTap: () {
+            print("게임 ID: ${game['id']} 클릭됨"); // 클릭 이벤트
+          },
+          child: Container(
+            margin: EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: secondaryBlack,
+              borderRadius: BorderRadius.circular(10),
             ),
-            title: Text(
-              "부루마블",
-              style: TextStyle(
-                fontSize: 20,
-                fontFamily: 'PretendardSemiBold',
-                color: mainWhite, // mainWhite 색상 적용
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                SvgPicture.asset(
-                  'assets/image/icon_time.svg',
-                  width: 24,
-                  height: 24,
+                ListTile(
+                  leading: ClipOval(
+                    child: Image.network(
+                      game['img']!,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    game['title']!,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: FontString.pretendardSemiBold,
+                      color: mainWhite,
+                    ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/image/icon_time.svg',
+                        width: 24,
+                        height: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "${game['round']}판",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: FontString.pretendardSemiBold,
+                          color: mainWhite,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 8),
-                Text(
-                  "35분",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'PretendardSemiBold',
-                    color: mainWhite, // mainWhite 색상 적용
+                Positioned(
+                  left: -10,
+                  bottom: -20,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          '${index + 1}', // index + 1로 순위 표시
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontFamily: FontString.pretendardSemiBold,
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = 3
+                              ..color = mainGold,
+                          ),
+                        ),
+                        Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontFamily: FontString.pretendardSemiBold,
+                            color: mainRed,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Positioned(
-            left: -10, // 부모 컨테이너의 padding 값을 고려하여 조정
-            bottom: -20,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // 테두리 효과
-                  Text(
-                    '100',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontFamily: 'PretendardSemiBold',
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 3
-                        ..color = mainGold,
-                    ),
-                  ),
-                  // 안쪽 텍스트 색상
-                  Text(
-                    '100',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontFamily: 'PretendardSemiBold',
-                      color: mainRed,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 }

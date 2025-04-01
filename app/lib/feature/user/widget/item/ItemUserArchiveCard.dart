@@ -1,73 +1,159 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 
-class ItemUserArchiveCard extends StatelessWidget {
-  final String imageUrl;
-  final String content;
-  final String tag;
+import '../../../../util/CommonUtils.dart';
 
-  const ItemUserArchiveCard({
-    super.key,
-    required this.imageUrl,
-    required this.content,
-    required this.tag
-  });
+class ItemUserArchiveCard extends StatelessWidget {
+  final List<Map<String, dynamic>> missionDataList;
+
+  const ItemUserArchiveCard({super.key, required this.missionDataList});
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: mainGrey,
-            width: 1
-          )
-        ),
-        color: Colors.transparent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    // 월별로 그룹화된 데이터
+    Map<String, List<Map<String, dynamic>>> groupedData = {};
+
+    // missionDataList를 월별로 그룹화
+    for (var missionData in missionDataList) {
+      String month = CommonUtils.extractMonth(missionData['createdAt'] ?? '');
+      if (groupedData.containsKey(month)) {
+        groupedData[month]!.add(missionData);
+      } else {
+        groupedData[month] = [missionData];
+      }
+    }
+
+    return Column(
+      children: groupedData.entries.map((entry) {
+        String month = entry.key;
+        List<Map<String, dynamic>> items = entry.value;
+        // 월별 텍스트와 해당 월에 속하는 아이템들 출력
+        return Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-              child: Image.asset(
-                'assets/image/item_archieve_photo.jpg',
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 12),
-              child: Column(
-                children: [
-                  Text(
-                    'This is a description for the card. Here you can put some content that explains more about the card.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: mainWhite,
-                      fontFamily: 'PretendardMedium'
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  month, // 월을 상단에 출력
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: mainWhite,
+                    fontFamily: FontString.pretendardSemiBold,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+
+            // 아이템들 출력
+            Padding(
+              padding: const EdgeInsets.only(left: 34),
+              child: Column(
+                children: items.map((missionData) {
+                  String day =
+                      CommonUtils.extractDay(missionData['createdAt'] ?? '');
+                  String dayOfWeek = CommonUtils.extractDayOfWeek(
+                      missionData['createdAt'] ?? '');
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        ButtonCommonGameTag(text: "3시간 40분")
+                        // 왼쪽 바깥에 텍스트 배치
+                        Positioned(
+                          left: -34,
+                          child: Column(
+                            children: [
+                              Text(
+                                day,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: mainWhite,
+                                  fontFamily: FontString.pretendardMedium,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                dayOfWeek,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: mainWhite,
+                                  fontFamily: FontString.pretendardMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // 카드 위젯
+                        IntrinsicHeight(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: mainGrey, width: 1),
+                            ),
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16),
+                                  ),
+                                  child: Image.network(
+                                    missionData['archiveImage'] ?? '',
+                                    height: 300,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 16, bottom: 12),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        missionData['archiveContent'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: mainWhite,
+                                          fontFamily:
+                                              FontString.pretendardMedium,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 16),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            ButtonCommonGameTag(
+                                                text:
+                                                    '${missionData['archiveGamePlayCount'] ?? 0}판'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
             ),
           ],
-        ),
-      ),
+        );
+      }).toList(),
     );
   }
 }

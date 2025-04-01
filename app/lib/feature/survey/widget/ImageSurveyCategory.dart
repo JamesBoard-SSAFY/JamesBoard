@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class ImageSurveyCategory extends StatefulWidget {
@@ -27,7 +29,7 @@ class _ImageSurveyCategory extends State<ImageSurveyCategory> {
           physics: NeverScrollableScrollPhysics(), // 내부 스크롤을 비활성화
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, // 3개의 열
-            childAspectRatio: 0.9, // 정사각형 비율
+            childAspectRatio: 0.85, // 정사각형 비율
             crossAxisSpacing: 8, // 열 간 간격
             mainAxisSpacing: 16, // 행 간 간격
           ),
@@ -52,7 +54,9 @@ class _ImageSurveyCategory extends State<ImageSurveyCategory> {
                       ClipOval(
                         child: ColorFiltered(
                           colorFilter: ColorFilter.mode(
-                            isSelected ? Colors.black.withOpacity(0.3) : Colors.transparent,
+                            isSelected
+                                ? Colors.black.withOpacity(0.3)
+                                : Colors.transparent,
                             BlendMode.darken, // 어두운 효과를 줄 수 있음
                           ),
                           child: Image.asset(
@@ -66,7 +70,7 @@ class _ImageSurveyCategory extends State<ImageSurveyCategory> {
                       if (isSelected)
                         Positioned(
                           child: SvgPicture.asset(
-                            'assets/image/survey_check.svg', // SVG 아이콘 경로
+                            IconPath.surveyCheck, // SVG 아이콘 경로
                             width: itemWidth * 0.4, // 아이콘 크기
                             height: itemWidth * 0.4,
                           ),
@@ -79,7 +83,7 @@ class _ImageSurveyCategory extends State<ImageSurveyCategory> {
                     style: TextStyle(
                       color: isSelected ? mainGold : mainWhite, // 선택된 경우 색상 변경
                       fontSize: 16,
-                      fontFamily: 'PretendardBold',
+                      fontFamily: FontString.pretendardBold,
                     ),
                   ),
                 ],

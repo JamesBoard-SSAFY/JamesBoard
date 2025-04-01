@@ -14,7 +14,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        show_sql: true
+        show_sql: false
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
     open-in-view: false
@@ -57,7 +57,7 @@ logging:
   level:
     com.board: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+    org.hibernate.orm.jdbc.bind: TRACE
 
 jwt:
   secret: ${JWT_SECRET}
