@@ -55,7 +55,7 @@ class RecommendGameScreen extends StatelessWidget {
                     gameId: game.gameId,
                     imageUrl: game.gameImage,
                     gameName: game.gameTitle,
-                    gameCategory: game.gameCategory,
+                    gameCategory: game.gameCategory[0],
                     gameMinPlayer: game.minPlayer,
                     gameMaxPlayer: game.maxPlayer,
                     gameDifficulty: game.difficulty,

@@ -8,7 +8,7 @@ import '../model/request/ArchiveEditRequest.dart';
 
 part 'ArchiveService.g.dart';
 
-@RestApi(baseUrl: "https://j12d205.p.ssafy.io/")
+@RestApi(baseUrl: "https://j12d205.p.ssafy.io")
 abstract class ArchiveService {
   factory ArchiveService(Dio dio, {String baseUrl}) = _ArchiveService;
 
@@ -17,7 +17,7 @@ abstract class ArchiveService {
   Future<List<ArchiveListResponse>> getAllArchives();
 
   // 아카이브 상세 조회
-  @GET("api/archives/{archiveId}")
+  @GET("/api/archives/{archiveId}")
   Future<ArchiveDetailResponse> getArchiveById(
     @Path("archiveId") int archiveId,
   );
@@ -29,14 +29,14 @@ abstract class ArchiveService {
   );
 
   // 아카이브 수정
-  @PATCH("api/archives/{archiveId}")
+  @PATCH("/api/archives/{archiveId}")
   Future<int> updateArchive(
     @Path("archiveId") int archiveId,
     @Body() ArchiveEditRequest request,
   );
 
   // 아카이브 삭제
-  @DELETE("api/archives/{archiveId}")
+  @DELETE("/api/archives/{archiveId}")
   Future<int> deleteArchive(
     @Path("archiveId") int archiveId,
   );

@@ -10,7 +10,7 @@ part of 'ArchiveService.dart';
 
 class _ArchiveService implements ArchiveService {
   _ArchiveService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://j12d205.p.ssafy.io/';
+    baseUrl ??= 'https://j12d205.p.ssafy.io';
   }
 
   final Dio _dio;
@@ -61,7 +61,7 @@ class _ArchiveService implements ArchiveService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'api/archives/${archiveId}',
+            '/api/archives/${archiveId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -117,7 +117,7 @@ class _ArchiveService implements ArchiveService {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'api/archives/${archiveId}',
+            '/api/archives/${archiveId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -144,7 +144,7 @@ class _ArchiveService implements ArchiveService {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'api/archives/${archiveId}',
+            '/api/archives/${archiveId}',
             queryParameters: queryParameters,
             data: _data,
           )

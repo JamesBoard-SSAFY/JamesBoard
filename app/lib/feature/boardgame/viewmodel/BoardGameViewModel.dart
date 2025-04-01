@@ -24,6 +24,9 @@ class BoardGameViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  int? _selectedGameId;
+  int? get selectedGameId => _selectedGameId;
+
   BoardGameViewModel(this._repository);
 
   Future<void> getRecommendedGames({int limit = 10}) async {
@@ -72,5 +75,10 @@ class BoardGameViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void setSelectedGameId({required int gameId}) {
+    _selectedGameId = gameId;
+    notifyListeners();
   }
 }

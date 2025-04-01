@@ -7,7 +7,8 @@ class BoardGameResponse {
   final int gameId;
   final String gameTitle;
   final String gameImage;
-  final String gameCategory;
+  final List<String> gameCategory;
+  final List<String> gameTheme;
   final int minPlayer;
   final int maxPlayer;
   final int difficulty;
@@ -19,6 +20,7 @@ class BoardGameResponse {
     required this.gameTitle,
     required this.gameImage,
     required this.gameCategory,
+    required this.gameTheme,
     required this.minPlayer,
     required this.maxPlayer,
     required this.difficulty,
@@ -28,5 +30,6 @@ class BoardGameResponse {
 
   factory BoardGameResponse.fromJson(Map<String, dynamic> json) =>
       _$BoardGameResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$BoardGameResponseToJson(this);
 }

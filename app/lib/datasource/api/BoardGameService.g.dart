@@ -101,17 +101,14 @@ class _BoardGameService implements BoardGameService {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      if (sortBy != null) 'sortBy': sortBy,
-      if (limit != null) 'limit': limit,
+      r'sortBy': sortBy,
+      r'limit': limit,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    const _data = null;
+    const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<List<BoardGameTopResponse>>(
-      Options(
-        method: 'GET',
-        headers: _headers,
-        extra: _extra,
-      )
+      Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             'api/games/top',
@@ -121,10 +118,19 @@ class _BoardGameService implements BoardGameService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    return _result.data!
-        .map((dynamic i) =>
-            BoardGameTopResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    late List<BoardGameTopResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                BoardGameTopResponse.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

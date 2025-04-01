@@ -5,7 +5,14 @@ import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class SearchBarCommonTitle extends StatelessWidget {
-  const SearchBarCommonTitle({super.key});
+  final TextEditingController controller;
+  final ValueChanged<String> onSubmitted;
+
+  const SearchBarCommonTitle({
+    super.key,
+    required this.controller,
+    required this.onSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +21,8 @@ class SearchBarCommonTitle extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              controller: controller,
+              onSubmitted: onSubmitted,
               style: TextStyle(
                 fontFamily: FontString.pretendardMedium,
                 color: mainWhite, // 텍스트 색상 설정
@@ -34,7 +43,7 @@ class SearchBarCommonTitle extends StatelessWidget {
           SizedBox(width: 1),
           TextButton(
             onPressed: () {
-              FocusScope.of(context).unfocus();
+              Navigator.pop(context);
             },
             child: Text(
               AppString.cancel,

@@ -9,12 +9,12 @@ part of 'ArchiveEditRequest.dart';
 ArchiveEditRequest _$ArchiveEditRequestFromJson(Map<String, dynamic> json) =>
     ArchiveEditRequest(
       gameId: (json['gameId'] as num).toInt(),
-      archiveGamePlayCount: json['archiveGamePlayCount'] as String,
+      archiveGamePlayCount: (json['archiveGamePlayCount'] as num).toInt(),
       archiveImageList: (json['archiveImageList'] as List<dynamic>)
-          .map((e) => ArchiveImageList.fromJson(e as Map<String, dynamic>))
+          .map((e) => e as String)
           .toList(),
       archiveContent: json['archiveContent'] as String,
-      archiveGamePlayTime: json['archiveGamePlayTime'] as String,
+      archiveGamePlayTime: (json['archiveGamePlayTime'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ArchiveEditRequestToJson(ArchiveEditRequest instance) =>
@@ -24,14 +24,4 @@ Map<String, dynamic> _$ArchiveEditRequestToJson(ArchiveEditRequest instance) =>
       'archiveImageList': instance.archiveImageList,
       'archiveGamePlayTime': instance.archiveGamePlayTime,
       'archiveGamePlayCount': instance.archiveGamePlayCount,
-    };
-
-ArchiveImageList _$ArchiveImageListFromJson(Map<String, dynamic> json) =>
-    ArchiveImageList(
-      archiveImageUrl: json['archiveImageUrl'] as String,
-    );
-
-Map<String, dynamic> _$ArchiveImageListToJson(ArchiveImageList instance) =>
-    <String, dynamic>{
-      'archiveImageUrl': instance.archiveImageUrl,
     };

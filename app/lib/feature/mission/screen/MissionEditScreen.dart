@@ -7,6 +7,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
+import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionBoardGameCount.dart';
@@ -14,7 +16,9 @@ import 'package:jamesboard/feature/mission/widget/ImageItemRegisterMission.dart'
 import 'package:jamesboard/feature/mission/widget/SelectBoxRegisterMissionBoardGame.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/AppString.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
@@ -89,10 +93,12 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   // 카메라 연결
   Future<void> _pickImageFromCamera() async {
     if (_images.length >= 9) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(AppString.uploadLimit),
-        duration: Duration(seconds: 2),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(AppString.uploadLimit),
+          duration: Duration(seconds: 2),
+        ),
+      );
       return;
     }
 
@@ -143,6 +149,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MissionViewModel>();
+
     return Scaffold(
       backgroundColor: mainBlack,
       appBar: DefaultCommonAppBar(
@@ -155,23 +163,37 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // 임무 선택 영역
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppString.missionChoice,
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: FontString.pretendardSemiBold,
+            GestureDetector(
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BoardGameSearchScreen(
+                      purpose: BoardGameSearchPurpose.fromMission,
                     ),
                   ),
-                  const SizedBox(height: 12.0),
-                  SelectBoxRegisterMissionBoardGame(),
-                ],
+                );
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppString.missionChoice,
+                      style: TextStyle(
+                        color: mainWhite,
+                        fontSize: 20,
+                        fontFamily: FontString.pretendardSemiBold,
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    SelectBoxRegisterMissionBoardGame(
+                      selectedGameTitle: viewModel.selectedGameTitle,
+                    ),
+                  ],
+                ),
               ),
             ),
 
