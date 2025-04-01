@@ -97,6 +97,7 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                     itemCount: games.length,
                     itemBuilder: (context, index) {
                       final game = games[index];
+                      final gameId = games[index].gameId;
                       return KeepAliveView(
                         child: Container(
                           margin: EdgeInsets.only(right: 8.0),
@@ -105,8 +106,10 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        BoardGameDetailScreen()),
+                                  builder: (context) => BoardGameDetailScreen(
+                                    gameId: gameId,
+                                  ),
+                                ),
                               );
                             },
                             child:

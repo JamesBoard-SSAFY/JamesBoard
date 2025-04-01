@@ -45,7 +45,10 @@ class RecommendGameScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BoardGameDetailScreen()),
+                        builder: (context) => BoardGameDetailScreen(
+                          gameId: game.gameId,
+                        ),
+                      ),
                     );
                   },
                   child: Padding(

@@ -5,8 +5,8 @@ import 'package:jamesboard/theme/Colors.dart';
 import '../../../constants/FontString.dart';
 
 class CardHomeSuggestion extends StatefulWidget {
-  final List<Map<String, String>> images; // {id: imageUrl}
-  final Function(String id) onImageTap; // 클릭 시 수행할 작업
+  final List<Map<String, String>> images;
+  final Function(int id) onImageTap;
 
   const CardHomeSuggestion(
       {super.key, required this.images, required this.onImageTap});
@@ -71,7 +71,7 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                   final id = image['id']!;
 
                   return GestureDetector(
-                    onTap: () => widget.onImageTap(id),
+                    onTap: () => {},
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 32),
                       child: ClipRRect(

@@ -21,10 +21,14 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
     super.initState();
   }
 
-  void onImageTap(String id) {
+  void onImageTap(int id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BoardGameDetailScreen()),
+      MaterialPageRoute(
+        builder: (context) => BoardGameDetailScreen(
+          gameId: id,
+        ),
+      ),
     );
   }
 

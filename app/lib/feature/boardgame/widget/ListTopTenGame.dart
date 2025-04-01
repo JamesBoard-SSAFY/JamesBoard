@@ -8,7 +8,7 @@ import 'CardHomeTopTen.dart';
 class ListTopTenGame extends StatefulWidget {
   final List<String> imageUrls;
   final String title;
-  final Function(String id) onImageTap;
+  final Function(int id) onImageTap;
   final Map<String, dynamic> queryParameters;
 
   const ListTopTenGame({
@@ -47,7 +47,7 @@ class _ListTopTenGameState extends State<ListTopTenGame> {
           CardHomeTopTen(
             title: widget.title,
             images: AppDummyData.images,
-            onImageTap: (String id) => widget.onImageTap(id),
+            onImageTap: (int id) => widget.onImageTap(id),
             queryParameters: widget.queryParameters,
           )
         ],
