@@ -30,11 +30,24 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
   @override
   String _nickname = ''; // 닉네임 상태 저장
   bool _isNicknameValid = false; // 닉네임 유효성 상태
+  late String _userImage; // 프로필 이미지 상태 추가
+
+  @override
+  void initState() {
+    super.initState();
+    _userImage = widget.userImg; // 초기 프로필 이미지 설정
+  }
 
   void _onNicknameChanged(String nickname, bool isValid) {
     setState(() {
       _nickname = nickname;
       _isNicknameValid = isValid;
+    });
+  }
+
+  void _onProfileImageChanged(String imagePath) {
+    setState(() {
+      _userImage = imagePath; // 선택한 이미지로 상태 업데이트
     });
   }
 
@@ -61,7 +74,8 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImageUserProfile(
-                    imageUrl: widget.userImg,
+                    imageUrl: _userImage,
+                    onImagePicked: _onProfileImageChanged,
                   ),
                 ],
               ),
@@ -97,8 +111,9 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                       ? () {
                           viewModel.editUserInfo(MyPageUserInfoRequest(
                               userName: _nickname,
-                              userProfile: widget.userImg));
+                              userProfile: _userImage)); // 선택한 이미지 전달
                           print("닉네임 변경 완료: $_nickname");
+                          print("프로필 이미지 변경 완료: $_userImage");
 
                           Navigator.pop(context);
                         }
