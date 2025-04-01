@@ -154,12 +154,10 @@ class _BoardGameService implements BoardGameService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
 
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<dynamic>(_options);
 
     try {
-      logger.d("gameservice result data : ${_result.data!}");
       final _data = BoardGameDetailResponse.fromJson(_result.data!);
-      logger.d("gameservice : ${_data}");
       return _data;
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
