@@ -1,18 +1,19 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
-import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/AppString.dart';
 import '../../../util/BottomSheetUtil.dart';
-import '../../../util/dummy/AppDummyData.dart';
-import '../../../widget/image/ImageCommonGameCard.dart';
 import '../viewmodel/BoardGameViewModel.dart';
+import '../widget/BoardGameDetailGameList.dart';
 
 class BoardGameDetailScreen extends StatefulWidget {
   final int gameId;
@@ -47,115 +48,99 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                     child: CircularProgressIndicator(color: mainGold));
               }
 
+              final boardGameDetail = viewModel.boardGameDetail;
+
+              if (boardGameDetail == null) {
+                return Center(
+                  child: Text(
+                    "게임 정보가 없습니다.",
+                    style: TextStyle(
+                      color: mainWhite,
+                    ),
+                  ),
+                );
+              }
+
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Consumer<BoardGameViewModel>(
-                      builder: (context, viewModel, child) {
-                        if (viewModel.isLoading) {
-                          return Center(
-                            child: CircularProgressIndicator(color: mainGold),
-                          );
-                        }
-
-                        final boardGameDetail = viewModel.boardGameDetail;
-
-                        logger.d("gameDetail : ${boardGameDetail}");
-
-                        if (boardGameDetail == null) {
-                          return Text(
-                            "설명이 없습니다.",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardMedium,
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          child: Image.network(
+                            boardGameDetail
+                                .gameImage, // Image URL from view model
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: secondaryBlack,
+                              shape: BoxShape.circle,
                             ),
-                          );
-                        }
-
-                        logger.d("detail: ${boardGameDetail}");
-
-                        return Stack(
-                          children: [
-                            ClipRRect(
-                              child: Image.network(
-                                boardGameDetail
-                                    .gameImage, // Image URL from view model
-                                height:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.chevron_left,
+                                color: mainWhite,
+                                size: 30,
                               ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                             ),
-                            Positioned(
-                              top: 8,
-                              left: 8,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: secondaryBlack,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.chevron_left,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(left: 20),
+                            decoration: BoxDecoration(color: shadowBlack),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  boardGameDetail.gameTitle,
+                                  style: TextStyle(
                                     color: mainWhite,
-                                    size: 30,
+                                    fontSize: 44,
+                                    fontFamily: FontString.pretendardBold,
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.only(left: 20),
-                                decoration: BoxDecoration(color: shadowBlack),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                SizedBox(width: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      boardGameDetail.gameTitle,
-                                      style: TextStyle(
-                                        color: mainWhite,
-                                        fontSize: 44,
-                                        fontFamily: FontString.pretendardBold,
-                                      ),
+                                    SvgPicture.asset(
+                                      IconPath.starSelected,
+                                      width: 24,
+                                      height: 24,
+                                      color: mainGold,
                                     ),
-                                    SizedBox(width: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          IconPath.starSelected,
-                                          width: 24,
-                                          height: 24,
-                                          color: mainGold,
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          "${boardGameDetail.gameRating}", // Rating from view model
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontFamily:
-                                                FontString.pretendardMedium,
-                                            color: mainGold,
-                                          ),
-                                        ),
-                                      ],
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "${boardGameDetail.gameRating}", // Rating from view model
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: FontString.pretendardMedium,
+                                        color: mainGold,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 5),
                     Container(
@@ -167,23 +152,38 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                           children: [
                             Container(
                               margin: EdgeInsets.only(right: 8),
-                              child: ButtonCommonGameTag(text: '15세'),
+                              child: ButtonCommonGameTag(
+                                text: "${boardGameDetail.gameMinAge}세",
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(right: 8),
-                              child: ButtonCommonGameTag(text: '1997년'),
+                              child: ButtonCommonGameTag(
+                                text: '${boardGameDetail.gameYear}년',
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(right: 8),
-                              child: ButtonCommonGameTag(text: '중급'),
+                              child: ButtonCommonGameTag(
+                                text: CommonUtils.getDifficulty(
+                                  boardGameDetail.difficulty,
+                                ),
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(right: 8),
-                              child: ButtonCommonGameTag(text: '3~6명'),
+                              child: ButtonCommonGameTag(
+                                text: CommonUtils.getAgeInfo(
+                                  boardGameDetail.minPlayers,
+                                  boardGameDetail.maxPlayers,
+                                ),
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(right: 8),
-                              child: ButtonCommonGameTag(text: '40분'),
+                              child: ButtonCommonGameTag(
+                                text: '${boardGameDetail.playTime}분',
+                              ),
                             ),
                           ],
                         ),
@@ -195,7 +195,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         top: 12,
                       ),
                       child: Text(
-                        "추리 • 전략",
+                        boardGameDetail.gameCategories.join(" • "),
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: FontString.pretendardMedium,
@@ -215,19 +215,22 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         disableWithOpacity: false,
                       ),
                     ),
-                    // Container(
-                    //   margin:
-                    //       const EdgeInsets.only(left: 20, top: 24, right: 20),
-                    //   child: Text(
-                    //     viewModel.boardGameDetail?.description!,
-                    //     maxLines: 5,
-                    //     overflow: TextOverflow.ellipsis,
-                    //     style: TextStyle(
-                    //         fontSize: 16,
-                    //         fontFamily: FontString.pretendardMedium,
-                    //         color: mainWhite),
-                    //   ),
-                    // ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        left: 20,
+                        top: 24,
+                        right: 20,
+                      ),
+                      child: Text(
+                        boardGameDetail.description,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: FontString.pretendardMedium,
+                            color: mainWhite),
+                      ),
+                    ),
                     Container(
                       margin: const EdgeInsets.only(
                         right: 20,
@@ -279,29 +282,9 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: 24,
-                        left: 20,
-                        right: 20,
-                        bottom: 20,
-                      ),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // 한 줄에 3개
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 3 / 4,
-                        ),
-                        itemCount: AppDummyData.imageUrls.length,
-                        itemBuilder: (context, index) {
-                          return ImageCommonGameCard(
-                            imageUrl: AppDummyData.imageUrls[index],
-                          );
-                        },
-                      ),
+                    BoardGameDetailGameList(
+                      category: boardGameDetail.gameCategories[Random()
+                          .nextInt(boardGameDetail.gameCategories.length)],
                     ),
                   ],
                 ),
