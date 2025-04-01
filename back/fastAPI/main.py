@@ -12,7 +12,10 @@ import models
 # 전역 RecommendationEngine 인스턴스
 recommendation_engine = None
 
-app = FastAPI(title="보드게임 추천 시스템 API")
+app = FastAPI(
+    title="Recommend API",
+    root_path="/recommends"
+)
 
 def generate_recommendations_job():
     """스케줄된 추천 생성 작업"""
