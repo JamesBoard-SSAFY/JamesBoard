@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class BoardgameSearchServiceImpl implements BoardGameSearchService {
+public class BoardGameSearchServiceImpl implements BoardGameSearchService {
 
     private final GameRepository gameRepository;
 
