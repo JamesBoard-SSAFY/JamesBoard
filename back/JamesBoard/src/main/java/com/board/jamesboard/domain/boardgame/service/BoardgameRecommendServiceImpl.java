@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BoardgameRecommendServiceImpl implements BoardGameRecommendService {
+public class BoardGameRecommendServiceImpl implements BoardGameRecommendService {
 
     private final UserRepository userRepository;
     private final RecommendContentRepository recommendContentRepository;
