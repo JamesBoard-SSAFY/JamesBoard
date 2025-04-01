@@ -19,10 +19,19 @@ class MissionViewModel extends ChangeNotifier {
 
   ArchiveDetailResponse? archiveDetailResponse;
 
+  int? loginUserId;
+
   MissionViewModel(
     this._archiveRepository,
     this._loginRepository,
   );
+
+  // 로그인한 userId 조회
+  Future<void> loadLoginUserId() async {
+    final userIdStr = await storage.read(key: 'userId');
+    loginUserId = int.tryParse(userIdStr ?? '');
+    notifyListeners();
+  }
 
   // 아카이브 전체 조회
   Future<void> getAllArchives() async {
