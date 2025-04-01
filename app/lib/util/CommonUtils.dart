@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../datasource/model/response/MyPage/GenreStats.dart';
 import '../datasource/model/response/MyPage/MyPageArchiveResponse.dart';
+import '../feature/user/widget/chart/ChartUserGenrePercent.dart';
 import '../theme/Colors.dart';
 
 class CommonUtils {
@@ -127,6 +129,16 @@ class CommonUtils {
           selectedMonth == "전체" || "${date.month}월" == selectedMonth;
 
       return yearMatch && monthMatch;
+    }).toList();
+  }
+
+  static List<ChartData> convertGenreStatsToChartData(List<GenreStats> genreStats) {
+    return genreStats.map((genreInfo) {
+      return ChartData(
+        genreInfo.gameCategoryName,
+        genreInfo.percentage,
+        getGenreColor(genreInfo.gameCategoryName),
+      );
     }).toList();
   }
 }
