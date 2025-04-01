@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
-import 'package:jamesboard/main.dart';
+import 'package:jamesboard/util/view/KeepAliveView.dart';
 import 'package:provider/provider.dart';
 import '../../../theme/Colors.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
@@ -97,18 +97,24 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                     itemCount: games.length,
                     itemBuilder: (context, index) {
                       final game = games[index];
-                      return Container(
-                        margin: EdgeInsets.only(right: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      BoardGameDetailScreen()),
-                            );
-                          },
-                          child: ImageCommonGameCard(imageUrl: game.gameImage),
+                      final gameId = games[index].gameId;
+                      return KeepAliveView(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BoardGameDetailScreen(
+                                    gameId: gameId,
+                                  ),
+                                ),
+                              );
+                            },
+                            child:
+                                ImageCommonGameCard(imageUrl: game.gameImage),
+                          ),
                         ),
                       );
                     },

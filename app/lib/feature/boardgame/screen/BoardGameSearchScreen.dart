@@ -95,7 +95,9 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => BoardGameDetailScreen(),
+                                  builder: (_) => BoardGameDetailScreen(
+                                    gameId: game.gameId,
+                                  ),
                                 ),
                               );
                             }

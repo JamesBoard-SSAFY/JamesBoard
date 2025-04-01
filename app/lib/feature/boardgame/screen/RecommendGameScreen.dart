@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jamesboard/datasource/api/BoardGameService.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/util/DioProviderUtil.dart';
+import 'package:jamesboard/util/view/KeepAliveView.dart';
 import 'package:provider/provider.dart';
 import '../../../repository/BoardGameRepository.dart';
 import '../viewmodel/BoardGameViewModel.dart';
@@ -40,27 +39,33 @@ class RecommendGameScreen extends StatelessWidget {
             itemCount: viewModel.recommendedGames.length,
             itemBuilder: (context, index) {
               final game = viewModel.recommendedGames[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BoardGameDetailScreen()),
-                  );
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-                  child: ItemRecommendBoardGameInfo(
-                    gameId: game.gameId,
-                    imageUrl: game.gameImage,
-                    gameName: game.gameTitle,
-                    gameCategory: game.gameCategory[0],
-                    gameMinPlayer: game.minPlayer,
-                    gameMaxPlayer: game.maxPlayer,
-                    gameDifficulty: game.difficulty,
-                    gamePlayTime: game.playTime,
-                    gameDescription: game.gameDescription,
+
+              return KeepAliveView(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BoardGameDetailScreen(
+                          gameId: game.gameId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 20),
+                    child: ItemRecommendBoardGameInfo(
+                      gameId: game.gameId,
+                      imageUrl: game.gameImage,
+                      gameName: game.gameTitle,
+                      gameCategory: game.gameCategory[0],
+                      gameMinPlayer: game.minPlayer,
+                      gameMaxPlayer: game.maxPlayer,
+                      gameDifficulty: game.difficulty,
+                      gamePlayTime: game.playTime,
+                      gameDescription: game.gameDescription,
+                    ),
                   ),
                 ),
               );

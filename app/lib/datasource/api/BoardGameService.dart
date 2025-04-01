@@ -3,6 +3,8 @@ import 'package:jamesboard/datasource/model/response/BoardGameResponse.dart';
 import 'package:jamesboard/main.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../model/response/BoardGameDetailResponse.dart';
+import '../model/response/BoardGameRecommendResponse.dart';
 import '../model/response/BoardGameTopResponse.dart';
 
 part 'BoardGameService.g.dart';
@@ -12,7 +14,7 @@ abstract class BoardGameService {
   factory BoardGameService(Dio dio, {String baseUrl}) = _BoardGameService;
 
   @GET("api/games/recommendations")
-  Future<List<BoardGameResponse>> getRecommendedGames(
+  Future<List<BoardGameRecommendResponse>> getRecommendedGames(
       {@Query("limit") int limit = 10});
 
   @GET("api/games")
@@ -28,4 +30,8 @@ abstract class BoardGameService {
     @Query("sortBy") String? sortBy,
     @Query("limit") int? limit,
   });
+
+  @GET("api/games/{gameId}")
+  Future<BoardGameDetailResponse> getBoardGameDetail(
+      @Path("gameId") int gameId);
 }

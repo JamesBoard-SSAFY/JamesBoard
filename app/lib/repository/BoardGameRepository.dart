@@ -1,3 +1,5 @@
+import 'package:jamesboard/datasource/model/response/BoardGameDetailResponse.dart';
+import 'package:jamesboard/datasource/model/response/BoardGameRecommendResponse.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameTopResponse.dart';
 
 import '../datasource/api/BoardGameService.dart';
@@ -16,25 +18,26 @@ class BoardGameRepository {
     return BoardGameRepository._(service);
   }
 
-  // 추천 보드게임 리스트를 반환하는 메서드
-  Future<List<BoardGameResponse>> getRecommendedGames({int limit = 10}) =>
+  Future<List<BoardGameRecommendResponse>> getRecommendedGames(
+          {int limit = 10}) =>
       _service.getRecommendedGames(limit: limit);
 
   Future<List<BoardGameResponse>> getBoardGames(
-      Map<String, dynamic> queryParameters) {
-    return _service.getBoardGames(
-      difficulty: queryParameters['difficulty'] ?? null,
-      minPlayers: queryParameters['minPlayers'] ?? null,
-      category: queryParameters['category'] ?? null,
-      boardgameName: queryParameters['boardgameName'] ?? null,
-    );
-  }
+          Map<String, dynamic> queryParameters) =>
+      _service.getBoardGames(
+        difficulty: queryParameters['difficulty'] ?? null,
+        minPlayers: queryParameters['minPlayers'] ?? null,
+        category: queryParameters['category'] ?? null,
+        boardgameName: queryParameters['boardgameName'] ?? null,
+      );
 
   Future<List<BoardGameTopResponse>> getTopGames(
-      Map<String, dynamic> queryParameters) {
-    return _service.getTopGames(
-      sortBy: queryParameters['sortBy'] ?? null,
-      limit: queryParameters['limit'] ?? null,
-    );
-  }
+          Map<String, dynamic> queryParameters) =>
+      _service.getTopGames(
+        sortBy: queryParameters['sortBy'] ?? null,
+        limit: queryParameters['limit'] ?? null,
+      );
+
+  Future<BoardGameDetailResponse> getBoardGameDetail(int gameId) =>
+      _service.getBoardGameDetail(gameId);
 }
