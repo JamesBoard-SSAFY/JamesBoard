@@ -7,6 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionBoardGameCount.dart';
@@ -155,23 +156,35 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // 임무 선택 영역
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppString.missionChoice,
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: FontString.pretendardSemiBold,
-                    ),
+            GestureDetector(
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BoardGameSearchScreen(),
                   ),
-                  const SizedBox(height: 12.0),
-                  SelectBoxRegisterMissionBoardGame(),
-                ],
+                );
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppString.missionChoice,
+                      style: TextStyle(
+                        color: mainWhite,
+                        fontSize: 20,
+                        fontFamily: FontString.pretendardSemiBold,
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    SelectBoxRegisterMissionBoardGame(
+                      selectedGame: null,
+                    ),
+                  ],
+                ),
               ),
             ),
 
