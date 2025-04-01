@@ -32,9 +32,17 @@ class MissionViewModel extends ChangeNotifier {
   int? _selectedGameId;
   int? get selectedGameId => _selectedGameId;
 
-  void setSelectedBoardGame({required int gameId, required String gameTitle}) {
+  int? _selectedGameAveragePlayTime;
+  int? get selectedGameAveragePlayTime => _selectedGameAveragePlayTime;
+
+  // 검색해서 선택한 보드게임 정보 저장.
+  void setSelectedBoardGame(
+      {required int gameId,
+      required String gameTitle,
+      required int gamePlayTime}) {
     _selectedGameId = gameId;
     _selectedGameTitle = gameTitle;
+    _selectedGameAveragePlayTime = gamePlayTime;
     notifyListeners();
   }
 

@@ -108,6 +108,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                               missionViewModel.setSelectedBoardGame(
                                 gameId: game.gameId,
                                 gameTitle: game.gameTitle,
+                                gamePlayTime: game.playTime,
                               );
 
                               logger.d(

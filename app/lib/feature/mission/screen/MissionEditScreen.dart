@@ -93,10 +93,12 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   // 카메라 연결
   Future<void> _pickImageFromCamera() async {
     if (_images.length >= 9) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(AppString.uploadLimit),
-        duration: Duration(seconds: 2),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(AppString.uploadLimit),
+          duration: Duration(seconds: 2),
+        ),
+      );
       return;
     }
 
