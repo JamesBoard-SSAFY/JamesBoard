@@ -11,7 +11,7 @@ class ImageItemMissionList extends StatelessWidget {
       builder: (context, constraints) {
         double size = (constraints.maxWidth - 16) / 2;
 
-        return Image.asset(
+        return Image.network(
           imageUrl,
           width: size * 0.3,
           height: size * 0.3,
