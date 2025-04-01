@@ -14,6 +14,9 @@ import 'package:jamesboard/repository/ArchiveRepository.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/repository/BoardGameRepository.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
+import 'package:jamesboard/repository/MyPageRepository.dart';
+import 'package:jamesboard/repository/S3Repository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
@@ -26,6 +29,8 @@ import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+
+import 'feature/user/viewmodel/MyPageViewModel.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
@@ -54,6 +59,11 @@ void main() async {
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
+  final loginRepository = LoginRepository.create();
+  final myPageRepository = MyPageRepository.create();
+  final s3Repository = S3Repository.create();
+  final myPageViewModel =
+      MyPageViewModel(myPageRepository, loginRepository, s3Repository, storage);
   runApp(
     MultiProvider(
       providers: [
@@ -79,6 +89,14 @@ void main() async {
             LoginRepository.create(),
           ),
         ),
+        ChangeNotifierProvider<MyPageViewModel>(
+          create: (context) => MyPageViewModel(
+            MyPageRepository.create(),
+            LoginRepository.create(),
+            S3Repository.create(),
+            storage,
+          ),
+        )
       ],
       child: MyApp(isLoggedIn: false),
     ),

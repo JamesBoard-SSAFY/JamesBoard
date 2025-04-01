@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartUserGenrePercent extends StatelessWidget {
-  final List<ChartData> chartData; // chartData를 인자로 받음
+  final MyPageGameStatsResponse chartData; // chartData를 인자로 받음
 
   const ChartUserGenrePercent({super.key, required this.chartData});
   @override
   Widget build(BuildContext context) {
-    int totalCount = chartData.fold(0, (sum, data) => sum + data.count);
+    int totalCount = chartData.totalPlayed;
     String totalCountString = totalCount.toString();
+    var genreData = CommonUtils.convertGenreStatsToChartData(chartData.genreStats);
 
     return Center(
         child: Container(
@@ -47,7 +50,7 @@ class ChartUserGenrePercent extends StatelessWidget {
             ],
             series: <CircularSeries>[
               DoughnutSeries<ChartData, String>( // 원형 차트 데이터
-                dataSource: chartData,
+                dataSource: genreData,
                 pointColorMapper: (ChartData data, _) => data.color,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
@@ -63,10 +66,9 @@ class ChartUserGenrePercent extends StatelessWidget {
 }
 
 class ChartData {
-  ChartData(this.x, this.y, this.color, this.count);
+  ChartData(this.x, this.y, this.color);
 
   final String x;
   final double y;
   final Color color;
-  final int count;
 }

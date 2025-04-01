@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
-
+import '../../../../datasource/model/response/MyPage/MyPageMissionRecordResponse.dart';
 import '../../../../widget/button/ButtonCommonGameTag.dart';
 
 class ImageMissionGameInformation extends StatelessWidget {
-  final Map<String, dynamic> gameData;
+  final MyPageMissionRecordResponse gameData;
 
   const ImageMissionGameInformation({
     super.key,
@@ -41,11 +41,17 @@ class ImageMissionGameInformation extends StatelessWidget {
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
-              child: Image.network(
-                gameData["gameImage"] ?? '',
+              child: gameData.gameImage != null && gameData.gameImage!.startsWith('http')
+                  ? Image.network(
+                gameData.gameImage!,
                 width: screenWidth,
                 height: imageHeight,
                 fit: BoxFit.cover,
+              )
+                  : Container(
+                width: screenWidth,
+                height: imageHeight,
+                color: mainBlack,
               ),
             ),
             Positioned(
@@ -53,7 +59,7 @@ class ImageMissionGameInformation extends StatelessWidget {
               bottom: 12,
               child: Container(
                 child: Text(
-                  gameData["gameTitle"] ?? '',
+                  gameData.gameTitle ?? '',
                   style: TextStyle(
                     color: mainWhite,
                     fontSize: 44,
@@ -73,13 +79,13 @@ class ImageMissionGameInformation extends StatelessWidget {
             spacing: 8.0, // 항목 간의 수평 간격
             runSpacing: 8.0, // 줄바꿈 시 항목 간의 수직 간격
             children: [
-              ButtonCommonGameTag(text: '${gameData["minAge"]}세'),
-              ButtonCommonGameTag(text: '${gameData["gameYear"]}년'),
+              ButtonCommonGameTag(text: '${gameData.minAge}세'),
+              ButtonCommonGameTag(text: '${gameData.gameYear}년'),
               ButtonCommonGameTag(
-                  text: _getDifficultyText(gameData["difficulty"])),
+                  text: _getDifficultyText(gameData.difficulty)),
               ButtonCommonGameTag(
-                  text: '${gameData["minPlayer"]} ~ ${gameData["maxPlayer"]}명'),
-              ButtonCommonGameTag(text: '${gameData["playTime"]}분'),
+                  text: '${gameData.minPlayer} ~ ${gameData.maxPlayer}명'),
+              ButtonCommonGameTag(text: '${gameData.playTime}분'),
             ],
           ),
         ),
@@ -92,7 +98,7 @@ class ImageMissionGameInformation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                gameData["gameCategoryList"].join(' · '),
+                gameData.gameCategoryList.join(' · '),
                 style: TextStyle(
                   color: mainGrey,
                   fontSize: 16,
