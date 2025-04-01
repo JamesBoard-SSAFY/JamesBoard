@@ -11,6 +11,11 @@ class MissionViewModel extends ChangeNotifier {
   final ArchiveRepository _archiveRepository;
   final LoginRepository _loginRepository;
 
+  MissionViewModel(
+    this._archiveRepository,
+    this._loginRepository,
+  );
+
   List<ArchiveListResponse> _archives = [];
   List<ArchiveListResponse> get archives => _archives;
 
@@ -21,10 +26,23 @@ class MissionViewModel extends ChangeNotifier {
 
   int? loginUserId;
 
-  MissionViewModel(
-    this._archiveRepository,
-    this._loginRepository,
-  );
+  String? _selectedGameTitle;
+  String? get selectedGameTitle => _selectedGameTitle;
+
+  int? _selectedGameId;
+  int? get selectedGameId => _selectedGameId;
+
+  void setSelectedBoardGame({required int gameId, required String gameTitle}) {
+    _selectedGameId = gameId;
+    _selectedGameTitle = gameTitle;
+    notifyListeners();
+  }
+
+  void clearSelectedBoardGame() {
+    _selectedGameId = null;
+    _selectedGameTitle = null;
+    notifyListeners();
+  }
 
   // 로그인한 userId 조회
   Future<void> loadLoginUserId() async {
