@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ArchiveDetailResponseDto {
     private Long archiveId;
+    private Long userId;
     private String userNickName;
     private String userProfile;
     private String archiveContent;

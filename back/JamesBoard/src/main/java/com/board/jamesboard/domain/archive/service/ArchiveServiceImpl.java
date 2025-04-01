@@ -82,6 +82,7 @@ public class ArchiveServiceImpl implements ArchiveService {
 
         return new ArchiveDetailResponseDto(
                 archive.getArchiveId(),
+                createUser.getUserId(),
                 createUser.getUserNickname(),
                 createUser.getUserProfile(),
                 archive.getArchiveContent(),
