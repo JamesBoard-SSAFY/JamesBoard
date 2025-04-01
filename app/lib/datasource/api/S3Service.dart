@@ -10,7 +10,7 @@ abstract class S3Service {
 
   // presigned url 발급
   @POST("/api/s3/presigned-url")
-  Future<String> postPresignedUrl(
+  Future<String> issuePresignedUrl(
     @Query("fileName") String fileName,
   );
 }

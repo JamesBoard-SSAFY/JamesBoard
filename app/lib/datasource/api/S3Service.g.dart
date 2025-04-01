@@ -20,7 +20,7 @@ class _S3Service implements S3Service {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<String> postPresignedUrl(String fileName) async {
+  Future<String> issuePresignedUrl(String fileName) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'fileName': fileName};
     final _headers = <String, dynamic>{};
