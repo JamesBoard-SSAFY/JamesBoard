@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:jamesboard/feature/mission/screen/MissionDetailScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/MissionViewModel.dart';
@@ -28,7 +30,20 @@ class _MissionListScreenState extends State<MissionListScreen> {
         ),
         itemCount: archives.length,
         itemBuilder: (context, index) {
-          return ImageItemMissionList(imageUrl: archives[index].archiveImage);
+          return ImageItemMissionList(
+            imageUrl: archives[index].archiveImage,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => MissionDetailScreen(
+                    title: '임무 상세',
+                    archiveId: archives[index].archiveId,
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
     );
