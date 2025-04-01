@@ -54,8 +54,7 @@ class BoardGameViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getBoardGamesForCategory(
-      Map<String, dynamic> queryParameters) async {
+  Future<void> getBoardGames(Map<String, dynamic> queryParameters) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -110,7 +109,7 @@ class BoardGameViewModel extends ChangeNotifier {
     try {
       _boardGameDetail = await _repository.getBoardGameDetail(gameId);
 
-      logger.d("viewmodel: ${boardGameDetail}");
+      logger.d("logger viewmodel: ${boardGameDetail.toString()}");
     } catch (e) {
       _errorMessage = 'Failed to load board game detail: $e';
     } finally {
