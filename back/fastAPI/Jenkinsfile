@@ -1,0 +1,133 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "jamesboard-recommend"
+        DOCKER_CONTAINER = "jamesboard-recommend-container"
+        DOCKER_PORT = 9099
+        DOCKER_PATH = credentials('DOCKER_PATH') // EC2 서버의 Docker 저장 경로
+
+        EC2_USER = credentials('EC2_USER')
+        EC2_IP = credentials('EC2_IP')
+        SSH_KEY = credentials('SSH_KEY')
+
+        DB_RECOMMEND_URL = credentials('DB_RECOMMEND_URL')
+        DB_USERNAME = credentials('DB_USERNAME')
+        DB_PASSWORD = credentials('DB_PASSWORD')
+
+        PYTHON_VERSION = '3.10'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                git branch: 'infra',
+                    url: 'https://lab.ssafy.com/s12-bigdata-recom-sub1/S12P21D205.git',
+                    credentialsId: 'GitLab-PAT'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building the Docker image...'
+                dir('back/fastAPI') {
+                    sh 'docker build -t ${DOCKER_IMAGE}:latest .'
+                }
+            }
+        }
+
+        stage('Save and Transfer Docker Image') {
+            steps {
+                echo 'Saving and transferring Docker image to EC2...'
+                sh """
+                docker save ${DOCKER_IMAGE}:latest | gzip > jamesboard-recommend.tar.gz
+                """
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'EC2-Server',
+                        transfers: [
+                            sshTransfer(
+                                sourceFiles: 'jamesboard-recommend.tar.gz'
+                            )
+                        ]
+                    )
+                ])
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                echo 'Deploying the application on EC2...'
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'EC2-Server',
+                        transfers: [
+                            sshTransfer(
+                                execCommand: """
+                                    mkdir -p ${DOCKER_PATH}
+                                    docker stop ${DOCKER_CONTAINER} || true
+                                    docker rm ${DOCKER_CONTAINER} || true
+                                    docker rmi ${DOCKER_IMAGE}:latest || true
+                                    docker load < ${DOCKER_PATH}/jamesboard-recommend.tar.gz
+                                    docker run -d --name ${DOCKER_CONTAINER} \
+                                      -p ${DOCKER_PORT}:${DOCKER_PORT} \
+                                      -e MYSQL_HOST=${DB_RECOMMEND_URL} \
+                                      -e MYSQL_PORT=3306 \
+                                      -e MYSQL_DATABASE=board_game \
+                                      -e MYSQL_USER=${DB_USERNAME} \
+                                      -e MYSQL_PASSWORD=${DB_PASSWORD} \
+                                      ${DOCKER_IMAGE}:latest
+                                """.stripIndent()
+                            )
+                        ]
+                    )
+                ])
+            }
+        }
+
+        stage('Notification') {
+            steps{
+                echo 'jenkins notification!'
+            }
+            post {
+                success {
+                    script {
+                        def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                        def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                        mattermostSend(color: 'good',
+                            message: ":gentle_hoon_4: FastAPI 빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                            endpoint: 'https://meeting.ssafy.com/hooks/xbmq7q54d3ndxbkfgazmo3ysya',
+                            channel: 'jenkins'
+                                )
+                    }
+                }
+                failure {
+                    script {
+                        def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                        def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                        mattermostSend(color: 'danger',
+                            message: ":sleep_hoon2: FastAPI 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                            endpoint: 'https://meeting.ssafy.com/hooks/xbmq7q54d3ndxbkfgazmo3ysya',
+                            channel: 'jenkins'
+                                )
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
