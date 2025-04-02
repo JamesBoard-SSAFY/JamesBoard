@@ -4,6 +4,7 @@ import 'package:jamesboard/feature/boardgame/viewmodel/UserActivityViewModel.dar
 import 'package:provider/provider.dart';
 
 import '../../../constants/FontString.dart';
+import '../../../datasource/model/request/user/UserActivityPatchRequest.dart';
 import '../../../datasource/model/request/user/UserActivityRequest.dart';
 import '../../../main.dart';
 import '../../../theme/Colors.dart';
@@ -97,22 +98,50 @@ class _BottomSheetBoardGameEvaluationState
                   return;
                 }
 
-                final request = UserActivityRequest(
-                  gameId: widget.gameId,
+                final userActivityId = await viewModel.checkUserActivity(
                   userId: widget.userId,
-                  rating: _rating,
+                  gameId: widget.gameId,
                 );
 
-                final success = await viewModel.addUserActivity(request);
+                final isRatingExists = userActivityId > 0;
 
-                logger.d('활동 추가 성공 여부: $success');
-
-                if (success) {
-                  Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("활동 추가에 실패했습니다. 다시 시도해주세요.")),
+                if (isRatingExists) {
+                  final request = UserActivityPatchRequest(
+                    rating: _rating,
                   );
+
+                  final success = await viewModel.updateUserActivityRating(
+                    userActivityId: userActivityId,
+                    request: request,
+                  );
+
+                  logger.d("updateUserActivityRating update success $success");
+
+                  if (success) {
+                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("활동 수정에 실패했습니다. 다시 시도해주세요.")),
+                    );
+                  }
+                } else {
+                  final request = UserActivityRequest(
+                    gameId: widget.gameId,
+                    userId: widget.userId,
+                    rating: _rating,
+                  );
+
+                  final success = await viewModel.addUserActivity(request);
+
+                  logger.d("updateUserActivityRating write success $success");
+
+                  if (success) {
+                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("활동 추가에 실패했습니다. 다시 시도해주세요.")),
+                    );
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(

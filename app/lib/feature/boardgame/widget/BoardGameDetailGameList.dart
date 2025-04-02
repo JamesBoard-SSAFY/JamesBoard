@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
 import 'package:provider/provider.dart';
 
+import '../../../constants/AppString.dart';
 import '../../../theme/Colors.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
 import '../viewmodel/BoardGameViewModel.dart';
+import '../viewmodel/CategoryGameViewModel.dart';
 
 class BoardGameDetailGameList extends StatefulWidget {
   final String category;
@@ -24,7 +26,11 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
   @override
   void initState() {
     super.initState();
-    viewModel = Provider.of<BoardGameViewModel>(context, listen: false);
+
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+
+    viewModel = categoryViewModel.getCategoryViewModel(AppString.gameDetailKey);
     viewModel.getBoardGames({"category": widget.category});
   }
 
