@@ -135,7 +135,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${archiveDetailResponse.userNickName} ${archiveDetailResponse.archiveContent}',
+                  archiveDetailResponse.archiveContent,
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: FontString.pretendardMedium,
