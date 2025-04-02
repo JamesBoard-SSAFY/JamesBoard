@@ -5,7 +5,10 @@ import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 class EditBoxRegisterMissionBoardGameCount extends StatefulWidget {
-  const EditBoxRegisterMissionBoardGameCount({super.key});
+  final TextEditingController controller;
+
+  const EditBoxRegisterMissionBoardGameCount(
+      {super.key, required this.controller});
 
   @override
   State<EditBoxRegisterMissionBoardGameCount> createState() =>
@@ -13,23 +16,16 @@ class EditBoxRegisterMissionBoardGameCount extends StatefulWidget {
 }
 
 class _CustomInputBoxState extends State<EditBoxRegisterMissionBoardGameCount> {
-  final TextEditingController _controller = TextEditingController();
   bool _hasInput = false;
 
   void initState() {
     super.initState();
 
-    _controller.addListener(() {
+    widget.controller.addListener(() {
       setState(() {
-        _hasInput = _controller.text.isNotEmpty;
+        _hasInput = widget.controller.text.isNotEmpty;
       });
     });
-  }
-
-  // 메모리 누수 방지.
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -41,7 +37,7 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionBoardGameCount> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
-        controller: _controller,
+        controller: widget.controller,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
