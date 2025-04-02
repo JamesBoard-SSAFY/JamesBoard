@@ -147,7 +147,7 @@ class _ProfileMissionDetailState extends State<ProfileMissionDetail> {
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: AssetImage(widget.imageUrl),
+              backgroundImage: NetworkImage(widget.imageUrl),
             ),
             const SizedBox(width: 12),
             Text(
