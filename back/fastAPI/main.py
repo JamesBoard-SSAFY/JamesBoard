@@ -14,23 +14,81 @@ recommendation_engine = None
 
 app = FastAPI(title="보드게임 추천 시스템 API")
 
-def generate_recommendations_job():
-    """스케줄된 추천 생성 작업"""
+def generate_content_recommendations_job():
+    """스케줄된 콘텐츠 기반 추천 생성 작업"""
     try:
         if recommendation_engine is None:
             print("RecommendationEngine이 초기화되지 않았습니다.")
             return
             
-        print("Starting scheduled recommendation generation...")
+        print("Starting scheduled content-based recommendation generation...")
+        db = next(get_db())
+        
+        # 기존 추천 데이터 삭제
+        db.execute(text("TRUNCATE TABLE recommend_content"))
+        db.commit()
+        
+        # 모든 게임 ID 가져오기
+        games = db.query(models.Game.game_id).all()
+        game_ids = [game.game_id for game in games]
+        
+        total_games = len(game_ids)
+        processed_games = 0
+        failed_games = []
+        
+        print(f"Found {total_games} games to process")
+        
+        for source_game_id in game_ids:
+            try:
+                print(f"\nProcessing game_id: {source_game_id} ({processed_games + 1}/{total_games})")
+                
+                # 콘텐츠 기반 추천 생성
+                recommendations = recommendation_engine.calculate_content_recommendations(source_game_id)
+                
+                if not recommendations:
+                    print(f"No recommendations generated for game_id: {source_game_id}")
+                    failed_games.append(source_game_id)
+                    continue
+                
+                print(f"Generated {len(recommendations)} recommendations")
+                
+                # 추천 데이터 저장
+                recommendation_engine.save_recommendations(recommendations, source_game_id)
+                
+                processed_games += 1
+                if processed_games % 10 == 0:
+                    print(f"\nProgress: {processed_games}/{total_games} games ({(processed_games/total_games)*100:.2f}%)")
+                    db.commit()  # 중간 커밋
+                
+            except Exception as e:
+                print(f"Error processing game_id {source_game_id}: {str(e)}")
+                failed_games.append(source_game_id)
+                continue
+        
+        # 최종 커밋
+        db.commit()
+        print("Content-based recommendation generation completed")
+            
+    except Exception as e:
+        print(f"Error in scheduled content-based recommendation generation: {e}")
+
+def generate_hybrid_recommendations_job():
+    """스케줄된 하이브리드 추천 생성 작업"""
+    try:
+        if recommendation_engine is None:
+            print("RecommendationEngine이 초기화되지 않았습니다.")
+            return
+            
+        print("Starting scheduled hybrid recommendation generation...")
         success = recommendation_engine.generate_hybrid_recommendations()
         
         if success:
-            print("Scheduled recommendation generation completed successfully")
+            print("Scheduled hybrid recommendation generation completed successfully")
         else:
-            print("Scheduled recommendation generation failed")
+            print("Scheduled hybrid recommendation generation failed")
             
     except Exception as e:
-        print(f"Error in scheduled recommendation generation: {e}")
+        print(f"Error in scheduled hybrid recommendation generation: {e}")
 
 @app.on_event("startup")
 async def startup_event():
@@ -50,11 +108,21 @@ async def startup_event():
         
         # 스케줄러 설정
         scheduler = BackgroundScheduler()
+        
+        # 콘텐츠 기반 추천 (3:00 AM)
         scheduler.add_job(
-            generate_recommendations_job,
-            CronTrigger(hour=3, minute=0),  # 매일 오전 3시에 실행
-            id='generate_recommendations_job'
+            generate_content_recommendations_job,
+            CronTrigger(hour=3, minute=0),
+            id='generate_content_recommendations_job'
         )
+        
+        # 하이브리드 추천 (3:30 AM)
+        scheduler.add_job(
+            generate_hybrid_recommendations_job,
+            CronTrigger(hour=3, minute=30),
+            id='generate_hybrid_recommendations_job'
+        )
+        
         scheduler.start()
         print("Scheduler started successfully")
         
@@ -153,22 +221,34 @@ async def trigger_content_recommendations(db: Session = Depends(get_db)):
 async def generate_all_hybrid_recommendations(db: Session = Depends(get_db)):
     """모든 사용자에 대한 하이브리드 추천을 생성(기존 테이블 초기화 동시 진행)"""
     try:
-        # 추천 엔진 초기화
-        recommendation_engine = RecommendationEngine(db)
+        if recommendation_engine is None:
+            raise HTTPException(status_code=500, detail="RecommendationEngine이 초기화되지 않았습니다.")
+            
+        start_time = time.time()
+        print("Starting hybrid recommendation generation...")
         
-        # recommend 테이블 초기화
+        # 기존 추천 데이터 삭제
         db.execute(text("TRUNCATE TABLE recommend"))
         db.commit()
         
-        # 하이브리드 추천 생성
         result = recommendation_engine.generate_all_hybrid_recommendations()
         
         if "message" in result and "Error" in result["message"]:
             raise HTTPException(status_code=500, detail=result["message"])
             
-        return {"message": "Successfully generated hybrid recommendations"}
+        end_time = time.time()
+        processing_time = end_time - start_time
+        
+        print(f"\nHybrid recommendation generation completed in {processing_time:.2f} seconds")
+        return {
+            "status": "success",
+            "message": "Successfully generated hybrid recommendations",
+            "processing_time": processing_time
+        }
         
     except Exception as e:
+        print(f"Critical error in hybrid recommendation generation: {str(e)}")
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -91,39 +91,30 @@ class RecommendationEngine:
                 print("Loading existing embeddings...")
                 # 저장된 임베딩 로드
                 self.embeddings = np.load(embedding_file)
-                if len(self.embeddings) != len(self.items):
-                    print(f"Warning: Number of embeddings ({len(self.embeddings)}) does not match number of items ({len(self.items)})")
-                    # 임베딩 재계산
-                    self._compute_embeddings()
                 return
             
             print("Computing new embeddings...")
-            self._compute_embeddings()
-                
-        except Exception as e:
-            print(f"Error in embedding initialization: {e}")
-            self.embeddings = None
-
-    def _compute_embeddings(self):
-        """게임 설명에 대한 임베딩을 계산합니다."""
-        try:
             # 게임 설명만 사용
             sentences = [item.get('game_description', '') for item in self.items]
             
-            if not sentences:
+            if sentences:
+                # 배치 처리로 임베딩 계산 (메모리 효율성 향상)
+                batch_size = 32
+                embeddings_list = []
+                for i in range(0, len(sentences), batch_size):
+                    batch = sentences[i:i + batch_size]
+                    batch_embeddings = self.model.encode(batch)
+                    embeddings_list.append(batch_embeddings)
+                
+                self.embeddings = np.vstack(embeddings_list)
+                np.save(embedding_file, self.embeddings)
+                print("New embeddings computed and saved")
+            else:
                 print("No sentences found for embedding computation")
                 self.embeddings = np.array([])
-                return
-            
-            # 모든 게임의 임베딩을 한 번에 계산
-            self.embeddings = self.model.encode(sentences)
-            
-            # 임베딩 저장
-            np.save('game_embeddings.npy', self.embeddings)
-            print(f"New embeddings computed and saved for {len(self.embeddings)} games")
-            
+                
         except Exception as e:
-            print(f"Error computing embeddings: {e}")
+            print(f"Error in embedding initialization: {e}")
             self.embeddings = None
 
     def calculate_content_recommendations(self, game_id: int, top_n: int = 30) -> List[Dict]:
@@ -132,36 +123,31 @@ class RecommendationEngine:
             # 게임 정보 조회
             game = self.db.query(models.Game).filter(models.Game.game_id == game_id).first()
             if not game:
-                print(f"Warning: Game with ID {game_id} not found in database")
                 return []
 
-            # 게임의 임베딩 가져오기
+            # 게임의 임베딩 가져오기 (game_id 1에 대한 특별 처리)
             try:
                 game_idx = next(i for i, item in enumerate(self.items) if item['game_id'] == game_id)
             except StopIteration:
                 print(f"Warning: game_id {game_id} not found in items list")
                 return []
 
-            # 임베딩이 없는 경우 처리
-            if self.embeddings is None or len(self.embeddings) == 0:
-                print(f"Warning: No embeddings available for game_id {game_id}")
-                return []
-
-            # 모든 게임 간의 코사인 유사도 계산
-            try:
-                cosine_sim = cosine_similarity(
+            # 배치 처리로 코사인 유사도 계산 (메모리 효율성 향상)
+            batch_size = 100
+            cosine_sim = np.zeros(len(self.embeddings))
+            
+            for i in range(0, len(self.embeddings), batch_size):
+                batch_end = min(i + batch_size, len(self.embeddings))
+                batch_sim = cosine_similarity(
                     self.embeddings[game_idx:game_idx+1],
-                    self.embeddings
+                    self.embeddings[i:batch_end]
                 )[0]
-            except Exception as e:
-                print(f"Error calculating cosine similarity for game_id {game_id}: {str(e)}")
-                return []
-
-            # 자기 자신 제외하고 상위 N개 선택 (유사도 0.3 이상인 게임만)
+                cosine_sim[i:batch_end] = batch_sim
+            
+            # 자기 자신 제외하고 상위 N개 선택
             sim_scores = list(enumerate(cosine_sim))
-            sim_scores = [(idx, score) for idx, score in sim_scores if score >= 0.3]  # 유사도 임계값 적용
             sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
-
+            
             # 상세 정보 조회 (한 번의 쿼리로 모든 게임 정보 가져오기)
             similar_game_ids = [self.items[idx]['game_id'] for idx, _ in sim_scores]
             similar_games = {
@@ -170,7 +156,7 @@ class RecommendationEngine:
                 .filter(models.Game.game_id.in_(similar_game_ids))
                 .all()
             }
-
+            
             # 추천 결과 생성
             recommendations = []
             for idx, similarity in sim_scores:
@@ -179,14 +165,18 @@ class RecommendationEngine:
                     recommendations.append({
                         "game_id": game_id,
                         "recommend_game_id": similar_game_id,
-                        "recommend_content_rank": len(recommendations) + 1,
-                        "similarity_score": float(similarity)
+                        "recommend_content_rank": len(recommendations) + 1
                     })
+
+            # game_id 1에 대한 추가 검증
+            if game_id == 1 and not recommendations:
+                print(f"Warning: No recommendations generated for game_id 1")
+                return []
 
             return recommendations
 
         except Exception as e:
-            print(f"Error calculating content recommendations for game_id {game_id}: {str(e)}")
+            print(f"Error calculating content recommendations: {str(e)}")
             return []
 
     def save_recommendations(self, recommendations: List[Dict], game_id: int):
