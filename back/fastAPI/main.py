@@ -27,12 +27,12 @@ def setup_scheduler():
     global scheduler
     scheduler = BackgroundScheduler()
     
-    # 콘텐츠 기반 추천 (3:00 AM)
-    scheduler.add_job(
-        generate_content_recommendations_job,
-        CronTrigger(hour=3, minute=0),
-        id='generate_content_recommendations_job'
-    )
+    # # 콘텐츠 기반 추천 (3:00 AM)
+    # scheduler.add_job(
+    #     generate_content_recommendations_job,
+    #     CronTrigger(hour=3, minute=0),
+    #     id='generate_content_recommendations_job'
+    # )
     
     # 하이브리드 추천 (3:30 AM)
     scheduler.add_job(
