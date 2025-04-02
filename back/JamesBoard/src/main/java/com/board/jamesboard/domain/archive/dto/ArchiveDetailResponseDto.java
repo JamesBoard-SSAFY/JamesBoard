@@ -17,6 +17,7 @@ public class ArchiveDetailResponseDto {
     private String userNickName;
     private String userProfile;
     private String archiveContent;
+    private Long gameId;
     private String gameTitle;
     private Integer archiveGamePlayTime;
     private Integer archiveGamePlayCount;
