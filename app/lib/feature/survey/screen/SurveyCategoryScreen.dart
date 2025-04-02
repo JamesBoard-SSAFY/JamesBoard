@@ -31,7 +31,7 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
     '6': '가족',
     '7': '추리',
     '8': '전쟁',
-    '9': '추상전략',
+    '9': '추상 전략',
   };
 
   @override
