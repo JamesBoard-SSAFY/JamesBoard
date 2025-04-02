@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/mission/screen/MissionDetailScreen.dart';
+import 'package:jamesboard/main.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/MissionViewModel.dart';
@@ -15,10 +16,37 @@ class MissionListScreen extends StatefulWidget {
   State<MissionListScreen> createState() => _MissionListScreenState();
 }
 
-class _MissionListScreenState extends State<MissionListScreen> {
+class _MissionListScreenState extends State<MissionListScreen> with RouteAware {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<MissionViewModel>().getAllArchives();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    context.read<MissionViewModel>().getAllArchives();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final archives = context.watch<MissionViewModel>().archives;
+    final archives =
+        context.watch<MissionViewModel>().archives.reversed.toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),

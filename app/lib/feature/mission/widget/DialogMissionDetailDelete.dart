@@ -107,18 +107,20 @@ class DialogMissionDetailDelete extends StatelessWidget {
   }
 }
 
-Future<void> showCustomDialogMissionDetailDelete(
-    BuildContext context, String mainMessage, String subMessage) async {
-  bool? result = await showGeneralDialog(
+Future<bool?> showCustomDialogMissionDetailDelete(
+    BuildContext context, String mainMessage, String subMessage) {
+  return showGeneralDialog<bool>(
     context: context,
-    barrierDismissible: true, // 바깥 영역 탭 시 닫기
+    barrierDismissible: true,
     barrierLabel: '',
-    barrierColor: Colors.black.withOpacity(0.5), // 배경 어둡게
+    barrierColor: Colors.black.withOpacity(0.5),
     pageBuilder: (context, animation, secondaryAnimation) {
       return DialogMissionDetailDelete(
         mainMessage: mainMessage,
         subMessage: subMessage,
         onConfirm: () {
+          logger.d(
+              'DialogMissionDetailDelete / showCustomDialogMissionDetailDelete : onConfirm() 누름');
           Navigator.of(context).pop(true);
         },
         onCancel: () {
@@ -127,7 +129,6 @@ Future<void> showCustomDialogMissionDetailDelete(
       );
     },
     transitionBuilder: (context, animation, secondaryAnimation, child) {
-      // 페이드 인 & 팝업 애니메이션 추가
       return FadeTransition(
         opacity: animation,
         child: ScaleTransition(
@@ -140,12 +141,4 @@ Future<void> showCustomDialogMissionDetailDelete(
       );
     },
   );
-
-  if (result == true) {
-    // 확인 버튼 처리
-    print('확인이 눌림');
-  } else {
-    // 취소 버튼 처리
-    print('취소가 눌림');
-  }
 }

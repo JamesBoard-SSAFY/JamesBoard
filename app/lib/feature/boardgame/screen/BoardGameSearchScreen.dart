@@ -13,6 +13,8 @@ import 'package:jamesboard/widget/item/ItemCommonRecentSearch.dart';
 import 'package:jamesboard/widget/searchbar/SearchBarCommonTitle.dart';
 import 'package:provider/provider.dart';
 
+import '../viewmodel/CategoryGameViewModel.dart';
+
 class BoardGameSearchScreen extends StatefulWidget {
   final BoardGameSearchPurpose purpose;
 
@@ -27,19 +29,26 @@ class BoardGameSearchScreen extends StatefulWidget {
 
 class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  late BoardGameViewModel boardGameViewModel;
 
-  void _searchBoardGames(BuildContext context) {
+  void _searchBoardGames() {
     final keyword = _searchController.text.trim();
 
     if (keyword.isEmpty) return;
 
-    final viewModel = context.read<BoardGameViewModel>();
-    viewModel.getBoardGames({'boardgameName': keyword});
+    boardGameViewModel.getBoardGames({'boardGameName': keyword});
   }
 
   @override
   void initState() {
     super.initState();
+
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+
+    boardGameViewModel =
+        categoryViewModel.getCategoryViewModel('boardGameName');
+    boardGameViewModel.clearSearchResults();
   }
 
   @override
@@ -55,76 +64,78 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
               // 검색 바 영역
               SearchBarCommonTitle(
                 controller: _searchController,
-                onSubmitted: (_) => _searchBoardGames(context),
+                onSubmitted: (_) => _searchBoardGames(),
               ),
               const SizedBox(height: 20),
 
               // 검색 결과 영역
               Expanded(
-                child: Consumer<BoardGameViewModel>(
-                  builder: (context, viewModel, _) {
-                    if (viewModel.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+                child: ChangeNotifierProvider<BoardGameViewModel>.value(
+                  value: boardGameViewModel,
+                  child: Consumer<BoardGameViewModel>(
+                    builder: (context, viewModel, _) {
+                      if (viewModel.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 3 / 4,
-                      ),
-                      itemCount: viewModel.games.length,
-                      itemBuilder: (context, index) {
-                        final game = viewModel.games[index];
-                        return GestureDetector(
-                          onTap: () {
-                            final selectedGameId = game.gameId;
-                            final selectedGameTitle = game.gameTitle;
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 3 / 4,
+                        ),
+                        itemCount: viewModel.games.length,
+                        itemBuilder: (context, index) {
+                          final game = viewModel.games[index];
+                          logger.d('검색 결과 : $game');
 
-                            // 홈에서 검색한 경우
-                            if (widget.purpose ==
-                                BoardGameSearchPurpose.fromHome) {
-                              final boardGameViewModel =
-                                  context.read<BoardGameViewModel>();
-                              boardGameViewModel.setSelectedGameId(
-                                gameId: selectedGameId,
-                              );
+                          return GestureDetector(
+                            onTap: () {
+                              final selectedGameId = game.gameId;
+                              final selectedGameTitle = game.gameTitle;
+                              final selectedGamePlayTime = game.playTime;
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BoardGameDetailScreen(
-                                    gameId: game.gameId,
+                              if (widget.purpose ==
+                                  BoardGameSearchPurpose.fromHome) {
+                                viewModel.setSelectedGameId(
+                                  gameId: selectedGameId,
+                                );
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BoardGameDetailScreen(
+                                      gameId: selectedGameId,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                            // 아카이브 등록에서 검색한 경우
-                            else if (widget.purpose ==
-                                BoardGameSearchPurpose.fromMission) {
-                              final missionViewModel =
-                                  context.read<MissionViewModel>();
+                                );
+                              } else if (widget.purpose ==
+                                  BoardGameSearchPurpose.fromMission) {
+                                final missionViewModel =
+                                    context.read<MissionViewModel>();
 
-                              missionViewModel.setSelectedBoardGame(
-                                gameId: game.gameId,
-                                gameTitle: game.gameTitle,
-                                gamePlayTime: game.playTime,
-                              );
+                                missionViewModel.setSelectedBoardGame(
+                                  gameId: selectedGameId,
+                                  gameTitle: selectedGameTitle,
+                                  gamePlayTime: selectedGamePlayTime,
+                                );
 
-                              logger.d(
-                                  'BoardGameSearchScreen에서 MissionViewModel.gameTitle : ${missionViewModel.selectedGameTitle}');
+                                logger.d(
+                                    'BoardGameSearchScreen에서 MissionViewModel.gameTitle : ${missionViewModel.selectedGameTitle}');
 
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: ImageCommonGameCard(
-                              imageUrl: game.gameImage ?? ''),
-                        );
-                      },
-                    );
-                  },
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: ImageCommonGameCard(
+                              imageUrl: game.gameImage ?? '',
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               )
             ],

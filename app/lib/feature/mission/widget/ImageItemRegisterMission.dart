@@ -1,17 +1,14 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../theme/Colors.dart';
 
 class ImageItemRegisterMission extends StatelessWidget {
-  final String imageUrl;
+  final File imageFile;
   final VoidCallback onRemove;
 
   const ImageItemRegisterMission({
     super.key,
-    required this.imageUrl,
+    required this.imageFile,
     required this.onRemove,
   });
 
@@ -21,12 +18,12 @@ class ImageItemRegisterMission extends StatelessWidget {
       alignment: Alignment.topRight,
       children: [
         Container(
-          width: 150, // 고정 크기 설정
+          width: 150,
           height: 150,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: _getImageProvider(imageUrl), // FileImage 지원 추가
+              image: FileImage(imageFile), // ✅ FileImage 사용
               fit: BoxFit.cover,
             ),
           ),
@@ -52,14 +49,5 @@ class ImageItemRegisterMission extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  // 파일인지 에셋인지 구분해서 이미지 반환
-  ImageProvider _getImageProvider(String imageUrl) {
-    if (imageUrl.startsWith('/')) {
-      return FileImage(File(imageUrl));
-    } else {
-      return AssetImage(imageUrl);
-    }
   }
 }

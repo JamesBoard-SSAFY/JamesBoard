@@ -43,6 +43,9 @@ final logger = Logger(
 
 final storage = FlutterSecureStorage();
 
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -121,6 +124,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [routeObserver],
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
@@ -155,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
     RecommendGameScreen(),
-    MissionEditScreen(title: AppString.missionEditTitle),
+    MissionEditScreen(),
     MissionListScreen(title: AppString.missionListTitle),
     MyPageScreen(),
   ];
@@ -166,9 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                MissionEditScreen(title: AppString.missionEditTitle)),
+        MaterialPageRoute(builder: (context) => MissionEditScreen()),
       ).then((_) {
         setState(() {
           _selectedIndex = 0;

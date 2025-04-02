@@ -2,21 +2,21 @@
 
 part of 'BoardGameRecommendResponse.dart';
 
-// ***************************************************************************
+// **************************************************************************
 // JsonSerializableGenerator
-// ***************************************************************************
+// **************************************************************************
 
 BoardGameRecommendResponse _$BoardGameRecommendResponseFromJson(
         Map<String, dynamic> json) =>
     BoardGameRecommendResponse(
-      gameId: json['gameId'] as int,
+      gameId: (json['gameId'] as num).toInt(),
       gameTitle: json['gameTitle'] as String,
       gameImage: json['gameImage'] as String,
       gameCategory: json['gameCategory'] as String,
-      minPlayer: json['minPlayer'] as int,
-      maxPlayer: json['maxPlayer'] as int,
-      difficulty: json['difficulty'] as int,
-      playTime: json['playTime'] as int,
+      minPlayer: (json['minPlayer'] as num).toInt(),
+      maxPlayer: (json['maxPlayer'] as num).toInt(),
+      difficulty: (json['difficulty'] as num).toInt(),
+      playTime: (json['playTime'] as num).toInt(),
       gameDescription: json['gameDescription'] as String,
     );
 

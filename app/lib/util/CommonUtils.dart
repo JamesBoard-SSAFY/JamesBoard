@@ -168,7 +168,7 @@ class CommonUtils {
 
       // 이미지 압축 및 WebP 변환
       File? compressedImage =
-          await _compressAndConvertToWebP(File(pickedFile.path), newFileName);
+          await compressAndConvertToWebP(File(pickedFile.path), newFileName);
       logger.i("WebP 변환 완료: ${compressedImage?.path}");
 
       if (compressedImage != null) {
@@ -177,7 +177,7 @@ class CommonUtils {
 
         if (presignedUrl != null) {
           // 변환된 WebP 이미지 업로드
-          return await _uploadImageToS3(compressedImage, presignedUrl);
+          return await uploadImageToS3(compressedImage, presignedUrl);
         }
       }
     }
@@ -186,7 +186,7 @@ class CommonUtils {
 
   // 이미지 압축 및 WebP 변환
   // 이미지 압축 및 WebP 변환 (크기에 따른 품질 조정)
-  static Future<File?> _compressAndConvertToWebP(
+  static Future<File?> compressAndConvertToWebP(
       File imageFile, String newFileName) async {
     try {
       final tempDir = await getTemporaryDirectory();
@@ -249,7 +249,7 @@ class CommonUtils {
   }
 
   // S3 업로드
-  static Future<String?> _uploadImageToS3(
+  static Future<String?> uploadImageToS3(
       File compressedFile, String presignedUrl) async {
     try {
       final dio = Dio();

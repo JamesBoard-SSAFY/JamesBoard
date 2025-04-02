@@ -39,11 +39,6 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    // if (_recommendedGames.isNotEmpty) {
-    //   _isLoading = false;
-    //   notifyListeners();
-    // }
-
     try {
       _recommendedGames = await _repository.getRecommendedGames(limit: limit);
     } catch (e) {
@@ -58,14 +53,9 @@ class BoardGameViewModel extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-
-    // if (_games.isNotEmpty) {
-    //   _isLoading = false;
-    //   notifyListeners();
-    // }
-
     try {
       _games = await _repository.getBoardGames(queryParameters);
+      logger.d('boardGameviewmoel : games : $_games');
     } catch (e) {
       _errorMessage = 'Failed to load board games: $e';
     } finally {
@@ -78,11 +68,6 @@ class BoardGameViewModel extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-
-    // if (_topGames.isNotEmpty) {
-    //   _isLoading = false;
-    //   notifyListeners();
-    // }
 
     try {
       _topGames = await _repository.getTopGames(queryParameters);
@@ -116,5 +101,10 @@ class BoardGameViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void clearSearchResults() {
+    _games = [];
+    notifyListeners();
   }
 }

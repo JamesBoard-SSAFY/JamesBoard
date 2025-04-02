@@ -24,11 +24,11 @@ class BoardGameRepository {
 
   Future<List<BoardGameResponse>> getBoardGames(
           Map<String, dynamic> queryParameters) =>
-      _service.getBoardGames(
+      _service.getBoardGamesForCategory(
         difficulty: queryParameters['difficulty'] ?? null,
         minPlayers: queryParameters['minPlayers'] ?? null,
         category: queryParameters['category'] ?? null,
-        boardgameName: queryParameters['boardgameName'] ?? null,
+        boardGameName: queryParameters['boardGameName'] ?? null,
       );
 
   Future<List<BoardGameTopResponse>> getTopGames(

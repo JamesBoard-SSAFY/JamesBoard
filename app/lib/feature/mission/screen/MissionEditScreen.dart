@@ -1,34 +1,37 @@
-import 'dart:ffi';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
+import 'package:jamesboard/feature/mission/screen/MissionDetailScreen.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionBoardGameCount.dart';
 import 'package:jamesboard/feature/mission/widget/ImageItemRegisterMission.dart';
 import 'package:jamesboard/feature/mission/widget/SelectBoxRegisterMissionBoardGame.dart';
+import 'package:jamesboard/feature/user/viewmodel/MyPageViewModel.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 
 import '../../../constants/AppString.dart';
+import '../../../datasource/model/request/ArchiveEditRequest.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionEditScreen extends StatefulWidget {
-  final String title;
+  final int? archiveId;
 
   const MissionEditScreen({
     super.key,
-    required this.title,
+    this.archiveId,
   });
 
   @override
@@ -40,155 +43,182 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   final TextEditingController _countController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  List<File> _images = [];
+  List<File> _imageFiles = [];
 
-  // 이미지 선택
-  Future<void> _pickImage() async {
-    if (_images.length >= 9) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(AppString.uploadLimit),
-        duration: Duration(seconds: 2),
-      ));
-      return;
-    }
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  static Future<(String, File)?> _cropCompressAndUploadImage(
+      ImageSource source, MyPageViewModel viewModel) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(source: source);
 
     if (pickedFile != null) {
-      // 1:1로 크롭하기.
-      final croppedFile = await ImageCropper().cropImage(
+      final CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: AppString.imageIncision,
+            toolbarTitle: '이미지 자르기',
             toolbarColor: Colors.black,
             toolbarWidgetColor: Colors.white,
-            hideBottomControls: true, // 하단 컨트롤 숨기기
-            lockAspectRatio: true, // 비율 고정
+            hideBottomControls: true,
+            lockAspectRatio: true,
           ),
           IOSUiSettings(
-            minimumAspectRatio: 1.0, // 최소 비율 설정
-            aspectRatioLockEnabled: true, // 비율 고정
-          )
+            minimumAspectRatio: 1.0,
+            aspectRatioLockEnabled: true,
+          ),
         ],
       );
 
       if (croppedFile != null) {
-        setState(() {
-          _images.add(File(croppedFile.path));
-        });
+        String originalFileName = pickedFile.name;
+        String newFileName =
+            '${path.basenameWithoutExtension(originalFileName)}.webp';
+        File? compressedImage = await CommonUtils.compressAndConvertToWebP(
+            File(croppedFile.path), newFileName);
+
+        if (compressedImage != null) {
+          String? presignedUrl = await viewModel.issuePresignedUrl(newFileName);
+          if (presignedUrl != null) {
+            String? uploadedUrl = await CommonUtils.uploadImageToS3(
+                compressedImage, presignedUrl);
+            if (uploadedUrl != null) {
+              return (uploadedUrl, compressedImage);
+            }
+          }
+        }
       }
     }
+    return null;
   }
 
-  // 이미지 삭제
-  void _removeImage(int index) {
-    setState(() {
-      _images.removeAt(index);
-    });
-  }
+  void _onSubmit(MissionViewModel viewModel) async {
+    final count = int.tryParse(_countController.text);
+    if (count != null) {
+      viewModel.setArchivePlayCount(count);
+      viewModel.setArchivePlayTime();
+    }
+    viewModel.setArchivePlayContent(_descriptionController.text);
 
-  // 카메라 연결
-  Future<void> _pickImageFromCamera() async {
-    if (_images.length >= 9) {
+    final validationResult = viewModel.validationArchiveSubmission();
+    logger.d('validationResult : $validationResult');
+    logger.d(
+        'selectedGameAveragePlayTime: ${viewModel.selectedGameAveragePlayTime}');
+    logger.d('archivePlayCount: ${viewModel.archivePlayCount}');
+
+    if (validationResult != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppString.uploadLimit),
-          duration: Duration(seconds: 2),
+        SnackBar(content: Text(validationResult)),
+      );
+      return;
+    }
+
+    final request = ArchiveEditRequest(
+      gameId: viewModel.selectedGameId!,
+      archiveGamePlayCount: viewModel.archivePlayCount!,
+      archiveImageList: viewModel.imageUrls,
+      archiveContent: viewModel.archiveContent!,
+      archiveGamePlayTime: viewModel.archivePlayTime!,
+    );
+
+    logger.d('gameId : ${viewModel.selectedGameId}');
+    logger.d('archiveGamePlayCount : ${viewModel.archivePlayCount}');
+    logger.d('archiveImageList : ${viewModel.imageUrls}');
+    logger.d('archiveContent : ${viewModel.archiveContent}');
+    logger.d('archiveGamePlayTime : ${viewModel.archivePlayTime}');
+
+    int result;
+
+    if (widget.archiveId == null) {
+      // 등록 모드
+      result = await viewModel.insertArchive(request);
+    } else {
+      // 수정 모드
+      result = await viewModel.updateArchive(widget.archiveId!, request);
+    }
+
+    if (result != -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!'),
         ),
       );
-      return;
-    }
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-    if (pickedFile != null) {
-      // 1:1로 크롭하기.
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: AppString.imageIncision,
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
-            hideBottomControls: true, // 하단 컨트롤 숨기기
-            lockAspectRatio: true, // 비율 고정
-          ),
-          IOSUiSettings(
-            minimumAspectRatio: 1.0, // 최소 비율 설정
-            aspectRatioLockEnabled: true, // 비율 고정
-          )
-        ],
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              MissionDetailScreen(title: '임무 상세', archiveId: result),
+        ),
+        (route) => route.isFirst,
       );
-
-      if (croppedFile != null) {
-        setState(() {
-          _images.add(File(croppedFile.path));
-        });
-      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('처리 중 오류가 발생했습니다.')),
+      );
     }
   }
 
-  // 등록 버튼
-  void _onSubmit() {
-    if (_gameController.text.isNotEmpty &&
-        _countController.text.isNotEmpty &&
-        _descriptionController.text.isNotEmpty) {
-      logger.d('보드게임 : ${_gameController.text}');
-      logger.d('보드게임 판 수 : ${_countController.text}');
-      logger.d('아카이브 문구 : ${_descriptionController.text}');
-      logger.d('이미지 수 : ${_images.length}');
-    } else {
-      logger.d('모든 항목을 입력해주세요.');
+  @override
+  void initState() {
+    super.initState();
+    final missionViewModel = context.read<MissionViewModel>();
+
+    missionViewModel.clearAll();
+    _imageFiles.clear();
+
+    if (widget.archiveId != null) {
+      // 수정 모드
+      missionViewModel.getArchiveById(widget.archiveId!).then((_) {
+        final detail = missionViewModel.archiveDetailResponse;
+        if (detail != null) {
+          _countController.text = detail.archiveGamePlayCount.toString();
+          _descriptionController.text = detail.archiveContent;
+          missionViewModel.setSelectedBoardGame(
+            gameId: detail.gameId,
+            gameTitle: detail.gameTitle,
+            gamePlayTime: detail.archiveGamePlayCount > 0
+                ? (detail.archiveGamePlayTime ~/ detail.archiveGamePlayCount)
+                : 0,
+          );
+        }
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<MissionViewModel>();
+    final myPageViewModel = context.watch<MyPageViewModel>();
 
     return Scaffold(
       backgroundColor: mainBlack,
       appBar: DefaultCommonAppBar(
-        title: widget.title,
-      ),
+          title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // 임무 선택 영역
+            // 보드게임 선택 영역
             GestureDetector(
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => BoardGameSearchScreen(
-                      purpose: BoardGameSearchPurpose.fromMission,
-                    ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BoardGameSearchScreen(
+                    purpose: BoardGameSearchPurpose.fromMission,
                   ),
-                );
-              },
+                ),
+              ),
               child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      AppString.missionChoice,
-                      style: TextStyle(
-                        color: mainWhite,
-                        fontSize: 20,
-                        fontFamily: FontString.pretendardSemiBold,
-                      ),
-                    ),
-                    const SizedBox(height: 12.0),
+                    Text(AppString.missionChoice,
+                        style: TextStyle(
+                            color: mainWhite,
+                            fontSize: 20,
+                            fontFamily: FontString.pretendardSemiBold)),
+                    const SizedBox(height: 12),
                     SelectBoxRegisterMissionBoardGame(
                       selectedGameTitle: viewModel.selectedGameTitle,
                     ),
@@ -196,102 +226,106 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 ),
               ),
             ),
-
-            // 임무 수 영역
+            // 진행한 임무 수 영역
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    AppString.missionCompletedCount,
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: FontString.pretendardSemiBold,
-                    ),
+                  Text(AppString.missionCompletedCount,
+                      style: TextStyle(
+                          color: mainWhite,
+                          fontSize: 20,
+                          fontFamily: FontString.pretendardSemiBold)),
+                  const SizedBox(height: 12),
+                  EditBoxRegisterMissionBoardGameCount(
+                    controller: _countController,
                   ),
-                  const SizedBox(height: 12.0),
-                  EditBoxRegisterMissionBoardGameCount(),
                 ],
               ),
             ),
-
             // 임무 사진 영역
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, top: 24.0),
+              padding: const EdgeInsets.only(left: 20, top: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text(
-                    AppString.missionPhotoTitle,
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: FontString.pretendardSemiBold,
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-
-                  // 버튼들
+                  Text(AppString.missionPhotoTitle,
+                      style: TextStyle(
+                          color: mainWhite,
+                          fontSize: 20,
+                          fontFamily: FontString.pretendardSemiBold)),
+                  const SizedBox(height: 12),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // 갤러리
                       Flexible(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
                           child: ButtonRegisterArchivePicture(
                             icon: IconPath.addPicture,
-                            onTap: _pickImage,
+                            onTap: () async {
+                              final result = await _cropCompressAndUploadImage(
+                                  ImageSource.gallery, myPageViewModel);
+                              if (result != null) {
+                                final (imageUrl, file) = result;
+                                setState(() {
+                                  _imageFiles.add(file);
+                                });
+                                viewModel.addImageUrl(imageUrl);
+                              }
+                            },
                           ),
                         ),
                       ),
-
-                      SizedBox(width: 12),
-
-                      // 카메라
+                      const SizedBox(width: 12),
                       Flexible(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
                           child: ButtonRegisterArchivePicture(
                             icon: IconPath.camera,
-                            onTap: _pickImageFromCamera,
+                            onTap: () async {
+                              final result = await _cropCompressAndUploadImage(
+                                  ImageSource.camera, myPageViewModel);
+                              if (result != null) {
+                                final (imageUrl, file) = result;
+                                setState(() {
+                                  _imageFiles.add(file);
+                                });
+                                viewModel.addImageUrl(imageUrl);
+                              }
+                            },
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12.0),
-
-                  // 이미지 리스트
-                  if (_images.isNotEmpty)
+                  const SizedBox(height: 12),
+                  if (_imageFiles.isNotEmpty)
                     SizedBox(
                       height: 150,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ImageItemRegisterMission(
-                                imageUrl: _images[index].path,
-                                onRemove: () => _removeImage(index)),
-                          );
-                        },
+                        itemCount: _imageFiles.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ImageItemRegisterMission(
+                            imageFile: _imageFiles[index],
+                            onRemove: () {
+                              setState(() {
+                                _imageFiles.removeAt(index);
+                              });
+                              viewModel.removeImageUrl(index);
+                            },
+                          ),
+                        ),
                       ),
                     ),
-
-                  // 업로드 상태
-                  if (_images.isNotEmpty)
+                  if (viewModel.imageUrls.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 8, right: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // 구분선
                           Expanded(
                             child: Container(
                               height: 1,
@@ -299,10 +333,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               margin: const EdgeInsets.only(right: 8),
                             ),
                           ),
-
-                          // 업로드 상태
                           Text(
-                            '(${_images.length} / 9)',
+                            '(${viewModel.imageUrls.length} / 9)',
                             style: TextStyle(
                               color: mainGrey,
                               fontSize: 16,
@@ -311,15 +343,14 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                           )
                         ],
                       ),
-                    )
+                    ),
                 ],
               ),
             ),
-
-            // 임무 문구 영역
+            // 임무 결과 영역
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 24.0),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 24, bottom: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -327,43 +358,34 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text(
-                        AppString.missionResultTitle,
-                        style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: FontString.pretendardSemiBold,
-                        ),
-                      ),
-                      Text(
-                        AppString.missionResultLimit,
-                        style: TextStyle(
-                          color: mainGrey,
-                          fontSize: 14,
-                          fontFamily: FontString.pretendardSemiBold,
-                        ),
-                      )
+                      Text(AppString.missionResultTitle,
+                          style: TextStyle(
+                              color: mainWhite,
+                              fontSize: 20,
+                              fontFamily: FontString.pretendardSemiBold)),
+                      Text(AppString.missionResultLimit,
+                          style: TextStyle(
+                              color: mainGrey,
+                              fontSize: 14,
+                              fontFamily: FontString.pretendardSemiBold)),
                     ],
                   ),
-                  const SizedBox(height: 12.0),
-                  EditBoxRegisterMissionArchiveContent(),
+                  const SizedBox(height: 12),
+                  EditBoxRegisterMissionArchiveContent(
+                    controller: _descriptionController,
+                  ),
                 ],
               ),
             ),
-
-            // 등록 버튼
+            // 등록 버튼 영역
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20.0, top: 24.0, bottom: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ButtonCommonPrimaryBottom(
-                    text: AppString.register,
-                    onPressed: () {},
-                    disableWithOpacity: false,
-                  ),
-                ],
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
+              child: ButtonCommonPrimaryBottom(
+                text: widget.archiveId == null
+                    ? AppString.register
+                    : AppString.modify,
+                onPressed: () => _onSubmit(viewModel),
+                disableWithOpacity: false,
               ),
             ),
           ],

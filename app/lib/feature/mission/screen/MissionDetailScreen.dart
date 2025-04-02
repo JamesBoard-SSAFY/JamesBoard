@@ -82,6 +82,10 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
               userName: archiveDetailResponse.userNickName,
               archiveUserId: archiveDetailResponse.userId,
               loginUserId: viewModel.loginUserId!,
+              archiveId: widget.archiveId,
+              onDeleteSuccess: () {
+                Navigator.of(context).pop(true);
+              },
             ),
           ),
 

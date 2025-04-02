@@ -2,35 +2,35 @@
 
 part of 'BoardGameDetailResponse.dart';
 
-// ***************************************************************************
+// **************************************************************************
 // JsonSerializableGenerator
-// ***************************************************************************
+// **************************************************************************
 
 BoardGameDetailResponse _$BoardGameDetailResponseFromJson(
-    Map<String, dynamic> json) {
-  return BoardGameDetailResponse(
-    gameId: json['gameId'] as int,
-    gameTitle: json['gameTitle'] as String,
-    gameImage: json['gameImage'] as String,
-    gameCategories: (json['gameCategories'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    gameThemes:
-        (json['gameThemes'] as List<dynamic>).map((e) => e as String).toList(),
-    gameDesigners: (json['gameDesigners'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    gamePublisher: json['gamePublisher'] as String,
-    gameYear: json['gameYear'] as int,
-    gameMinAge: json['gameMinAge'] as int,
-    minPlayers: json['minPlayers'] as int,
-    maxPlayers: json['maxPlayers'] as int,
-    difficulty: json['difficulty'] as int,
-    playTime: json['playTime'] as int,
-    description: json['description'] as String,
-    gameRating: (json['gameRating'] as num).toDouble(),
-  );
-}
+        Map<String, dynamic> json) =>
+    BoardGameDetailResponse(
+      gameId: (json['gameId'] as num).toInt(),
+      gameTitle: json['gameTitle'] as String,
+      gameImage: json['gameImage'] as String,
+      gameCategories: (json['gameCategories'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      gameThemes: (json['gameThemes'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      gameDesigners: (json['gameDesigners'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      gamePublisher: json['gamePublisher'] as String,
+      gameYear: (json['gameYear'] as num).toInt(),
+      gameMinAge: (json['gameMinAge'] as num).toInt(),
+      minPlayers: (json['minPlayers'] as num).toInt(),
+      maxPlayers: (json['maxPlayers'] as num).toInt(),
+      difficulty: (json['difficulty'] as num).toInt(),
+      playTime: (json['playTime'] as num).toInt(),
+      description: json['description'] as String,
+      gameRating: (json['gameRating'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$BoardGameDetailResponseToJson(
         BoardGameDetailResponse instance) =>

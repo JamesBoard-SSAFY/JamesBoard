@@ -9,6 +9,7 @@ class ArchiveDetailResponse {
   final String userNickName;
   final String userProfile;
   final String archiveContent;
+  final int gameId;
   final String gameTitle;
   final int archiveGamePlayTime;
   final int archiveGamePlayCount;
@@ -20,6 +21,7 @@ class ArchiveDetailResponse {
     required this.userNickName,
     required this.userProfile,
     required this.archiveContent,
+    required this.gameId,
     required this.gameTitle,
     required this.archiveGamePlayTime,
     required this.archiveGamePlayCount,

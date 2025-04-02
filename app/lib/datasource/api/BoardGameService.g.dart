@@ -20,13 +20,14 @@ class _BoardGameService implements BoardGameService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<BoardGameRecommendResponse>> getRecommendedGames(
-      {int limit = 10}) async {
+  Future<List<BoardGameRecommendResponse>> getRecommendedGames({
+    int limit = 10,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<BoardGameResponse>>(
+    final _options = _setStreamType<List<BoardGameRecommendResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -41,8 +42,9 @@ class _BoardGameService implements BoardGameService {
     try {
       _value = _result.data!
           .map(
-            (dynamic i) =>
-                BoardGameRecommendResponse.fromJson(i as Map<String, dynamic>),
+            (dynamic i) => BoardGameRecommendResponse.fromJson(
+              i as Map<String, dynamic>,
+            ),
           )
           .toList();
     } on Object catch (e, s) {
@@ -53,17 +55,17 @@ class _BoardGameService implements BoardGameService {
   }
 
   @override
-  Future<List<BoardGameResponse>> getBoardGames({
+  Future<List<BoardGameResponse>> getBoardGamesForCategory({
     int? difficulty,
     int? minPlayers,
-    String? boardgameName,
+    String? boardGameName,
     String? category,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'difficulty': difficulty,
       r'minPlayers': minPlayers,
-      r'boardgameName': boardgameName,
+      r'boardGameName': boardGameName,
       r'category': category,
     };
     queryParameters.removeWhere((k, v) => v == null);
@@ -137,32 +139,28 @@ class _BoardGameService implements BoardGameService {
   @override
   Future<BoardGameDetailResponse> getBoardGameDetail(int gameId) async {
     final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const _data = null;
-
+    const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BoardGameDetailResponse>(
-      Options(
-        method: 'GET',
-        headers: _headers,
-        extra: _extra,
-      )
+      Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'api/games/$gameId',
+            'api/games/${gameId}',
+            queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-
-    final _result = await _dio.fetch<dynamic>(_options);
-
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BoardGameDetailResponse _value;
     try {
-      final _data = BoardGameDetailResponse.fromJson(_result.data!);
-      return _data;
+      _value = BoardGameDetailResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
     }
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

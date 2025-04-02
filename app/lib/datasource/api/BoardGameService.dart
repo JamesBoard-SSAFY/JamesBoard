@@ -18,10 +18,10 @@ abstract class BoardGameService {
       {@Query("limit") int limit = 10});
 
   @GET("api/games")
-  Future<List<BoardGameResponse>> getBoardGames({
+  Future<List<BoardGameResponse>> getBoardGamesForCategory({
     @Query("difficulty") int? difficulty,
     @Query("minPlayers") int? minPlayers,
-    @Query("boardgameName") String? boardgameName,
+    @Query("boardGameName") String? boardGameName,
     @Query("category") String? category,
   });
 
