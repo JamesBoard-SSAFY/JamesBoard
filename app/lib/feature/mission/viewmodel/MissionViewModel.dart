@@ -168,4 +168,39 @@ class MissionViewModel extends ChangeNotifier {
 
     return -1;
   }
+
+  // 아카이브 수정
+  Future<int> updateArchive(int archiveId, ArchiveEditRequest request) async {
+    try {
+      final response =
+          await _archiveRepository.updateArchive(archiveId, request);
+      return response;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _loginRepository.logout();
+        logger.e('401 에러. 로그아웃 처리');
+      }
+    } catch (e) {
+      logger.e('서버 오류 $e');
+    }
+
+    return -1;
+  }
+
+  // 아카이브 삭제
+  Future<int> deleteArchive(int archiveId) async {
+    try {
+      final response = await _archiveRepository.deleteArchive(archiveId);
+      return response;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _loginRepository.logout();
+        logger.e('401 에러. 로그아웃 처리');
+      }
+    } catch (e) {
+      logger.e('서버 오류 $e');
+    }
+
+    return -1;
+  }
 }
