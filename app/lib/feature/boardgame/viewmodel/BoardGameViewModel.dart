@@ -39,10 +39,10 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    if (_recommendedGames.isNotEmpty) {
-      _isLoading = false;
-      notifyListeners();
-    }
+    // if (_recommendedGames.isNotEmpty) {
+    //   _isLoading = false;
+    //   notifyListeners();
+    // }
 
     try {
       _recommendedGames = await _repository.getRecommendedGames(limit: limit);
@@ -59,10 +59,10 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    if (_games.isNotEmpty) {
-      _isLoading = false;
-      notifyListeners();
-    }
+    // if (_games.isNotEmpty) {
+    //   _isLoading = false;
+    //   notifyListeners();
+    // }
 
     try {
       _games = await _repository.getBoardGames(queryParameters);
@@ -79,10 +79,10 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    if (_topGames.isNotEmpty) {
-      _isLoading = false;
-      notifyListeners();
-    }
+    // if (_topGames.isNotEmpty) {
+    //   _isLoading = false;
+    //   notifyListeners();
+    // }
 
     try {
       _topGames = await _repository.getTopGames(queryParameters);
