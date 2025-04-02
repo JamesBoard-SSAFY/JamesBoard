@@ -62,6 +62,7 @@ class MissionViewModel extends ChangeNotifier {
   void clearSelectedBoardGame() {
     _selectedGameId = null;
     _selectedGameTitle = null;
+    _selectedGameAveragePlayTime = null;
     notifyListeners();
   }
 
@@ -91,6 +92,17 @@ class MissionViewModel extends ChangeNotifier {
     if (_selectedGameAveragePlayTime == null || _archivePlayCount == null)
       return;
     _archivePlayTime = _selectedGameAveragePlayTime! * _archivePlayCount!;
+    notifyListeners();
+  }
+
+  void clearAll() {
+    _selectedGameId = null;
+    _selectedGameTitle = null;
+    _selectedGameAveragePlayTime = null;
+    _imageUrls.clear();
+    _archiveContent = null;
+    _archivePlayCount = null;
+    _archivePlayTime = null;
     notifyListeners();
   }
 
@@ -156,6 +168,7 @@ class MissionViewModel extends ChangeNotifier {
   Future<int> insertArchive(ArchiveEditRequest request) async {
     try {
       final response = await _archiveRepository.insertArchive(request);
+      clearAll();
       return response;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
