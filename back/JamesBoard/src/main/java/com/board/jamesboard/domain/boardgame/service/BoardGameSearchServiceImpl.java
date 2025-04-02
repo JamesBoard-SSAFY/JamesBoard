@@ -25,14 +25,14 @@ public class BoardGameSearchServiceImpl implements BoardGameSearchService {
     private final GameRepository gameRepository;
 
     @Override
-    public List<BoardGameResponseDto> searchBoardGames(Integer difficulty, Integer minPlayers, String name, String category) {
+    public List<BoardGameResponseDto> searchBoardGames(Integer difficulty, Integer minPlayers, String name, String category, Integer minPlayTime, Integer maxPlayTime) {
 
 //        List<Game> gamesWithFilter = gameRepository.searchGamesWithCategoryOnly(difficulty, minPlayers, name, category);
 //        List<Long> gameIds = gamesWithFilter.stream().map(Game::getGameId).toList();
 //        List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIds);
 //        List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIds);
 
-        List<Long> gameIdsFiltered = gameRepository.findFilteredGameIds(difficulty, minPlayers, name, category);
+        List<Long> gameIdsFiltered = gameRepository.findFilteredGameIds(difficulty, minPlayers, name, category, minPlayTime, maxPlayTime);
 
         List<Game> gamesWithTheme = gameRepository.findGamesByGameIdsWithThemes(gameIdsFiltered);
         List<Game> gameWithCategory = gameRepository.findGamesByGameIdsWithCategories(gameIdsFiltered);
