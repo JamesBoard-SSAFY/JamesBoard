@@ -53,8 +53,10 @@ public class BoardGameController {
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) Integer minPlayers,
             @RequestParam(required = false) String boardGameName,
-            @RequestParam(required = false) String category) {
-        return ResponseEntity.ok(boardgameSearchService.searchBoardGames(difficulty, minPlayers, boardGameName, category));
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer minPlayTime,
+            @RequestParam(required = false) Integer maxPlayTime) {
+        return ResponseEntity.ok(boardgameSearchService.searchBoardGames(difficulty, minPlayers, boardGameName, category, minPlayTime, maxPlayTime));
     }
 
     @GetMapping("/top")

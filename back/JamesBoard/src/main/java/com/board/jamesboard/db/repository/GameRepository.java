@@ -30,8 +30,10 @@ public interface GameRepository extends JpaRepository<Game,Long>, GameRepository
             "WHERE (:difficulty IS NULL OR g.gameDifficulty = :difficulty) AND " +
             "(:minPlayers IS NULL OR g.minPlayer >= :minPlayers) AND " +
             "(:name IS NULL OR g.gameTitle LIKE %:name%) AND " +
-            "(:category IS NULL OR gc.gameCategoryName = :category)")
-    List<Long> findFilteredGameIds(Integer difficulty, Integer minPlayers, String name, String category);
+            "(:category IS NULL OR gc.gameCategoryName = :category) AND " +
+            "(:minPlayTime IS NULL OR g.gamePlayTime >= :minPlayTime) AND " +
+            "(:maxPlayTime IS NULL OR g.gamePlayTime <= :maxPlayTime)")
+    List<Long> findFilteredGameIds(Integer difficulty, Integer minPlayers, String name, String category, Integer minPlayTime, Integer maxPlayTime);
 
 
     // 게임 순위로 정렬하여 상위 게임 조회
