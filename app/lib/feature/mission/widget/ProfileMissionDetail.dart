@@ -3,14 +3,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/DialogMissionDetailDelete.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
-class ProfileMissionDetail extends StatelessWidget {
+import '../../../main.dart';
+
+class ProfileMissionDetail extends StatefulWidget {
   final String imageUrl;
   final String userName;
   final int archiveUserId;
   final int loginUserId;
+  final int archiveId;
+  final VoidCallback? onDeleteSuccess;
 
   const ProfileMissionDetail({
     super.key,
@@ -18,7 +24,111 @@ class ProfileMissionDetail extends StatelessWidget {
     required this.userName,
     required this.archiveUserId,
     required this.loginUserId,
+    required this.archiveId,
+    this.onDeleteSuccess,
   });
+
+  @override
+  State<ProfileMissionDetail> createState() => _ProfileMissionDetailState();
+}
+
+class _ProfileMissionDetailState extends State<ProfileMissionDetail> {
+  void _onMorePressed(BuildContext context) {
+    final parentContext = context;
+
+    showModalBottomSheet(
+      context: parentContext,
+      backgroundColor: secondaryBlack,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 수정 버튼
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(parentContext).pop();
+                  // TODO: 수정 이동
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: secondaryBlack,
+                ),
+                child: Text(
+                  AppString.update,
+                  style: TextStyle(
+                    color: mainWhite,
+                    fontSize: 18,
+                    fontFamily: FontString.pretendardBold,
+                  ),
+                ),
+              ),
+            ),
+
+            // 구분선
+            const Divider(color: mainGrey, height: 1),
+
+            // 삭제 버튼
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.of(parentContext).pop();
+                  await Future.delayed(const Duration(milliseconds: 100));
+
+                  final result = await showCustomDialogMissionDetailDelete(
+                    parentContext,
+                    AppString.missionDialogMainMessage,
+                    AppString.missionDialogSubMessage,
+                  );
+
+                  if (result == true) {
+                    logger.d('✅ onConfirm 실행됨');
+
+                    if (!mounted) return;
+
+                    final viewModel = parentContext.read<MissionViewModel>();
+                    final deleteResult =
+                        await viewModel.deleteArchive(widget.archiveId);
+
+                    logger.d('🧨 삭제 결과: $deleteResult');
+
+                    if (!mounted) return;
+
+                    if (deleteResult != -1) {
+                      if (widget.onDeleteSuccess != null) {
+                        widget.onDeleteSuccess!();
+                      }
+                    } else {
+                      ScaffoldMessenger.of(parentContext).showSnackBar(
+                        const SnackBar(content: Text('삭제에 실패했습니다.')),
+                      );
+                    }
+                  }
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: secondaryBlack,
+                ),
+                child: Text(
+                  AppString.delete,
+                  style: TextStyle(
+                    color: Colors.red[500],
+                    fontSize: 18,
+                    fontFamily: FontString.pretendardBold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,28 +137,24 @@ class ProfileMissionDetail extends StatelessWidget {
       children: [
         Row(
           children: [
-            // 프로필 사진
             CircleAvatar(
               radius: 20,
-              backgroundImage: AssetImage(imageUrl),
+              backgroundImage: AssetImage(widget.imageUrl),
             ),
-            SizedBox(width: 12),
-
-            // 사용자 이름
+            const SizedBox(width: 12),
             Text(
-              userName,
+              widget.userName,
               style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: FontString.pretendardMedium,
-                  color: mainWhite),
-            )
+                fontSize: 16,
+                fontFamily: FontString.pretendardMedium,
+                color: mainWhite,
+              ),
+            ),
           ],
         ),
-
-        // 더보기
-        if (loginUserId == archiveUserId)
+        if (widget.loginUserId == widget.archiveUserId)
           GestureDetector(
-            onTap: () => {_onMorePressed(context)},
+            onTap: () => _onMorePressed(context),
             child: SvgPicture.asset(
               IconPath.more,
               width: 24,
@@ -57,88 +163,6 @@ class ProfileMissionDetail extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-
-  void _onMorePressed(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return IntrinsicHeight(
-          child: Container(
-            decoration: BoxDecoration(
-              color: secondaryBlack,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 수정 버튼
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: mainGrey,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: secondaryBlack,
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      AppString.update,
-                      style: TextStyle(
-                        color: mainWhite,
-                        fontSize: 20,
-                        fontFamily: FontString.pretendardBold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // 삭제 버튼
-                Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-
-                      Future.delayed(const Duration(milliseconds: 100), () {
-                        showCustomDialogMissionDetailDelete(
-                            context,
-                            AppString.missionDialogMainMessage,
-                            AppString.missionDialogSubMessage);
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: secondaryBlack,
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      AppString.delete,
-                      style: TextStyle(
-                        color: mainWhite,
-                        fontSize: 20,
-                        fontFamily: FontString.pretendardBold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
