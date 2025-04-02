@@ -26,11 +26,11 @@ import '../../../datasource/model/request/ArchiveEditRequest.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionEditScreen extends StatefulWidget {
-  final String title;
+  final int? archiveId;
 
   const MissionEditScreen({
     super.key,
-    required this.title,
+    this.archiveId,
   });
 
   @override
@@ -125,17 +125,56 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     logger.d('archiveContent : ${viewModel.archiveContent}');
     logger.d('archiveGamePlayTime : ${viewModel.archivePlayTime}');
 
-    final result = await viewModel.insertArchive(request);
+    int result;
+
+    if (widget.archiveId == null) {
+      // 등록 모드
+      result = await viewModel.insertArchive(request);
+    } else {
+      // 수정 모드
+      result = await viewModel.updateArchive(widget.archiveId!, request);
+    }
 
     if (result != -1) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('아카이브 등록 성공!')),
+        SnackBar(
+            content:
+                Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!')),
       );
-      Navigator.pop(context); // 등록 성공 시 이전 화면으로 이동
+      Navigator.pop(context); // 성공 시 이전 화면으로 이동
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('등록 중 오류가 발생했습니다.')),
+        const SnackBar(content: Text('처리 중 오류가 발생했습니다.')),
       );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final missionViewModel = context.read<MissionViewModel>();
+
+    // 무조건 이미지 관련 데이터를 초기화합니다.
+    missionViewModel.clearAll();
+    _imageFiles.clear();
+
+    if (widget.archiveId != null) {
+      // 수정 모드: 나머지 아카이브 정보만 불러옵니다.
+      missionViewModel.getArchiveById(widget.archiveId!).then((_) {
+        final detail = missionViewModel.archiveDetailResponse;
+        if (detail != null) {
+          _countController.text = detail.archiveGamePlayCount.toString();
+          _descriptionController.text = detail.archiveContent;
+          missionViewModel.setSelectedBoardGame(
+            gameId: detail.gameId,
+            gameTitle: detail.gameTitle,
+            gamePlayTime: detail.archiveGamePlayCount > 0
+                ? (detail.archiveGamePlayTime ~/ detail.archiveGamePlayCount)
+                : 0,
+          );
+          // 여기서는 이미지 URL이나 로컬 파일은 새로 입력받도록 초기화 상태를 유지합니다.
+        }
+      });
     }
   }
 
@@ -146,7 +185,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
     return Scaffold(
       backgroundColor: mainBlack,
-      appBar: DefaultCommonAppBar(title: widget.title),
+      appBar: DefaultCommonAppBar(
+          title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

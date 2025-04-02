@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
     RecommendGameScreen(),
-    MissionEditScreen(title: AppString.missionEditTitle),
+    MissionEditScreen(),
     MissionListScreen(title: AppString.missionListTitle),
     MyPageScreen(),
   ];
@@ -159,9 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                MissionEditScreen(title: AppString.missionEditTitle)),
+        MaterialPageRoute(builder: (context) => MissionEditScreen()),
       ).then((_) {
         setState(() {
           _selectedIndex = 0;
