@@ -18,7 +18,8 @@ class MissionListScreen extends StatefulWidget {
 class _MissionListScreenState extends State<MissionListScreen> {
   @override
   Widget build(BuildContext context) {
-    final archives = context.watch<MissionViewModel>().archives;
+    final archives =
+        context.watch<MissionViewModel>().archives.reversed.toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
