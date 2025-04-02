@@ -60,13 +60,9 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    if (_games.isNotEmpty) {
-      _isLoading = false;
-      notifyListeners();
-    }
-
     try {
       _games = await _repository.getBoardGames(queryParameters);
+      logger.d('boardGameviewmoel : games : $_games');
     } catch (e) {
       _errorMessage = 'Failed to load board games: $e';
     } finally {
