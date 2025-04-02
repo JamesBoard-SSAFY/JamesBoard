@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
+import 'package:jamesboard/feature/mission/screen/MissionDetailScreen.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/ButtonRegisterArchivePicture.dart';
 import 'package:jamesboard/feature/mission/widget/EditBoxRegisterMissionArchiveContent.dart';
@@ -138,10 +139,18 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     if (result != -1) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content:
-                Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!')),
+          content:
+              Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!'),
+        ),
       );
-      Navigator.pop(context); // 성공 시 이전 화면으로 이동
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              MissionDetailScreen(title: '임무 상세', archiveId: result),
+        ),
+        (route) => route.isFirst,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('처리 중 오류가 발생했습니다.')),
@@ -154,12 +163,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     super.initState();
     final missionViewModel = context.read<MissionViewModel>();
 
-    // 무조건 이미지 관련 데이터를 초기화합니다.
     missionViewModel.clearAll();
     _imageFiles.clear();
 
     if (widget.archiveId != null) {
-      // 수정 모드: 나머지 아카이브 정보만 불러옵니다.
+      // 수정 모드
       missionViewModel.getArchiveById(widget.archiveId!).then((_) {
         final detail = missionViewModel.archiveDetailResponse;
         if (detail != null) {
@@ -172,7 +180,6 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 ? (detail.archiveGamePlayTime ~/ detail.archiveGamePlayCount)
                 : 0,
           );
-          // 여기서는 이미지 URL이나 로컬 파일은 새로 입력받도록 초기화 상태를 유지합니다.
         }
       });
     }
@@ -374,7 +381,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
               child: ButtonCommonPrimaryBottom(
-                text: AppString.register,
+                text: widget.archiveId == null
+                    ? AppString.register
+                    : AppString.modify,
                 onPressed: () => _onSubmit(viewModel),
                 disableWithOpacity: false,
               ),

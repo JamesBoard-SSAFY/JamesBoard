@@ -43,6 +43,7 @@ class AppString {
   static const String missionResultTitle = "임무 결과 ";
   static const String missionResultLimit = "255자까지 입력 가능합니다.";
   static const String register = "등록";
+  static const String modify = "수정";
 
   //ButtonMissionDetailDialog
   static const String confirm = "확인";
