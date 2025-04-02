@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/DialogMissionDetailDelete.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -52,7 +53,14 @@ class _ProfileMissionDetailState extends State<ProfileMissionDetail> {
               child: TextButton(
                 onPressed: () {
                   Navigator.of(parentContext).pop();
-                  // TODO: 수정 이동
+                  Navigator.push(
+                    parentContext,
+                    MaterialPageRoute(
+                      builder: (_) => MissionEditScreen(
+                        archiveId: widget.archiveId,
+                      ),
+                    ),
+                  );
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 20),
