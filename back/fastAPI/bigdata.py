@@ -30,7 +30,7 @@ class RecommendationEngine:
         self.model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
         self.embeddings = None
         self._initialize_embeddings()
-        self.n_clusters = 100
+        self.n_clusters = 200
         self.batch_size = 1000
         self.reviews_df = None
         self.kmeans_model = None
@@ -517,12 +517,29 @@ class RecommendationEngine:
             # 사용자의 클러스터 찾기
             user_cluster = self.get_user_cluster(user_id)
             if user_cluster is None:
-                # 클러스터링이 실패한 경우, 모든 사용자의 리뷰를 사용
-                cluster_reviews = self.reviews_df
-            else:
-                # 같은 클러스터의 사용자들의 리뷰 데이터 추출
-                cluster_users = [uid for uid, cluster in self.user_clusters.items() if cluster == user_cluster]
-                cluster_reviews = self.reviews_df[self.reviews_df['user'].isin(cluster_users)]
+                print(f"Warning: Could not determine cluster for user {user_id}")
+                return []
+
+            # 사용자의 활동 데이터와 리뷰 데이터 병합
+            user_activities['user'] = user_activities['user_id'].astype(str)
+            user_activities['rating'] = user_activities['user_activity_rating']
+            user_activities['ID'] = user_activities['game_id']
+            
+            # 기존 리뷰 데이터와 user_activity 데이터 병합
+            merged_data = pd.concat([
+                self.reviews_df,
+                user_activities[['user', 'rating', 'ID']]
+            ], ignore_index=True)
+            
+            # 중복 제거 (user_activity 데이터 우선)
+            merged_data = merged_data.drop_duplicates(subset=['user', 'ID'], keep='last')
+            
+            # 사용자가 평가한 게임 목록
+            user_rated_games = set(user_activities['game_id'].unique())
+            
+            # 같은 클러스터의 사용자들의 리뷰 데이터 추출
+            cluster_users = [uid for uid, cluster in self.user_clusters.items() if cluster == user_cluster]
+            cluster_reviews = merged_data[merged_data['user'].isin(cluster_users)]
             
             if cluster_reviews.empty:
                 return []
@@ -535,7 +552,10 @@ class RecommendationEngine:
             # 컬럼명 변경
             game_ratings.columns = ['game_id', 'mean_rating', 'review_count']
             
-            # 최소 1개 이상의 평가가 있는 게임만 선택 (조건 완화)
+            # 사용자가 이미 평가한 게임 제외
+            game_ratings = game_ratings[~game_ratings['game_id'].isin(user_rated_games)]
+            
+            # 최소 1개 이상의 평가가 있는 게임만 선택
             game_ratings = game_ratings[game_ratings['review_count'] >= 1]
             
             # 상위 N개 게임 선택
@@ -730,13 +750,19 @@ class RecommendationEngine:
     def create_collaborative_matrix(self, user_activities: pd.DataFrame) -> Tuple[csr_matrix, Dict]:
         """협업 필터링을 위한 사용자-게임 매트릭스를 생성합니다."""
         try:
-            # 사용자 활동 데이터와 리뷰 데이터 병합
-            merged_data = pd.merge(
-                user_activities,
+            # user_activity 데이터 전처리
+            user_activities['user'] = user_activities['user_id'].astype(str)
+            user_activities['rating'] = user_activities['user_activity_rating']
+            user_activities['ID'] = user_activities['game_id']
+            
+            # 기존 리뷰 데이터와 user_activity 데이터 병합
+            merged_data = pd.concat([
                 self.reviews_df,
-                left_on='game_id',
-                right_on='ID'
-            )
+                user_activities[['user', 'rating', 'ID']]
+            ], ignore_index=True)
+            
+            # 중복 제거 (user_activity 데이터 우선)
+            merged_data = merged_data.drop_duplicates(subset=['user', 'ID'], keep='last')
             
             # 사용자-게임 매트릭스 생성
             user_game_matrix = merged_data.pivot(
@@ -792,53 +818,54 @@ class RecommendationEngine:
     def _train_clustering_model(self) -> bool:
         """클러스터링 모델을 학습시킵니다."""
         try:
-            if self.reviews_df is None or self.reviews_df.empty:
-                print("No review data available for clustering")
+            # 사용자 활동 데이터 가져오기
+            user_activities = self.db.query(
+                models.UserActivity.user_id,
+                func.avg(models.UserActivity.user_activity_rating).label('mean_rating'),
+                func.count(models.UserActivity.game_id).label('review_count')
+            ).group_by(
+                models.UserActivity.user_id
+            ).all()
+
+            if not user_activities:
+                print("No user activities found")
                 return False
-            
-            print("Starting clustering model training...")
-            print(f"Total reviews: {len(self.reviews_df)}")
-            
-            # 사용자별 평균 평점과 평가 수 계산
-            user_ratings = self.reviews_df.groupby('user').agg({
-                'rating': ['mean', 'count']
-            }).reset_index()
-            
-            # 컬럼명 변경
-            user_ratings.columns = ['user', 'mean_rating', 'review_count']
-            
-            # 최소 1개 이상의 평가가 있는 사용자만 선택 (조건 완화)
-            user_ratings = user_ratings[user_ratings['review_count'] >= 1]
-            
-            print(f"Users with reviews: {len(user_ratings)}")
-            
-            if len(user_ratings) < self.n_clusters:
-                print(f"Not enough users for {self.n_clusters} clusters")
-                return False
-            
+
+            # 데이터프레임 생성
+            user_ratings = pd.DataFrame([
+                {
+                    'user': activity.user_id,
+                    'mean_rating': float(activity.mean_rating),
+                    'review_count': activity.review_count
+                }
+                for activity in user_activities
+            ])
+
             # 데이터 정규화
-            X = user_ratings[['mean_rating', 'review_count']].values
             scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X)
-            
+            features = ['mean_rating', 'review_count']
+            user_data_scaled = scaler.fit_transform(user_ratings[features])
+
             # MiniBatchKMeans 모델 학습
             self.kmeans_model = MiniBatchKMeans(
                 n_clusters=self.n_clusters,
                 batch_size=self.batch_size,
                 random_state=42
             )
-            self.kmeans_model.fit(X_scaled)
-            
+            self.kmeans_model.fit(user_data_scaled)
+
             # 사용자별 클러스터 할당
             for _, row in user_ratings.iterrows():
-                user_data = row[['mean_rating', 'review_count']].values.reshape(1, -1)
+                user_data = row[features].values.reshape(1, -1)
                 user_data_scaled = scaler.transform(user_data)
                 cluster = self.kmeans_model.predict(user_data_scaled)[0]
                 self.user_clusters[row['user']] = cluster
-            
+
             print(f"Clustering model trained successfully with {len(user_ratings)} users")
+            print(f"Number of clusters: {self.n_clusters}")
+            print(f"Cluster distribution: {pd.Series(list(self.user_clusters.values())).value_counts().to_dict()}")
             return True
-            
+
         except Exception as e:
             print(f"Error training clustering model: {str(e)}")
             return False
@@ -846,12 +873,26 @@ class RecommendationEngine:
     def get_hybrid_recommendations(self, user_id: int, top_n: int = 30) -> List[Dict]:
         """하이브리드 추천을 생성합니다."""
         try:
+            # 사용자 정보 가져오기
+            user = self.db.query(models.User).filter(models.User.user_id == user_id).first()
+            if not user:
+                return []
+
             # 사용자 활동 데이터 가져오기
             user_activities = self.get_user_activity_data(user_id)
             if user_activities.empty:
                 return []
 
-            # 사용자가 가장 선호하는 게임 찾기 (평점이 가장 높은 게임)
+            # 사용자의 클러스터 가져오기
+            user_cluster = self.get_user_cluster(user_id)
+            if user_cluster is None:
+                print(f"Warning: Could not determine cluster for user {user_id}")
+                return []
+
+            # 사용자가 평가한 게임 목록
+            user_rated_games = set(user_activities['game_id'].unique())
+
+            # 사용자가 가장 선호하는 게임 찾기
             favorite_game = user_activities.nlargest(1, 'rating').iloc[0]
             favorite_game_id = favorite_game['game_id']
 
@@ -863,20 +904,28 @@ class RecommendationEngine:
             )
 
             # 콘텐츠 기반 추천 (30%)
-            content_recs = self.get_content_recommendations(favorite_game_id, top_n)
+            content_recs = []
+            if user.prefer_game_id:
+                # 사용자의 선호 게임이 있는 경우 해당 게임 기반으로 추천
+                content_recs = self.get_content_recommendations(user.prefer_game_id, top_n)
+            else:
+                # 선호 게임이 없는 경우 가장 높은 평점을 준 게임 기반으로 추천
+                content_recs = self.get_content_recommendations(favorite_game_id, top_n)
 
             # 추천 결과 통합 및 정규화
             hybrid_scores = defaultdict(float)
             
             # 협업 필터링 점수 (70%)
             for rec in collaborative_recs:
-                rank_score = 1.0 / rec['rank']
-                hybrid_scores[rec['game_id']] += rank_score * 0.7
+                if rec['game_id'] not in user_rated_games:  # 이미 평가한 게임 제외
+                    rank_score = 1.0 / rec['rank']
+                    hybrid_scores[rec['game_id']] += rank_score * 0.7
 
             # 콘텐츠 기반 점수 (30%)
             for rec in content_recs:
-                rank_score = 1.0 / rec['recommend_content_rank']
-                hybrid_scores[rec['recommend_game_id']] += rank_score * 0.3
+                if rec['recommend_game_id'] not in user_rated_games:  # 이미 평가한 게임 제외
+                    rank_score = 1.0 / rec['recommend_content_rank']
+                    hybrid_scores[rec['recommend_game_id']] += rank_score * 0.3
 
             # 최종 순위 생성
             final_rankings = sorted(
