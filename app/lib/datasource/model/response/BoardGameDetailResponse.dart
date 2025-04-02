@@ -42,4 +42,9 @@ class BoardGameDetailResponse {
       _$BoardGameDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BoardGameDetailResponseToJson(this);
+
+  @override
+  String toString() {
+    return 'BoardGameDetailResponse(gameId: $gameId, gameTitle: "$gameTitle", gameImage: "$gameImage", gameCategories: $gameCategories, gameThemes: $gameThemes, gameDesigners: $gameDesigners, gamePublisher: "$gamePublisher", gameYear: $gameYear, gameMinAge: $gameMinAge, minPlayers: $minPlayers, maxPlayers: $maxPlayers, difficulty: $difficulty, playTime: $playTime, description: "$description", gameRating: $gameRating)';
+  }
 }

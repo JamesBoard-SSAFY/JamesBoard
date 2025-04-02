@@ -12,14 +12,14 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
   final double initialRating;
   final int itemCount;
   final bool allowHalfRating;
-  final ValueChanged<double>? onRatingUpdate;
+  final ValueChanged<double> onRatingUpdate;
 
   const RatingBarBoardGameDetailReview({
     super.key,
     required this.initialRating,
     this.itemCount = 5,
     this.allowHalfRating = true,
-    this.onRatingUpdate,
+    required this.onRatingUpdate,
   });
 
   @override
@@ -53,7 +53,9 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
           ),
         ),
         onRatingUpdate: (rating) {
-          // Rating is updated
+          if (onRatingUpdate != null) {
+            onRatingUpdate!(rating); // 상태 변경 콜백 호출
+          }
         },
       ),
     );

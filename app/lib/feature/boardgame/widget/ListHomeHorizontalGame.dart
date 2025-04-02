@@ -38,7 +38,7 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
     final categoryViewModel =
         Provider.of<CategoryGameViewModel>(context, listen: false);
     viewModel = categoryViewModel.getCategoryViewModel(widget.title);
-    viewModel.getBoardGamesForCategory(widget.queryParameters);
+    viewModel.getBoardGames(widget.queryParameters);
   }
 
   @override

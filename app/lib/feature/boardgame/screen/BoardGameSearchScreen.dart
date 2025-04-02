@@ -34,7 +34,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
     if (keyword.isEmpty) return;
 
     final viewModel = context.read<BoardGameViewModel>();
-    viewModel.getBoardGamesForCategory({'boardgameName': keyword});
+    viewModel.getBoardGames({'boardgameName': keyword});
   }
 
   @override

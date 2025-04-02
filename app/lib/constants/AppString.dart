@@ -98,6 +98,8 @@ class AppString {
   static const String evaluation = "평가";
   static const String similarMission = "비슷한 임무";
 
+  static const String gameDetailKey = "게임 상세 조회";
+
   //BottomSheetBoardGameEvaluation
   static const String apply = "적용";
   //MyPageUserEditScreen

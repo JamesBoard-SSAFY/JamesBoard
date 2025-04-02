@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/UserActivityViewModel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/FontString.dart';
+import '../../../datasource/model/request/user/UserActivityPatchRequest.dart';
+import '../../../datasource/model/request/user/UserActivityRequest.dart';
+import '../../../main.dart';
 import '../../../theme/Colors.dart';
 import 'RatingBarBoardGameDetailReview.dart';
 
-class BottomSheetBoardGameEvaluation extends StatelessWidget {
+class BottomSheetBoardGameEvaluation extends StatefulWidget {
+  final int gameId;
+  final int userId;
+
   const BottomSheetBoardGameEvaluation({
     super.key,
+    required this.gameId,
+    required this.userId,
   });
+
+  @override
+  State<BottomSheetBoardGameEvaluation> createState() =>
+      _BottomSheetBoardGameEvaluationState();
+}
+
+class _BottomSheetBoardGameEvaluationState
+    extends State<BottomSheetBoardGameEvaluation> {
+  late UserActivityViewModel viewModel;
+
+  double _rating = 0.0;
+
+  void _updateRating(double rating) {
+    setState(() {
+      _rating = rating;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +70,9 @@ class BottomSheetBoardGameEvaluation extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           RatingBarBoardGameDetailReview(
-            initialRating: 0,
+            initialRating: _rating,
             onRatingUpdate: (rating) {
-              print("사용자 평가: $rating");
+              _updateRating(rating);
             },
           ),
           const SizedBox(height: 20),
@@ -54,7 +88,62 @@ class BottomSheetBoardGameEvaluation extends StatelessWidget {
               ),
             ),
             child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () async {
+                if (_rating == 0.0) {
+                  logger.d("rating $_rating");
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("평점을 선택해주세요.")),
+                  );
+                  return;
+                }
+
+                final userActivityId = await viewModel.checkUserActivity(
+                  userId: widget.userId,
+                  gameId: widget.gameId,
+                );
+
+                final isRatingExists = userActivityId > 0;
+
+                if (isRatingExists) {
+                  final request = UserActivityPatchRequest(
+                    rating: _rating,
+                  );
+
+                  final success = await viewModel.updateUserActivityRating(
+                    userActivityId: userActivityId,
+                    request: request,
+                  );
+
+                  logger.d("updateUserActivityRating update success $success");
+
+                  if (success) {
+                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("활동 수정에 실패했습니다. 다시 시도해주세요.")),
+                    );
+                  }
+                } else {
+                  final request = UserActivityRequest(
+                    gameId: widget.gameId,
+                    userId: widget.userId,
+                    rating: _rating,
+                  );
+
+                  final success = await viewModel.addUserActivity(request);
+
+                  logger.d("updateUserActivityRating write success $success");
+
+                  if (success) {
+                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("활동 추가에 실패했습니다. 다시 시도해주세요.")),
+                    );
+                  }
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
                 padding: const EdgeInsets.symmetric(vertical: 24),

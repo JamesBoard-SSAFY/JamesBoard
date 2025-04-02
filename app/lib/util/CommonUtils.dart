@@ -280,4 +280,25 @@ class CommonUtils {
       return null;
     }
   }
+
+  static String getDifficulty(int diffNumber) {
+    switch (diffNumber) {
+      case 0:
+        return '초급';
+      case 1:
+        return '중급';
+      case 2:
+        return '고급';
+      default:
+        return '없음';
+    }
+  }
+
+  static String getAgeInfo(int minPlayer, int maxPlayer) {
+    if (minPlayer == maxPlayer) {
+      return "$minPlayer명";
+    }
+
+    return "$minPlayer~$maxPlayer명";
+  }
 }
