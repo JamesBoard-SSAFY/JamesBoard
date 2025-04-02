@@ -8,7 +8,7 @@ import '../../../theme/Colors.dart';
 class ListBGGRankGame extends StatefulWidget {
   final List<String> imageUrls; // 게임 이미지 URL 리스트
   final String title;
-  final Function(String id) onImageTap; // 클릭 시 수행할 작업
+  final Function(int id) onImageTap; // 클릭 시 수행할 작업
   final Map<String, dynamic> queryParameters;
 
   const ListBGGRankGame({
@@ -47,7 +47,7 @@ class _ListHomeHorizontalGameState extends State<ListBGGRankGame> {
           CardHomeReview(
             title: widget.title,
             images: AppDummyData.images,
-            onImageTap: (String id) => {widget.onImageTap(id)},
+            onImageTap: (int id) => {widget.onImageTap(id)},
             queryParameters: widget.queryParameters,
           )
         ],

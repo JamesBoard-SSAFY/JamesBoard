@@ -10,20 +10,27 @@ import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
+import 'package:jamesboard/repository/ArchiveRepository.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/repository/BoardGameRepository.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
+import 'package:jamesboard/repository/MyPageRepository.dart';
+import 'package:jamesboard/repository/S3Repository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
+import 'feature/mission/viewmodel/MissionViewModel.dart';
 import 'feature/survey/viewmodel/SurveyViewModel.dart';
 import 'feature/user/screen/MyPageScreen.dart';
 import 'feature/boardgame/screen/RecommendGameScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+
+import 'feature/user/viewmodel/MyPageViewModel.dart';
 
 final logger = Logger(
     printer: PrettyPrinter(
@@ -52,11 +59,16 @@ void main() async {
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
+  final loginRepository = LoginRepository.create();
+  final myPageRepository = MyPageRepository.create();
+  final s3Repository = S3Repository.create();
+  final myPageViewModel =
+      MyPageViewModel(myPageRepository, loginRepository, s3Repository, storage);
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => SurveyViewModel(
+        ChangeNotifierProvider<SurveyViewModel>(
+          create: (context) => SurveyViewModel(
             SurveyRepository.create(),
             LoginRepository.create(),
           ),
@@ -71,6 +83,20 @@ void main() async {
             BoardGameRepository.create(),
           ),
         ),
+        ChangeNotifierProvider<MissionViewModel>(
+          create: (context) => MissionViewModel(
+            ArchiveRepository.create(),
+            LoginRepository.create(),
+          ),
+        ),
+        ChangeNotifierProvider<MyPageViewModel>(
+          create: (context) => MyPageViewModel(
+            MyPageRepository.create(),
+            LoginRepository.create(),
+            S3Repository.create(),
+            storage,
+          ),
+        )
       ],
       child: MyApp(isLoggedIn: false),
     ),
@@ -145,6 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _selectedIndex = index;
       });
+
+      // 아카이브 탭이면 최신 아카이브 데이터 받아오기.
+      if (index == 3) {
+        context.read<MissionViewModel>().getAllArchives();
+      }
     }
   }
 

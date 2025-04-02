@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
-
-import '../../../util/CommonUtils.dart';
+import 'package:provider/provider.dart';
+import '../../../datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
+import '../../../repository/MyPageRepository.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
+import '../viewmodel/MyPageViewModel.dart';
 import '../widget/chart/ChartUserGenrePercent.dart';
 import 'MyPagePlayTimeScreen.dart';
 
@@ -36,6 +39,9 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.loadUserId();
+
     return Scaffold(
       backgroundColor: mainBlack,
       body: Column(
@@ -48,8 +54,10 @@ class _MyPageScreenState extends State<MyPageScreen>
               ),
               CircleAvatar(
                 radius: 35,
-                backgroundImage:
-                    AssetImage('assets/image/image_default_profile.png'),
+                backgroundImage: viewModel.userInfo?.userProfile != null
+                    ? NetworkImage(viewModel.userInfo!.userProfile!)
+                    : AssetImage('assets/image/image_default_profile.png')
+                        as ImageProvider,
                 backgroundColor: mainBlack,
               ),
               SizedBox(
@@ -59,7 +67,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "장킨스",
+                    viewModel.userInfo?.userNickname ?? "",
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 20,
@@ -76,7 +84,8 @@ class _MyPageScreenState extends State<MyPageScreen>
                         MaterialPageRoute(
                           builder: (context) => MyPageUserEditScreen(
                             title: "요원 정보 변경",
-                            userName: "장킨스",
+                            userName: viewModel.userInfo?.userNickname ?? "",
+                            userImg: viewModel.userInfo!.userProfile,
                           ),
                         ),
                       );
@@ -145,6 +154,9 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // 임무 보고
   Widget _buildTabContentMissionReport() {
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.getAllPlayedGames();
+
     void handleImageTap(String id) {
       print('클릭한 이미지 ID: $id');
       // 여기에 원하는 동작 추가
@@ -152,7 +164,7 @@ class _MyPageScreenState extends State<MyPageScreen>
 
     return Expanded(
       child: ImageCommonMyPageGameCard(
-        images: AppDummyData.missionReportimages,
+        images: viewModel.playedGames ?? [],
         onTap: handleImageTap,
       ),
     );
@@ -160,6 +172,9 @@ class _MyPageScreenState extends State<MyPageScreen>
 
   // 임무 통계
   Widget _buildTabContentMissionStatistics() {
+    final viewModel = Provider.of<MyPageViewModel>(context);
+    viewModel.getTopPlayedGame();
+    
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -183,9 +198,14 @@ class _MyPageScreenState extends State<MyPageScreen>
               ],
             ),
             ChartUserGenrePercent(
-                chartData: AppDummyData.missionStatisticsChartData),
+              chartData: viewModel.gameStats ?? MyPageGameStatsResponse(
+                totalPlayed: 0,
+                genreStats: [],
+                topPlayedGames: [],
+              ),
+            ),
             ItemUserGenrePercentInfo(
-                genres: AppDummyData.missionStatisticsGenres),
+                genres: viewModel.gameStats?.genreStats ?? []),
             SizedBox(
               height: 32,
             ),
@@ -207,7 +227,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                       MaterialPageRoute(
                         builder: (context) => MyPagePlayTimeScreen(
                           title: "작전 누적 판수 순위",
-                          gameData: AppDummyData.missionCumulativeGameData,
+                          gameData: viewModel.gameStats?.topPlayedGames ?? [],
                         ),
                       ),
                     );
@@ -228,7 +248,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             ),
             ItemCommonGameRank(
                 gameData:
-                    AppDummyData.missionCumulativeGameData.take(5).toList()),
+                viewModel.gameStats?.topPlayedGames.take(5).toList() ?? []),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:jamesboard/datasource/api/ArchiveService.dart';
 import 'package:jamesboard/main.dart';
+import 'package:jamesboard/util/DioProviderUtil.dart';
 
 import '../datasource/model/request/ArchiveEditRequest.dart';
 import '../datasource/model/response/ArchiveDetailResponse.dart';
@@ -12,15 +13,7 @@ class ArchiveRepository {
   ArchiveRepository._(this._service);
 
   factory ArchiveRepository.create() {
-    final dio = Dio(BaseOptions(
-      baseUrl: 'https://j12d205.p.ssafy.io/',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer $accessToken' // 여기에 accessToken을 넣으면 될 듯
-      },
-    ));
-
-    final service = ArchiveService(dio);
+    final service = ArchiveService(DioProviderUtil.dio);
     return ArchiveRepository._(service);
   }
 

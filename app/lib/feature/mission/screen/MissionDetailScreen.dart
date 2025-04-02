@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/HashTagMissionDetail.dart';
 import 'package:jamesboard/feature/mission/widget/ProfileMissionDetail.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -11,24 +14,12 @@ import '../../../widget/appbar/DefaultCommonAppBar.dart';
 
 class MissionDetailScreen extends StatefulWidget {
   final String title;
-  final String profileImageUrl;
-  final String userName;
-  final List<String> missionImageUrls;
-  final String missionDescription;
-  final String gameName;
-  final int playCount;
-  final int gamePlayTime;
+  final int archiveId;
 
   const MissionDetailScreen({
     super.key,
     required this.title,
-    required this.missionImageUrls,
-    required this.userName,
-    required this.profileImageUrl,
-    required this.missionDescription,
-    required this.gameName,
-    required this.playCount,
-    required this.gamePlayTime,
+    required this.archiveId,
   });
 
   @override
@@ -38,24 +29,44 @@ class MissionDetailScreen extends StatefulWidget {
 class _MissionDetailScreenState extends State<MissionDetailScreen> {
   final PageController _pageController = PageController();
 
-  String _getFormattedPlayTime(int averagePlayTime, int playCount) {
-    int totalMinutes = averagePlayTime * playCount;
-    int hours = totalMinutes ~/ 60;
-    int minutes = totalMinutes % 60;
-
-    if (hours > 0) {
-      if (minutes > 0) {
-        return '$hours시간 $minutes분';
-      } else {
-        return '$hours시간';
-      }
-    } else {
-      return '$minutes분';
-    }
+  @override
+  void initState() {
+    super.initState();
+    context.read<MissionViewModel>().getArchiveById(widget.archiveId);
+    context.read<MissionViewModel>().loadLoginUserId();
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MissionViewModel>();
+
+    if (viewModel.isLoading) {
+      return const Scaffold(
+        backgroundColor: mainBlack,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (viewModel.hasError ||
+        viewModel.archiveDetailResponse == null ||
+        viewModel.loginUserId == null) {
+      return const Scaffold(
+        backgroundColor: mainBlack,
+        body: Center(
+          child: Text(
+            '데이터를 불러오지 못했습니다.',
+            style: TextStyle(
+              color: mainWhite,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final archiveDetailResponse = viewModel.archiveDetailResponse!;
+
     return Scaffold(
       backgroundColor: mainBlack,
       appBar: DefaultCommonAppBar(
@@ -67,7 +78,11 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ProfileMissionDetail(
-                imageUrl: widget.profileImageUrl, userName: widget.userName),
+              imageUrl: archiveDetailResponse.userProfile,
+              userName: archiveDetailResponse.userNickName,
+              archiveUserId: archiveDetailResponse.userId,
+              loginUserId: viewModel.loginUserId!,
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -77,10 +92,11 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
             aspectRatio: 1, // 1:1 비율
             child: PageView.builder(
               controller: _pageController,
-              itemCount: widget.missionImageUrls.length,
+              itemCount: archiveDetailResponse.archiveImageList.length,
               itemBuilder: (context, index) {
-                return Image.asset(
-                  widget.missionImageUrls[index], // 또는 Image.network 가능
+                return Image.network(
+                  archiveDetailResponse
+                      .archiveImageList[index], // 또는 Image.network 가능
                   fit: BoxFit.cover,
                 );
               },
@@ -90,12 +106,12 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
           const SizedBox(height: 12),
 
           // 인디케이터
-          if (widget.missionImageUrls.length > 1)
+          if (archiveDetailResponse.archiveImageList.length > 1)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: SmoothPageIndicator(
                 controller: _pageController,
-                count: widget.missionImageUrls.length,
+                count: archiveDetailResponse.archiveImageList.length,
                 effect: ScaleEffect(
                   activeDotColor: mainRed,
                   dotColor: mainGrey,
@@ -115,7 +131,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget.userName} ${widget.missionDescription}',
+                  '${archiveDetailResponse.userNickName} ${archiveDetailResponse.archiveContent}',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: FontString.pretendardMedium,
@@ -128,14 +144,12 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                 // 해시태그
                 Row(
                   children: [
-                    HashTagMissionDetail(info: widget.gameName),
+                    HashTagMissionDetail(info: archiveDetailResponse.gameTitle),
                     const SizedBox(
                       width: 8,
                     ),
                     HashTagMissionDetail(
-                      info: _getFormattedPlayTime(
-                          widget.gamePlayTime, widget.playCount),
-                    )
+                        info: '${archiveDetailResponse.archiveGamePlayCount}판')
                   ],
                 )
               ],

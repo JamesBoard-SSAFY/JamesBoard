@@ -9,7 +9,7 @@ import '../viewmodel/CategoryGameViewModel.dart';
 class CardHomeReview extends StatefulWidget {
   final String title;
   final List<Map<String, String>> images;
-  final Function(String) onImageTap;
+  final Function(int) onImageTap;
   final Map<String, dynamic> queryParameters;
 
   const CardHomeReview({
@@ -71,8 +71,7 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                   final id = games[index].gameId;
                   return Container(
                     child: GestureDetector(
-                      onTap: () =>
-                          widget.onImageTap(widget.images[index]['id']!),
+                      onTap: () => widget.onImageTap(id),
                       child: Container(
                         width: itemWidth * 1.2,
                         child: Row(

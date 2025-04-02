@@ -9,9 +9,16 @@ import 'package:jamesboard/theme/Colors.dart';
 class ProfileMissionDetail extends StatelessWidget {
   final String imageUrl;
   final String userName;
+  final int archiveUserId;
+  final int loginUserId;
 
-  const ProfileMissionDetail(
-      {super.key, required this.imageUrl, required this.userName});
+  const ProfileMissionDetail({
+    super.key,
+    required this.imageUrl,
+    required this.userName,
+    required this.archiveUserId,
+    required this.loginUserId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +46,16 @@ class ProfileMissionDetail extends StatelessWidget {
         ),
 
         // 더보기
-        GestureDetector(
-          onTap: () => {_onMorePressed(context)},
-          child: SvgPicture.asset(
-            IconPath.more,
-            width: 24,
-            height: 24,
-            color: mainWhite,
+        if (loginUserId == archiveUserId)
+          GestureDetector(
+            onTap: () => {_onMorePressed(context)},
+            child: SvgPicture.asset(
+              IconPath.more,
+              width: 24,
+              height: 24,
+              color: mainWhite,
+            ),
           ),
-        ),
       ],
     );
   }

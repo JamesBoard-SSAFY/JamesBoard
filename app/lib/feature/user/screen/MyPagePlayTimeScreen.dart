@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/datasource/model/response/MyPage/TopPlayedGame.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
@@ -6,7 +7,7 @@ import '../../../widget/item/ItemCommonGameRank.dart';
 
 class MyPagePlayTimeScreen extends StatefulWidget {
   final String title;
-  final List<Map<String, String>> gameData;
+  final List<TopPlayedGame> gameData;
 
   const MyPagePlayTimeScreen({
     super.key,

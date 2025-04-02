@@ -30,6 +30,9 @@ dependencies:
   # 갤러리 이미지
   image_picker: ^1.1.2
 
+  # 이미지 압축, 변환, 크기 조절, 회전
+  flutter_image_compress: ^2.0.4
+
   # 이미지 자르기
   image_cropper: ^9.0.0
 
