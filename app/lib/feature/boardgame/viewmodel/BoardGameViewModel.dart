@@ -114,4 +114,9 @@ class BoardGameViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void clearSearchResults() {
+    _games = [];
+    notifyListeners();
+  }
 }
