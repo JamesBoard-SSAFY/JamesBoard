@@ -29,11 +29,17 @@ class MissionDetailScreen extends StatefulWidget {
 class _MissionDetailScreenState extends State<MissionDetailScreen> {
   final PageController _pageController = PageController();
 
+  Future<void> _initDetailData() async {
+    final vm = context.read<MissionViewModel>();
+
+    await vm.loadLoginUserId(); // loginUserId 먼저 로딩
+    await vm.getArchiveById(widget.archiveId); // 그 다음 아카이브 상세
+  }
+
   @override
   void initState() {
     super.initState();
-    context.read<MissionViewModel>().getArchiveById(widget.archiveId);
-    context.read<MissionViewModel>().loadLoginUserId();
+    _initDetailData();
   }
 
   @override
@@ -96,7 +102,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
             aspectRatio: 1, // 1:1 비율
             child: PageView.builder(
               controller: _pageController,
-              itemCount: archiveDetailResponse.archiveImageList.length,
+              itemCount: archiveDetailResponse.archiveImageList.length ?? 0,
               itemBuilder: (context, index) {
                 return Image.network(
                   archiveDetailResponse
