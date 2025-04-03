@@ -23,6 +23,8 @@ abstract class BoardGameService {
     @Query("minPlayers") int? minPlayers,
     @Query("boardGameName") String? boardGameName,
     @Query("category") String? category,
+    @Query("minPlayTime") int? minPlayTime,
+    @Query("maxPlayTime") int? maxPlayTime,
   });
 
   @GET("api/games/top")
