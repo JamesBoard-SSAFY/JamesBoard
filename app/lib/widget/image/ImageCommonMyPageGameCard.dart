@@ -16,12 +16,16 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      shrinkWrap: true,
+      // 부모 위젯의 크기를 따라가도록 설정
+      physics: NeverScrollableScrollPhysics(),
+      // 스크롤 중첩 방지
       padding: const EdgeInsets.all(8.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3x3 그리드
-        crossAxisSpacing: 8.0, // 좌우 간격
-        mainAxisSpacing: 8.0, // 상하 간격
-        childAspectRatio: 1, // 정사각형 비율
+        crossAxisCount: 3,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        childAspectRatio: 1,
       ),
       itemCount: images.length,
       itemBuilder: (context, index) {
@@ -32,23 +36,15 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    MissionRecordScreen(id: item.gameId),
+                builder: (context) => MissionRecordScreen(id: item.gameId),
               ),
             );
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: item.gameImage != null
-                ? Image.network(
-              item.gameImage!,
-              fit: BoxFit.cover,
-            )
-                : Image.asset(
-              'assets/image/sample.png', // gameImage가 null일 때 에셋 이미지 사용
-              fit: BoxFit.cover,
-            ),
-
+                ? Image.network(item.gameImage!, fit: BoxFit.cover)
+                : Image.asset('assets/image/sample.png', fit: BoxFit.cover),
           ),
         );
       },
