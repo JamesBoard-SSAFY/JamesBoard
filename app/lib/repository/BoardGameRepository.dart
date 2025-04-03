@@ -29,6 +29,8 @@ class BoardGameRepository {
         minPlayers: queryParameters['minPlayers'] ?? null,
         category: queryParameters['category'] ?? null,
         boardGameName: queryParameters['boardGameName'] ?? null,
+        minPlayTime: queryParameters['minPlayTime'] ?? null,
+        maxPlayTime: queryParameters['maxPlayTime'] ?? null,
       );
 
   Future<List<BoardGameTopResponse>> getTopGames(
