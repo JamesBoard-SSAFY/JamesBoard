@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserActivityRepository extends JpaRepository<UserActivity, Long> {
+public interface
+UserActivityRepository extends JpaRepository<UserActivity, Long> {
     Optional<UserActivity> findByUserAndGame(User user, Game game);
 
     @Query("SELECT DISTINCT ua.game FROM UserActivity ua WHERE ua.user.userId = :userId " +

@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
             return games.stream()
                     .map(game -> UserGameResponseDto.builder()
                             .gameId(game.getGameId())
-                            .gameImage(game.getSmallThumbnail())
+                            .gameImage(game.getBigThumbnail())
                             .build())
                     .collect(Collectors.toList());
         } catch (CustomException e) {
