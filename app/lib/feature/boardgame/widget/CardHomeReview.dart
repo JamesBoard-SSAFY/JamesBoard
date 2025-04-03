@@ -67,7 +67,7 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                     mainAxisSpacing: 8),
                 itemCount: widget.images.length,
                 itemBuilder: (context, index) {
-                  final imageUrl = games[index].gameImage;
+                  final imageUrl = games[index].bigThumbnail;
                   final id = games[index].gameId;
                   return Container(
                     child: GestureDetector(

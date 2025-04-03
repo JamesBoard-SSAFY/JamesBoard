@@ -41,6 +41,7 @@ class BoardGameViewModel extends ChangeNotifier {
 
     try {
       _recommendedGames = await _repository.getRecommendedGames(limit: limit);
+      _recommendedGames = _recommendedGames.sublist(0, 9);
     } catch (e) {
       _errorMessage = 'Failed to load recommended games: $e';
     } finally {
