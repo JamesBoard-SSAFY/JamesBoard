@@ -13,7 +13,6 @@ class ListHomeHorizontalGame extends StatefulWidget {
   final String title;
   final String updateCategory;
   final Function(String, String) updateFilter;
-  final Map<String, String> selectedFilters;
   final Map<String, dynamic> queryParameters;
 
   const ListHomeHorizontalGame({
@@ -21,7 +20,6 @@ class ListHomeHorizontalGame extends StatefulWidget {
     required this.title,
     required this.updateCategory,
     required this.updateFilter,
-    required this.selectedFilters,
     required this.queryParameters,
   }) : super(key: key);
 
@@ -65,10 +63,10 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ListBoardGameCategory(
+                          queryParameters: widget.queryParameters,
                           title: widget.title,
                           updateCategory: widget.updateCategory,
                           updateFilter: widget.updateFilter,
-                          selectedFilters: widget.selectedFilters,
                         ),
                       ),
                     );
