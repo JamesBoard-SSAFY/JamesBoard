@@ -28,6 +28,11 @@ class _MyPageScreenState extends State<MyPageScreen>
   @override
   void initState() {
     super.initState();
+    Future.microtask(() {
+      final viewModel = context.read<MyPageViewModel>();
+      viewModel.getAllPlayedGames();
+      viewModel.getTopPlayedGame();
+    });
     _tabController = TabController(length: 2, vsync: this); // 두 개의 탭 설정
   }
 
@@ -162,7 +167,7 @@ class _MyPageScreenState extends State<MyPageScreen>
       // 여기에 원하는 동작 추가
     }
 
-    return Expanded(
+    return SingleChildScrollView(
       child: ImageCommonMyPageGameCard(
         images: viewModel.playedGames ?? [],
         onTap: handleImageTap,
