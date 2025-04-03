@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
@@ -30,8 +31,18 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
   void initState() {
     super.initState();
 
-    viewModel = Provider.of<BoardGameViewModel>(context, listen: false);
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+
+    viewModel =
+        categoryViewModel.getCategoryViewModel(widget.gameId.toString());
     viewModel.getBoardGameDetail(widget.gameId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    viewModel.dispose();
   }
 
   @override
