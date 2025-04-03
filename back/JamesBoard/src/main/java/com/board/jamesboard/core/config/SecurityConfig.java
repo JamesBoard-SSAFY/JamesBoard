@@ -66,7 +66,7 @@ public class SecurityConfig {
                     .requestMatchers("/login/oauth2/error").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/error").permitAll()
-                    // Swagger UI - 더 정확한 경로 지정
+                    // Swagger UI
                     .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/swagger-resources/**").permitAll()
                     .requestMatchers("/v3/api-docs", "/v3/api-docs/**").permitAll() // 정확한 경로 추가
