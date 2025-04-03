@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/FontString.dart';
+import '../../../repository/BoardGameRepository.dart';
 
 class CardHomeSuggestion extends StatefulWidget {
   final List<Map<String, String>> images;
@@ -18,6 +22,7 @@ class CardHomeSuggestion extends StatefulWidget {
 class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
   late PageController _pageController;
   late int _currentPage;
+  late BoardGameViewModel boardGameViewModel;
   Timer? _timer;
 
   @override
@@ -26,6 +31,10 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
     _pageController = PageController(initialPage: 0);
     _currentPage = 0;
     _startAutoScroll();
+
+    boardGameViewModel =
+        Provider.of<BoardGameViewModel>(context, listen: false);
+    boardGameViewModel.getRecommendedGames();
   }
 
   void _startAutoScroll() {
@@ -48,82 +57,120 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double width = constraints.maxWidth;
-        double height = width * 1.1;
+    return ChangeNotifierProvider(
+      create: (_) => BoardGameViewModel(BoardGameRepository.create())
+        ..getRecommendedGames(limit: 10),
+      child: Consumer<BoardGameViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.recommendedGames.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: mainGold,
+              ),
+            );
+          }
 
-        return SizedBox(
-          height: height,
-          child: Stack(
-            children: [
-              PageView.builder(
-                controller: _pageController,
-                itemCount: null, // 무한 스크롤 효과
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index % widget.images.length;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final image = widget.images[index % widget.images.length];
-                  final imageUrl = image['url']!;
-                  final id = image['id']!;
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              double width = constraints.maxWidth;
+              double height = width * 1.1;
 
-                  return GestureDetector(
-                    onTap: () => {},
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 32),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4.0),
-                        child: Image.network(
-                          imageUrl,
-                          width: width,
-                          height: height,
-                          fit: BoxFit.cover,
+              return SizedBox(
+                height: height,
+                child: Stack(
+                  children: [
+                    PageView.builder(
+                      controller: _pageController,
+                      itemCount: null, // 무한 스크롤 효과
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage =
+                              index % viewModel.recommendedGames.length;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        final game = viewModel.recommendedGames[
+                            index % viewModel.recommendedGames.length];
+                        final imageUrl = game.gameImage;
+                        final id = game.gameId;
+
+                        return GestureDetector(
+                          onTap: () {
+                            _timer?.cancel();
+                            widget.onImageTap(id);
+                            _startAutoScroll();
+                          },
+                          onTapDown: (_) {
+                            _timer?.cancel();
+                          },
+                          onTapUp: (_) {
+                            _startAutoScroll();
+                          },
+                          onTapCancel: () {
+                            _startAutoScroll();
+                          },
+                          onLongPress: () {
+                            _timer?.cancel();
+                          },
+                          onLongPressUp: () {
+                            _startAutoScroll();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4.0),
+                              child: Image.network(
+                                imageUrl,
+                                width: width,
+                                height: height,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Positioned(
+                      bottom: 5,
+                      right: 40,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${_currentPage + 1}',
+                                style: TextStyle(
+                                  color: mainGold,
+                                  fontSize: 16,
+                                  fontFamily: FontString.pretendardBold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' / ${viewModel.recommendedGames.length}',
+                                style: TextStyle(
+                                  color: mainWhite,
+                                  fontSize: 16,
+                                  fontFamily: FontString.pretendardBold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-              Positioned(
-                bottom: 5,
-                right: 40,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${_currentPage + 1}',
-                          style: TextStyle(
-                            color: mainGold,
-                            fontSize: 16,
-                            fontFamily: FontString.pretendardBold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' / ${widget.images.length}',
-                          style: TextStyle(
-                            color: mainWhite,
-                            fontSize: 16,
-                            fontFamily: FontString.pretendardBold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

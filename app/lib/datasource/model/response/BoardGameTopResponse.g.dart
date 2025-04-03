@@ -10,12 +10,12 @@ BoardGameTopResponse _$BoardGameTopResponseFromJson(
         Map<String, dynamic> json) =>
     BoardGameTopResponse(
       gameId: (json['gameId'] as num).toInt(),
-      gameImage: json['gameImage'] as String,
+      bigThumbnail: json['bigThumbnail'] as String,
     );
 
 Map<String, dynamic> _$BoardGameTopResponseToJson(
         BoardGameTopResponse instance) =>
     <String, dynamic>{
       'gameId': instance.gameId,
-      'gameImage': instance.gameImage,
+      'bigThumbnail': instance.bigThumbnail,
     };
