@@ -22,10 +22,10 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
   @override
   void initState() {
     super.initState();
-    // 초기값이 있으면 해당 값의 인덱스를 찾아 selectedIndex에 설정
-    selectedIndex = widget.initialValue != null
-        ? widget.items.indexOf(widget.initialValue!)
-        : null;
+    // // 초기값이 있으면 해당 값의 인덱스를 찾아 selectedIndex에 설정
+    // selectedIndex = widget.initialValue != null
+    //     ? widget.items.indexOf(widget.initialValue!)
+    //     : null;
   }
 
   @override

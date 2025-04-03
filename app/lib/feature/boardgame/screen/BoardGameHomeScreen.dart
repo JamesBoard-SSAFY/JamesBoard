@@ -56,7 +56,6 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
           title: title,
           updateFilter: updateFilter,
           updateCategory: AppString.genre,
-          selectedFilters: AppDummyData.selectedFilters,
         );
       }),
       ListTopTenGame(
@@ -73,7 +72,6 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
           title: numTitle,
           updateFilter: updateFilter,
           updateCategory: AppString.numOfPerson,
-          selectedFilters: AppDummyData.selectedFilters,
         );
       }),
       ListBGGRankGame(
@@ -90,7 +88,6 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
           title: title,
           updateFilter: updateFilter,
           updateCategory: AppString.level,
-          selectedFilters: AppDummyData.selectedFilters,
         );
       }),
       SizedBox(height: 20),

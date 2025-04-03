@@ -153,33 +153,6 @@ class AppDummyData {
     ),
   ];
 
-  static final Map<String, String> filterDisplayMap = {
-    // 인원 변환
-    'Solo: 1인': '1인',
-    'Duo: 2인': '2인',
-    'Team: 3~4인': '3~4인',
-    'Assemble: 5인 이상': '5인 이상',
-
-    // 평균 게임 시간 변환
-    '초신속 임무 (0 ~ 30분)': '0 ~ 30분',
-    '정밀 작전 (60 ~ 120분)': '60 ~ 120분',
-    '장기 작전 (120 ~ 240분)': '120 ~ 240분',
-    '마스터 작전 (240분 이상)': '240분 이상',
-  };
-
-  static final Map<String, List<String>> filterOptions = {
-    '장르': ['파티', '전략', '경제', '모험', '롤플레잉', '가족', '추리', '전쟁', '추상전략', '상관없음'],
-    '인원': ['Solo: 1인', 'Duo: 2인', 'Team: 3~4인', 'Assemble: 5인 이상', '상관없음'],
-    '난이도': ['초급', '중급', '고급', '상관없음'],
-    '평균 게임 시간': [
-      '초신속 임무 (0 ~ 30분)',
-      '정밀 작전 (60 ~ 120분)',
-      '장기 작전 (120 ~ 240분)',
-      '마스터 작전 (240분 이상)',
-      '상관없음'
-    ],
-  };
-
   // 이미지 URL 리스트
   static final List<String> imageUrls = [
     'https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg',
@@ -587,4 +560,131 @@ class AppDummyData {
           '클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다. 클루에 대한 설명입니다.클루에 대한 설명입니다.클루에 대한 ...',
     },
   ];
+
+  static List<String> filters = [
+    "category",
+    "minPlayers",
+    "difficulty",
+    "playTime",
+  ];
+
+  static Map<String, String> filterButtonMap = {
+    "category": "장르",
+    "minPlayers": "인원",
+    "difficulty": "난이도",
+    "playTime": "평균 게임 시간"
+  };
+
+  static Map<String, dynamic> filterQueryKeyMap = {
+    "장르": "category",
+    "인원": "minPlayers",
+    "난이도": "difficulty",
+    "평균 게임 시간": "playTime"
+  };
+
+  static final Map<String, List<String>> filterOptions = {
+    'category': [
+      '파티',
+      '전략',
+      '경제',
+      '모험',
+      '롤플레잉',
+      '가족',
+      '추리',
+      '전쟁',
+      '추상전략',
+      '상관없음',
+    ],
+    "minPlayers": [
+      "Solo: 1인",
+      "Duo: 2인",
+      "Team: 3~4인",
+      "Assemble: 5인 이상",
+      '상관없음',
+    ],
+    "difficulty": [
+      "본부, 초급 단계 요청합니다.",
+      "본부, 중급 단계 요청합니다.",
+      "본부, 고급 단계 요청합니다.",
+      "본부, 어느 단계든 상관없습니다.",
+    ],
+    "playTime": [
+      "초신속 임무 (0 ~ 30분)",
+      "정밀 작전 (60 ~ 120분)",
+      "장기 작전 (120 ~ 240분)",
+      "마스터 작전 (240분 이상)",
+      "상관없음"
+    ],
+  };
+
+  static final Map<String, String> filterDisplayMap = {
+    'Solo: 1인': '1인',
+    'Duo: 2인': '2인',
+    'Team: 3~4인': '3~4인',
+    'Assemble: 5인 이상': '5인 이상',
+    '초신속 임무 (0 ~ 30분)': '0 ~ 30분',
+    '정밀 작전 (60 ~ 120분)': '60 ~ 120분',
+    '장기 작전 (120 ~ 240분)': '120 ~ 240분',
+    '마스터 작전 (240분 이상)': '240분 이상',
+    '본부, 초급 단계 요청합니다.': '초급',
+    '본부, 중급 단계 요청합니다.': '중급',
+    '본부, 고급 단계 요청합니다.': '고급',
+    '본부, 어느 단계든 상관없습니다.': '상관없음',
+    '파티': '파티',
+    '전략': '전략',
+    '경제': '경제',
+    '모험': '모험',
+    '롤플레잉': '롤플레잉',
+    '가족': '가족',
+    '추리': '추리',
+    '전쟁': '전쟁',
+    '추상전략': '추상전략',
+    '상관없음': '상관없음',
+  };
+
+  static const Map<String, String> categoryMap = {
+    '파티': '파티',
+    '전략': '전략',
+    '경제': '경제',
+    '모험': '모험',
+    '롤플레잉': '롤플레잉',
+    '가족': '가족',
+    '추리': '추리',
+    '전쟁': '전쟁',
+    '추상전략': '추상전략',
+    '상관없음': '상관없음',
+  };
+
+  static const Map<String, int> difficultyMap = {
+    "본부, 초급 단계 요청합니다.": 0,
+    "본부, 중급 단계 요청합니다.": 1,
+    "본부, 고급 단계 요청합니다.": 2,
+  };
+
+  static const Map<int, String> difficultyStrMap = {
+    0: "본부, 초급 단계 요청합니다.",
+    1: "본부, 중급 단계 요청합니다.",
+    2: "본부, 고급 단계 요청합니다.",
+  };
+
+  static const Map<String, int> minPlayersMap = {
+    "Solo: 1인": 1,
+    "Duo: 2인": 2,
+    "Team: 3~4인": 3,
+    "Assemble: 5인 이상": 5,
+  };
+
+  static const Map<int, String> minPlayerStrMap = {
+    1: "Solo: 1인",
+    2: "Duo: 2인",
+    3: "Team: 3~4인",
+    5: "Assemble: 5인 이상",
+  };
+
+  static const Map<String, List<int>> playTimeMap = {
+    "초신속 임무 (0 ~ 30분)": [0, 30],
+    "정밀 작전 (60 ~ 120분)": [60, 120],
+    "장기 작전 (120 ~ 240분)": [120, 240],
+    "마스터 작전 (240분 이상)": [240, 9999],
+  };
 }
