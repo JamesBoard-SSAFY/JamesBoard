@@ -43,7 +43,10 @@ class _TextFieldUserNicknameState extends State<TextFieldUserNickname> {
     // 허용되지 않은 문자 제거
     String filteredText = text.replaceAll(RegExp(r'[^a-zA-Z0-9ㄱ-ㅎ가-힣!?.,_@#&$%-]'), '');
 
-    if (filteredText.length < 2) {
+    if (text.contains(RegExp(r'\s'))) {
+      _errorText = "닉네임에는 공백을 포함할 수 없습니다.";
+      isValid = false;
+    } else if (filteredText.length < 2) {
       _errorText = "닉네임은 최소 2자 이상 입력해야 합니다.";
       isValid = false;
     } else if (text != filteredText) {

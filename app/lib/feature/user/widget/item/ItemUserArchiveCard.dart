@@ -4,6 +4,7 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import '../../../../datasource/model/response/MyPage/MyPageArchiveResponse.dart';
 import '../../../../util/CommonUtils.dart';
+import '../../../mission/screen/MissionDetailScreen.dart';
 
 class ItemUserArchiveCard extends StatelessWidget {
   final List<MyPageArchiveResponse> missionDataList;
@@ -55,10 +56,9 @@ class ItemUserArchiveCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 34),
               child: Column(
                 children: items.map((missionData) {
-                  String day =
-                  CommonUtils.extractDay(missionData.createdAt);
-                  String dayOfWeek = CommonUtils.extractDayOfWeek(
-                      missionData.createdAt);
+                  String day = CommonUtils.extractDay(missionData.createdAt);
+                  String dayOfWeek =
+                      CommonUtils.extractDayOfWeek(missionData.createdAt);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
@@ -91,58 +91,73 @@ class ItemUserArchiveCard extends StatelessWidget {
                           ),
                         ),
                         // 카드 위젯
-                        IntrinsicHeight(
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(color: mainGrey, width: 1),
-                            ),
-                            color: Colors.transparent,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MissionDetailScreen(
+                                    title: "임무 상세",
+                                    archiveId: missionData.archiveId,
                                   ),
-                                  child: Image.network(
-                                    missionData.archiveImage,
-                                    height: 300,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
+                                ));
+                          },
+                          child: IntrinsicHeight(
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                side: BorderSide(color: mainGrey, width: 1),
+                              ),
+                              color: Colors.transparent,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16),
+                                    ),
+                                    child: Image.network(
+                                      missionData.archiveImage,
+                                      height: 300,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 16, bottom: 12),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        missionData.archiveContent,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: mainWhite,
-                                          fontFamily:
-                                          FontString.pretendardMedium,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 16,
+                                        bottom: 12),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          missionData.archiveContent,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: mainWhite,
+                                            fontFamily:
+                                                FontString.pretendardMedium,
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 16),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          children: [
-                                            ButtonCommonGameTag(
-                                                text:
-                                                '${missionData.archiveGamePlayCount}판'),
-                                          ],
+                                        Container(
+                                          margin: EdgeInsets.only(top: 16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              ButtonCommonGameTag(
+                                                  text:
+                                                      '${missionData.archiveGamePlayCount}판'),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

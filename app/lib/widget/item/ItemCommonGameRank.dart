@@ -4,6 +4,7 @@ import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
 import '../../datasource/model/response/MyPage/TopPlayedGame.dart';
+import '../../feature/boardgame/screen/BoardGameDetailScreen.dart';
 
 class ItemCommonGameRank extends StatelessWidget {
   final List<TopPlayedGame> gameData;
@@ -19,6 +20,14 @@ class ItemCommonGameRank extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BoardGameDetailScreen(
+                  gameId: game.gameId,
+                ),
+              ),
+            );
             print("게임 ID: ${game.gameId} 클릭됨"); // 클릭 이벤트
           },
           child: Container(
@@ -50,7 +59,6 @@ class ItemCommonGameRank extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis, // 초과 시 ... 표시
                   ),
-
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

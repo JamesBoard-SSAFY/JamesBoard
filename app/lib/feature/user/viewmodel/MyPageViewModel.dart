@@ -146,7 +146,8 @@ class MyPageViewModel extends ChangeNotifier {
     if (userId == null) return;
     try {
       isLoading = true;
-      notifyListeners();
+      Future.delayed(Duration.zero, () => notifyListeners()); // 빌드 이후 UI 업데이트
+
       playedGames = await _myPageRepository.getAllPlayedGames(userId!);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
@@ -159,7 +160,7 @@ class MyPageViewModel extends ChangeNotifier {
       logger.e("flutter - getAllPlayedGames: $e");
     } finally {
       isLoading = false;
-      notifyListeners();
+      Future.delayed(Duration.zero, () => notifyListeners()); // 빌드 이후 UI 업데이트
     }
   }
 
@@ -167,7 +168,8 @@ class MyPageViewModel extends ChangeNotifier {
     if (userId == null) return;
     try {
       isLoading = true;
-      notifyListeners();
+      Future.delayed(Duration.zero, () => notifyListeners()); // 빌드 이후 UI 업데이트
+
       gameStats = await _myPageRepository.getTopPlayedGame(userId!);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
@@ -180,7 +182,7 @@ class MyPageViewModel extends ChangeNotifier {
       logger.e("flutter - getTopPlayedGame: $e");
     } finally {
       isLoading = false;
-      notifyListeners();
+      Future.delayed(Duration.zero, () => notifyListeners()); // 빌드 이후 UI 업데이트
     }
   }
 

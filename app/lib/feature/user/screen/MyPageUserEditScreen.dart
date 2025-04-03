@@ -35,6 +35,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
   @override
   void initState() {
     super.initState();
+    _nickname = widget.userName;
     _userImage = widget.userImg; // 초기 프로필 이미지 설정
   }
 
@@ -54,10 +55,12 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
   }
 
   void _validateForm() {
-    // 닉네임이 유효하고, 이미지가 기존 값에서 변경되었을 경우만 활성화
     bool isImageChanged = _userImage != widget.userImg;
+    bool isFormValid =
+        _isNicknameValid || isImageChanged; // 닉네임이 유효하거나 이미지 변경되었을 때만 true
+
     setState(() {
-      _isNicknameValid = _isNicknameValid && isImageChanged;
+      _isNicknameValid = isFormValid;
     });
   }
 
@@ -118,8 +121,8 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: (_isNicknameValid &&
-                          _userImage != widget.userImg) // 버튼 활성화 조건 추가
+                  onPressed: (_isNicknameValid ||
+                          _userImage != widget.userImg)
                       ? () {
                           viewModel.editUserInfo(MyPageUserInfoRequest(
                               userName: _nickname, userProfile: _userImage));
@@ -130,6 +133,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                           Navigator.pop(context);
                         }
                       : null, // 유효하지 않으면 버튼 비활성화
+                  // 유효하지 않으면 버튼 비활성화
                   style: ElevatedButton.styleFrom(
                     backgroundColor: secondaryBlack,
                     shape: RoundedRectangleBorder(
