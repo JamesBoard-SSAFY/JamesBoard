@@ -43,4 +43,8 @@ public interface GameRepository extends JpaRepository<Game,Long>, GameRepository
     // 평균 평점으로 정렬하여 상위 게임 조회
     @Query(value = "SELECT * FROM game ORDER BY game_avg_rating DESC LIMIT :limit", nativeQuery = true)
     List<Game> findTopGamesByRating(@Param("limit") int limit);
+
+    @Query("SELECT AVG(ua.userActivityRating) FROM UserActivity ua WHERE ua.game = :game AND ua.userActivityRating IS NOT NULL")
+    Float findAverageRatingByGame(Game game);
+
 }

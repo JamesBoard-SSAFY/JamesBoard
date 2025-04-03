@@ -103,4 +103,9 @@ public class Game {
     // 추천된 게임
     @OneToMany(mappedBy = "recommendGame")
     private List<RecommendContent> recommendedContent = new ArrayList<>();
+
+    public void updateAverageRating(Float averageRating) {
+        this.gameAvgRating = averageRating;
+    }
+
 }
