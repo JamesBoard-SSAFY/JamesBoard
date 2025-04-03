@@ -1,5 +1,6 @@
 package com.board.jamesboard.domain.boardgame.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,8 +55,7 @@ public class BoardGameSearchServiceImpl implements BoardGameSearchService {
                                 .toList()
                 ));
 
-        // Dto 매핑
-        return gameWithCategory.stream()
+        List<BoardGameResponseDto> result = new java.util.ArrayList<>(gameWithCategory.stream()
                 .map(game -> new BoardGameResponseDto(
                         game.getGameId(),
                         game.getGameTitle(),
@@ -68,7 +68,9 @@ public class BoardGameSearchServiceImpl implements BoardGameSearchService {
                         game.getGamePlayTime(),
                         game.getGameDescription()
                 ))
-                .collect(Collectors.toList());
+                .toList());
 
+        Collections.shuffle(result);
+        return result;
     }
 }
