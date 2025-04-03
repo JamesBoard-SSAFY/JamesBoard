@@ -37,7 +37,7 @@ def setup_scheduler():
     # 하이브리드 추천 (3:30 AM)
     scheduler.add_job(
         generate_hybrid_recommendations_job,
-        CronTrigger(hour=3, minute=30),
+        CronTrigger(minute="*/20"),
         id='generate_hybrid_recommendations_job'
     )
     
@@ -110,7 +110,7 @@ def generate_hybrid_recommendations_job():
             return
             
         logger.info("Starting scheduled hybrid recommendation generation...")
-        success = recommendation_engine.generate_hybrid_recommendations()
+        success = recommendation_engine.generate_all_hybrid_recommendations()
         
         if success:
             logger.info("Scheduled hybrid recommendation generation completed successfully")
