@@ -120,10 +120,11 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
               ),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: (_isNicknameValid ||
-                          _userImage != widget.userImg)
-                      ? () {
+                child: ButtonCommonPrimaryBottom(
+                  text: '변경',
+                  disableWithOpacity: true,
+                  onPressed: (_isNicknameValid || _userImage != widget.userImg)
+                      ? () async {
                           viewModel.editUserInfo(MyPageUserInfoRequest(
                               userName: _nickname, userProfile: _userImage));
 
@@ -134,21 +135,6 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                         }
                       : null, // 유효하지 않으면 버튼 비활성화
                   // 유효하지 않으면 버튼 비활성화
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: secondaryBlack,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                  ),
-                  child: Text(
-                    '변경',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: FontString.pretendardSemiBold,
-                      color: mainWhite,
-                    ),
-                  ),
                 ),
               ),
             ],

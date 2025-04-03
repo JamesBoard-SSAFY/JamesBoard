@@ -35,7 +35,6 @@ class RecommendGameScreen extends StatelessWidget {
             ));
           }
           return ListView.builder(
-            padding: EdgeInsets.all(16),
             itemCount: viewModel.recommendedGames.length,
             itemBuilder: (context, index) {
               final game = viewModel.recommendedGames[index];
@@ -54,7 +53,7 @@ class RecommendGameScreen extends StatelessWidget {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 24, horizontal: 20),
+                        vertical: 16, horizontal: 20),
                     child: ItemRecommendBoardGameInfo(
                       gameId: game.gameId,
                       imageUrl: game.gameImage,

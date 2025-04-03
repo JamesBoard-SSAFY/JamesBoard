@@ -17,6 +17,7 @@ class SearchBarCommonTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 48,
       child: Row(
         children: [
           Expanded(
@@ -26,11 +27,16 @@ class SearchBarCommonTitle extends StatelessWidget {
               style: TextStyle(
                 fontFamily: FontString.pretendardMedium,
                 color: mainWhite, // 텍스트 색상 설정
+                fontSize: 16,
               ),
               decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
                   hintText: AppString.searchBarHint,
                   hintStyle: TextStyle(
-                      fontFamily: FontString.pretendardMedium, color: mainGrey),
+                    fontFamily: FontString.pretendardMedium,
+                    color: mainGrey,
+                    fontSize: 16,
+                  ),
                   filled: true,
                   fillColor: secondaryBlack,
                   border: OutlineInputBorder(
@@ -49,8 +55,8 @@ class SearchBarCommonTitle extends StatelessWidget {
               AppString.cancel,
               style: TextStyle(
                   color: mainWhite,
-                  fontSize: 18,
-                  fontFamily: FontString.pretendardSemiBold),
+                  fontSize: 16,
+                  fontFamily: FontString.pretendardMedium),
             ),
           ),
         ],

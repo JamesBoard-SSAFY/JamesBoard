@@ -64,9 +64,10 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
 
   // 데이터 로딩 함수
   Future<void> loadMissionRecord() async {
-    await viewModel.getMissionRecord(widget.id);  // id 전달
+    await viewModel.getMissionRecord(widget.id); // id 전달
     setState(() {
-      missionRecord = viewModel.missionRecord ?? missionRecord;  // missionRecord가 null이면 빈 값으로 대체
+      missionRecord = viewModel.missionRecord ??
+          missionRecord; // missionRecord가 null이면 빈 값으로 대체
       availableYears =
           CommonUtils.extractAvailableYears(missionRecord.archiveList);
       selectedYear = availableYears.isNotEmpty ? availableYears.first : "2025년";
@@ -115,23 +116,22 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                     ],
                   ),
                   Positioned(
-                    top: 15,
-                    left: 20,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: secondaryBlack,
+                    top: 12,
+                    left: 12,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: secondaryBlack,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.chevron_left,
+                          color: mainWhite,
+                          size: 30,
                         ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                              'assets/image/icon_arrow_left.svg',
-                              width: 12,
-                              height: 12),
-                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ),
@@ -179,7 +179,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
 
               // 달 선택
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -189,12 +189,18 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                       bool isSelected = selectedIndex == index;
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextButton(
                           onPressed: () => updateMonth(index),
                           style: ButtonStyle(
+                            // padding:
+                            //     MaterialStateProperty.all(EdgeInsets.all(10)),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8)),
+                            minimumSize: MaterialStateProperty.all(Size(0, 0)),
                             backgroundColor:
-                            MaterialStateProperty.all(mainBlack),
+                                MaterialStateProperty.all(mainBlack),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -226,24 +232,24 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 8, 20),
                 child: filteredArchiveList.isEmpty
                     ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '등록된 임무 보고가 없습니다.',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: mainWhite,
-                        fontFamily: FontString.pretendardSemiBold,
-                      ),
-                    ),
-                  ],
-                )
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '등록된 임무 보고가 없습니다.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: mainWhite,
+                              fontFamily: FontString.pretendardSemiBold,
+                            ),
+                          ),
+                        ],
+                      )
                     : Column(
-                  children: [
-                    ItemUserArchiveCard(
-                        missionDataList: filteredArchiveList),
-                  ],
-                ),
+                        children: [
+                          ItemUserArchiveCard(
+                              missionDataList: filteredArchiveList),
+                        ],
+                      ),
               ),
             ],
           ),

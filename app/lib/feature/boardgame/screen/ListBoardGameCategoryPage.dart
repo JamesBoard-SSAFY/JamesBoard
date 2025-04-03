@@ -190,11 +190,12 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                     child: Text(
                       AppString.clear,
                       style: TextStyle(
-                        color: mainWhite,
-                        fontSize: 16,
-                        fontFamily: FontString.pretendardSemiBold,
-                        decoration: TextDecoration.underline,
-                      ),
+                          color: mainGrey,
+                          fontSize: 16,
+                          fontFamily: FontString.pretendardSemiBold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: mainGrey,
+                          decorationThickness: 1),
                     ),
                   ),
                 ],

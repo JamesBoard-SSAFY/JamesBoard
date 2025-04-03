@@ -179,7 +179,7 @@ class _MyPageScreenState extends State<MyPageScreen>
   Widget _buildTabContentMissionStatistics() {
     final viewModel = Provider.of<MyPageViewModel>(context);
     viewModel.getTopPlayedGame();
-    
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -203,11 +203,12 @@ class _MyPageScreenState extends State<MyPageScreen>
               ],
             ),
             ChartUserGenrePercent(
-              chartData: viewModel.gameStats ?? MyPageGameStatsResponse(
-                totalPlayed: 0,
-                genreStats: [],
-                topPlayedGames: [],
-              ),
+              chartData: viewModel.gameStats ??
+                  MyPageGameStatsResponse(
+                    totalPlayed: 0,
+                    genreStats: [],
+                    topPlayedGames: [],
+                  ),
             ),
             ItemUserGenrePercentInfo(
                 genres: viewModel.gameStats?.genreStats ?? []),
@@ -215,6 +216,7 @@ class _MyPageScreenState extends State<MyPageScreen>
               height: 32,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -240,7 +242,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                   child: Text(
                     "더보기",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: mainGrey,
                       fontFamily: 'PretendardBold',
                     ),
@@ -253,7 +255,7 @@ class _MyPageScreenState extends State<MyPageScreen>
             ),
             ItemCommonGameRank(
                 gameData:
-                viewModel.gameStats?.topPlayedGames.take(5).toList() ?? []),
+                    viewModel.gameStats?.topPlayedGames.take(5).toList() ?? []),
           ],
         ),
       ),

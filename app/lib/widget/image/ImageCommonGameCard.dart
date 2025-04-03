@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class ImageCommonGameCard extends StatelessWidget {
   final String imageUrl;
 
-  const ImageCommonGameCard({
-    super.key,
-    required this.imageUrl
-  });
+  const ImageCommonGameCard({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

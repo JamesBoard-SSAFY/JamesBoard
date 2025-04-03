@@ -95,7 +95,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
               children: [
                 // 게임 제목
                 Padding(
-                  padding: const EdgeInsets.only(top: 16, left: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 12, left: 12, bottom: 12),
                   child: Text(
                     gameName,
                     style: TextStyle(
@@ -108,7 +108,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
 
                 // 태그 섹션
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
                   child: Wrap(
                     spacing: 12.0,
                     runSpacing: 8.0,
@@ -127,7 +127,7 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
                 // 설명 섹션
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 16, top: 16, right: 16, bottom: 20),
+                      left: 12, top: 12, right: 12, bottom: 12),
                   child: Text(
                     gameDescription,
                     maxLines: 3,

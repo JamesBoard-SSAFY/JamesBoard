@@ -78,7 +78,6 @@ class ItemUserArchiveCard extends StatelessWidget {
                                   fontFamily: FontString.pretendardMedium,
                                 ),
                               ),
-                              SizedBox(height: 5),
                               Text(
                                 dayOfWeek,
                                 style: TextStyle(
@@ -131,6 +130,8 @@ class ItemUserArchiveCard extends StatelessWidget {
                                         top: 16,
                                         bottom: 12),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           missionData.archiveContent,
@@ -152,7 +153,7 @@ class ItemUserArchiveCard extends StatelessWidget {
                                                       '${missionData.archiveGamePlayCount}판'),
                                             ],
                                           ),
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ),
