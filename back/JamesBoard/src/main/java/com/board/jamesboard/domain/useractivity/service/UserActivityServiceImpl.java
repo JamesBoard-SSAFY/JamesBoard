@@ -74,6 +74,13 @@ public class UserActivityServiceImpl implements UserActivityService {
 
         userActivity.updateUserActivityRating(ratingPatchRequestDto.getRating());
 
+        Game game = userActivity.getGame();
+
+        Float rating = gameRepository.findAverageRatingByGame(game);
+
+        game.updateAverageRating(rating);
+        gameRepository.save(game);
+
         return userActivity.getUserActivityId();
     }
 
@@ -110,8 +117,6 @@ public class UserActivityServiceImpl implements UserActivityService {
         UserActivity savedUserActivity = userActivityRepository.save(userActivity);
 
         Float rating = gameRepository.findAverageRatingByGame(game);
-
-        log.error("rating : {}", rating);
 
         game.updateAverageRating(rating);
         gameRepository.save(game);
