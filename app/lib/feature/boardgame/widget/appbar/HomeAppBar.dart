@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameSearchScreen.dart';
 import 'package:jamesboard/feature/chatbot/screen/ChatBotScreen.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
 
 import '../../../../constants/FontString.dart';
 
@@ -17,11 +19,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: mainBlack,
       elevation: 0,
-      title: Text(title,
-          style: TextStyle(
-              fontSize: 22,
-              color: mainWhite,
-              fontFamily: FontString.pretendardSemiBold)),
+      title: Text(
+        title,
+        style: TextStyle(
+            fontSize: 22,
+            color: mainWhite,
+            fontFamily: FontString.pretendardSemiBold),
+      ),
       actions: [
         IconButton(
           icon: SvgPicture.asset(
@@ -48,7 +52,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: 24,
             colorFilter: ColorFilter.mode(mainWhite, BlendMode.srcIn),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BoardGameSearchScreen(
+                  purpose: BoardGameSearchPurpose.fromHome,
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

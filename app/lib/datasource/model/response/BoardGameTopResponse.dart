@@ -5,11 +5,11 @@ part 'BoardGameTopResponse.g.dart';
 @JsonSerializable()
 class BoardGameTopResponse {
   final int gameId;
-  final String gameImage;
+  final String bigThumbnail;
 
   BoardGameTopResponse({
     required this.gameId,
-    required this.gameImage,
+    required this.bigThumbnail,
   });
 
   factory BoardGameTopResponse.fromJson(Map<String, dynamic> json) =>

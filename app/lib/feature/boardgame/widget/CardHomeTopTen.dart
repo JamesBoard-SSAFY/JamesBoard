@@ -64,7 +64,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                 itemCount: games.length,
                 itemBuilder: (context, index) {
                   final image = widget.images[index];
-                  final imageUrl = games[index].gameImage;
+                  final imageUrl = games[index].bigThumbnail;
                   final id = games[index].gameId;
 
                   return GestureDetector(
