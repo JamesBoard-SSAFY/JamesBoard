@@ -60,6 +60,8 @@ class _BoardGameService implements BoardGameService {
     int? minPlayers,
     String? boardGameName,
     String? category,
+    int? minPlayTime,
+    int? maxPlayTime,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -67,6 +69,8 @@ class _BoardGameService implements BoardGameService {
       r'minPlayers': minPlayers,
       r'boardGameName': boardGameName,
       r'category': category,
+      r'minPlayTime': minPlayTime,
+      r'maxPlayTime': maxPlayTime,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
