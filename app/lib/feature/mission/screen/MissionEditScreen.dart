@@ -228,7 +228,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
             ),
             // 진행한 임무 수 영역
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

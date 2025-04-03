@@ -111,19 +111,16 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
 
           // 인디케이터
           if (archiveDetailResponse.archiveImageList.length > 1)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SmoothPageIndicator(
-                controller: _pageController,
-                count: archiveDetailResponse.archiveImageList.length,
-                effect: ScaleEffect(
-                  activeDotColor: mainRed,
-                  dotColor: mainGrey,
-                  dotHeight: 8,
-                  dotWidth: 8,
-                  spacing: 8,
-                  scale: 1.5,
-                ),
+            SmoothPageIndicator(
+              controller: _pageController,
+              count: archiveDetailResponse.archiveImageList.length,
+              effect: ScaleEffect(
+                activeDotColor: mainRed,
+                dotColor: mainGrey,
+                dotHeight: 6,
+                dotWidth: 6,
+                spacing: 6,
+                scale: 1.5,
               ),
             ),
 

@@ -32,27 +32,27 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
           style: TextStyle(
               fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
       TextSpan(
-          text: "이\n필요합니다.",
+          text: "이 필요합니다.",
           style: TextStyle(
               fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
     ],
     [
       TextSpan(
-          text: "먼저,\n당신의",
+          text: "먼저,\n당신의 ",
           style: TextStyle(
               fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
       TextSpan(
-          text: "취향 ",
+          text: "취향",
           style: TextStyle(
               fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
       TextSpan(
-          text: "을\n선택해 주셔야겠군요.",
+          text: "을 선택해 주셔야겠군요.",
           style: TextStyle(
               fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
     ],
     [
       TextSpan(
-          text: "이제 제가 선정한\n게임 목록에서",
+          text: "이제 제가 선정한\n게임 목록에서 ",
           style: TextStyle(
               fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
       TextSpan(
@@ -60,7 +60,7 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
           style: TextStyle(
               fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
       TextSpan(
-          text: "을\n고르시면 됩니다.",
+          text: "을 고르시면 됩니다.",
           style: TextStyle(
               fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
     ],
@@ -155,12 +155,13 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
                   child: SmoothPageIndicator(
                     controller: _pageController,
                     count: images.length,
-                    effect: WormEffect(
-                      dotWidth: 8.0,
-                      dotHeight: 8.0,
-                      spacing: 16.0,
+                    effect: ScaleEffect(
+                      dotWidth: 6.0,
+                      dotHeight: 6.0,
+                      spacing: 6.0,
                       dotColor: mainGrey,
                       activeDotColor: mainRed,
+                      scale: 1.5,
                     ),
                   ),
                 ),

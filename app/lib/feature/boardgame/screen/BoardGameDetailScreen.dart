@@ -102,7 +102,16 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.only(left: 20),
-                            decoration: BoxDecoration(color: shadowBlack),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent, // 위쪽은 투명
+                                  shadowBlack.withOpacity(0.8), // 아래로 갈수록 진하게
+                                ],
+                              ),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,

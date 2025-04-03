@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/theme/Colors.dart';
 
 class ButtonCommonFilter extends StatelessWidget {
   final String text;
@@ -19,10 +20,10 @@ class ButtonCommonFilter extends StatelessWidget {
       onPressed: onTap,
       style: ButtonStyle(
         padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-        foregroundColor: MaterialStateProperty.all(
-            isSelected ? Colors.yellow : Colors.white),
+        foregroundColor:
+            MaterialStateProperty.all(isSelected ? mainGold : mainGrey),
         side: MaterialStateProperty.all(
-          BorderSide(color: isSelected ? Colors.yellow : Colors.white),
+          BorderSide(color: isSelected ? mainGold : mainGrey),
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(

@@ -28,7 +28,7 @@ class ImageMissionGameInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double imageHeight = screenWidth / 2;
+    double imageHeight = MediaQuery.of(context).size.height * 0.35;
 
     return Column(
       children: [
@@ -41,22 +41,23 @@ class ImageMissionGameInformation extends StatelessWidget {
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
-              child: gameData.gameImage != null && gameData.gameImage!.startsWith('http')
+              child: gameData.gameImage != null &&
+                      gameData.gameImage!.startsWith('http')
                   ? Image.network(
-                gameData.gameImage!,
-                width: screenWidth,
-                height: imageHeight,
-                fit: BoxFit.cover,
-              )
+                      gameData.gameImage!,
+                      width: screenWidth,
+                      height: imageHeight,
+                      fit: BoxFit.cover,
+                    )
                   : Container(
-                width: screenWidth,
-                height: imageHeight,
-                color: mainBlack,
-              ),
+                      width: screenWidth,
+                      height: imageHeight,
+                      color: mainBlack,
+                    ),
             ),
             Positioned(
               left: 20,
-              bottom: 12,
+              bottom: 0,
               child: Container(
                 child: Text(
                   gameData.gameTitle ?? '',

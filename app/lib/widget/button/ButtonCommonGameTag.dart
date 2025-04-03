@@ -9,7 +9,7 @@ class ButtonCommonGameTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       decoration: BoxDecoration(
         color: secondaryBlack, // 배경색
         borderRadius: BorderRadius.circular(5),

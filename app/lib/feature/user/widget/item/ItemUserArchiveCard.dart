@@ -55,10 +55,9 @@ class ItemUserArchiveCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 34),
               child: Column(
                 children: items.map((missionData) {
-                  String day =
-                  CommonUtils.extractDay(missionData.createdAt);
-                  String dayOfWeek = CommonUtils.extractDayOfWeek(
-                      missionData.createdAt);
+                  String day = CommonUtils.extractDay(missionData.createdAt);
+                  String dayOfWeek =
+                      CommonUtils.extractDayOfWeek(missionData.createdAt);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
@@ -117,6 +116,8 @@ class ItemUserArchiveCard extends StatelessWidget {
                                   padding: const EdgeInsets.only(
                                       left: 20, right: 20, top: 16, bottom: 12),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         missionData.archiveContent,
@@ -124,18 +125,18 @@ class ItemUserArchiveCard extends StatelessWidget {
                                           fontSize: 16,
                                           color: mainWhite,
                                           fontFamily:
-                                          FontString.pretendardMedium,
+                                              FontString.pretendardMedium,
                                         ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(top: 16),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           children: [
                                             ButtonCommonGameTag(
                                                 text:
-                                                '${missionData.archiveGamePlayCount}판'),
+                                                    '${missionData.archiveGamePlayCount}판'),
                                           ],
                                         ),
                                       ),
