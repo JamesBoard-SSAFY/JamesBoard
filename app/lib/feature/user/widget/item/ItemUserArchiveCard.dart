@@ -77,7 +77,6 @@ class ItemUserArchiveCard extends StatelessWidget {
                                   fontFamily: FontString.pretendardMedium,
                                 ),
                               ),
-                              SizedBox(height: 5),
                               Text(
                                 dayOfWeek,
                                 style: TextStyle(

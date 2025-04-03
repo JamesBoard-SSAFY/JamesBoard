@@ -50,7 +50,6 @@ class ItemCommonGameRank extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis, // 초과 시 ... 표시
                   ),
-
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -72,7 +71,7 @@ class ItemCommonGameRank extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: -10,
+                  left: -20,
                   bottom: -20,
                   child: Align(
                     alignment: Alignment.centerLeft,

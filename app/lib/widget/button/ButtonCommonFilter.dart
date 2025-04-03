@@ -19,7 +19,9 @@ class ButtonCommonFilter extends StatelessWidget {
     return OutlinedButton(
       onPressed: onTap,
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+        padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+        minimumSize: MaterialStateProperty.all(Size(0, 0)),
         foregroundColor:
             MaterialStateProperty.all(isSelected ? mainGold : mainGrey),
         side: MaterialStateProperty.all(

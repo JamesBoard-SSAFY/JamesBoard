@@ -78,8 +78,8 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                           ),
                         ),
                         Positioned(
-                          top: 8,
-                          left: 8,
+                          top: 12,
+                          left: 12,
                           child: Container(
                             decoration: BoxDecoration(
                               color: secondaryBlack,

@@ -64,6 +64,8 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyPageViewModel>(context);
 
+    final isDisabled = _isNicknameValid && _userImage != widget.userImg;
+
     return Scaffold(
       backgroundColor: mainBlack,
       appBar: DefaultCommonAppBar(
@@ -117,10 +119,11 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
               ),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: (_isNicknameValid &&
-                          _userImage != widget.userImg) // 버튼 활성화 조건 추가
-                      ? () {
+                child: ButtonCommonPrimaryBottom(
+                  text: '변경',
+                  disableWithOpacity: true,
+                  onPressed: (_isNicknameValid && _userImage != widget.userImg)
+                      ? () async {
                           viewModel.editUserInfo(MyPageUserInfoRequest(
                               userName: _nickname, userProfile: _userImage));
 
@@ -129,22 +132,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
 
                           Navigator.pop(context);
                         }
-                      : null, // 유효하지 않으면 버튼 비활성화
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: secondaryBlack,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                  ),
-                  child: Text(
-                    '변경',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: FontString.pretendardSemiBold,
-                      color: mainWhite,
-                    ),
-                  ),
+                      : null,
                 ),
               ),
             ],

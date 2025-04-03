@@ -59,6 +59,16 @@ class ImageMissionGameInformation extends StatelessWidget {
               left: 20,
               bottom: 0,
               child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent, // 위쪽은 투명
+                      shadowBlack.withOpacity(0.8), // 아래로 갈수록 진하게
+                    ],
+                  ),
+                ),
                 child: Text(
                   gameData.gameTitle ?? '',
                   style: TextStyle(
