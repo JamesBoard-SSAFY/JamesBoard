@@ -24,10 +24,10 @@ public interface ArchiveRepository extends JpaRepository<Archive, Long> {
     Integer getTotalPlayByUserId(@Param("userId") Long userId);
 
     // 사용자 게임 별 총 플레이 횟수
-    @Query("SELECT a.game.gameId, a.game.gameTitle, a.game.smallThumbnail, SUM(a.archiveGamePlayCount) as totalCount " +
+    @Query("SELECT a.game.gameId, a.game.gameTitle, a.game.bigThumbnail, SUM(a.archiveGamePlayCount) as totalCount " +
             "FROM Archive a " +
             "WHERE a.user.userId = :userId " +
-            "GROUP BY a.game.gameId, a.game.gameTitle, a.game.smallThumbnail " +
+            "GROUP BY a.game.gameId, a.game.gameTitle, a.game.bigThumbnail " +
             "ORDER BY totalCount DESC")
     List<Object[]> getTopPlayGamesByUserId(@Param("userId") Long userId);
 
