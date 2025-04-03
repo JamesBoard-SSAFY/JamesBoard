@@ -54,6 +54,11 @@ public class UserActivity {
     public void subtractPlayTime(int playTime) {
         if (this.userActivityTime == null) this.userActivityTime = 0;
         this.userActivityTime = Math.max(0, this.userActivityTime - playTime); // 음수 방지
+
+        if (this.userActivityTime == 0) {
+            this.userActivityTime = null;
+        }
+
         this.modifiedAt = LocalDateTime.now();
     }
 
