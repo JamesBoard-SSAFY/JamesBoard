@@ -59,7 +59,7 @@ public class BoardGameSearchServiceImpl implements BoardGameSearchService {
                 .map(game -> new BoardGameResponseDto(
                         game.getGameId(),
                         game.getGameTitle(),
-                        game.getSmallThumbnail(),
+                        game.getBigThumbnail(),
                         categoryMap.getOrDefault(game.getGameId(), List.of()),
                         themeMap.getOrDefault(game.getGameId(), List.of()),  // 없는 경우 빈 리스트
                         game.getMinPlayer(),
