@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../constants/AppString.dart';
 import '../../../theme/Colors.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
+import '../screen/BoardGameDetailScreen.dart';
 import '../viewmodel/BoardGameViewModel.dart';
 import '../viewmodel/CategoryGameViewModel.dart';
 
@@ -66,7 +67,22 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
             itemCount: games.length < 30 ? games.length : 30,
             itemBuilder: (context, index) {
               return KeepAliveView(
-                child: ImageCommonGameCard(imageUrl: games[index].gameImage),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BoardGameDetailScreen(
+                          key: UniqueKey(),
+                          gameId: games[index].gameId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: ImageCommonGameCard(
+                    imageUrl: games[index].gameImage,
+                  ),
+                ),
               );
             },
           ),
