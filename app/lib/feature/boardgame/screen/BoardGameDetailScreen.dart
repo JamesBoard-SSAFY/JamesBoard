@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
+import 'package:jamesboard/feature/boardgame/widget/button/ButtonBoardRatingGame.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
@@ -37,12 +38,6 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
     viewModel =
         categoryViewModel.getCategoryViewModel(widget.gameId.toString());
     viewModel.getBoardGameDetail(widget.gameId);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    viewModel.dispose();
   }
 
   @override
@@ -135,27 +130,6 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                                     fontFamily: FontString.pretendardBold,
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      IconPath.starSelected,
-                                      width: 24,
-                                      height: 24,
-                                      color: mainGold,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      "${boardGameDetail.gameRating}", // Rating from view model
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: FontString.pretendardMedium,
-                                        color: mainGold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),
@@ -229,8 +203,8 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         right: 20,
                         top: 24,
                       ),
-                      child: ButtonCommonPrimaryBottom(
-                        text: AppString.evaluation,
+                      child: ButtonBoardRatingGame(
+                        rating: boardGameDetail.gameRating,
                         onPressed: () {
                           BottomSheetUtil.showRatingBottomSheet(
                             context,
