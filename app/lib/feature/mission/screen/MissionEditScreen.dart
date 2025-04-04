@@ -44,6 +44,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   List<File> _imageFiles = [];
+  DateTime? _lastSnackBarTime;
+  bool _isSubmitting = false;
 
   static Future<(String, File)?> _cropCompressAndUploadImage(
       ImageSource source, MyPageViewModel viewModel) async {
@@ -92,6 +94,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   }
 
   void _onSubmit(MissionViewModel viewModel) async {
+    if (_isSubmitting) return;
+    setState(() {
+      _isSubmitting = true;
+    });
+
     final count = int.tryParse(_countController.text);
     if (count != null) {
       viewModel.setArchivePlayCount(count);
@@ -193,8 +200,6 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<MissionViewModel>();
     final myPageViewModel = context.watch<MyPageViewModel>();
-
-    DateTime? _lastSnackBarTime;
 
     return GestureDetector(
       onTap: () {
