@@ -41,7 +41,7 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionArchiveContent> {
       ),
       child: TextField(
         controller: widget.controller,
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.multiline,
         minLines: 3,
         maxLines: null,
         inputFormatters: [
