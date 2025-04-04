@@ -204,6 +204,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         top: 24,
                       ),
                       child: ButtonBoardRatingGame(
+                        gameId: widget.gameId,
                         rating: boardGameDetail.gameRating,
                         onPressed: () {
                           BottomSheetUtil.showRatingBottomSheet(

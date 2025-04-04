@@ -1,66 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
-import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
-class ButtonBoardRatingGame extends StatelessWidget {
+import '../../viewmodel/BoardGameViewModel.dart';
+import '../../viewmodel/CategoryGameViewModel.dart';
+
+class ButtonBoardRatingGame extends StatefulWidget {
+  final int gameId;
   final double rating;
   final VoidCallback? onPressed;
   final bool disableWithOpacity;
 
   const ButtonBoardRatingGame({
     super.key,
+    required this.gameId,
     required this.rating,
     required this.onPressed,
     required this.disableWithOpacity,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final isDisabled = onPressed == null;
+  State<ButtonBoardRatingGame> createState() => _ButtonBoardRatingGameState();
+}
 
-    return Opacity(
-      opacity: isDisabled && disableWithOpacity ? 0.4 : 1.0,
-      child: SizedBox(
-        width: double.infinity, // 버튼 너비를 꽉 차게 설정
-        height: 56,
-        child: IntrinsicHeight(
-          // 버튼 높이를 내부 컨텐츠 크기에 맞게 조정
-          child: AbsorbPointer(
-            absorbing: isDisabled && disableWithOpacity,
-            child: ElevatedButton(
-              onPressed: () {
-                onPressed!();
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                backgroundColor: secondaryBlack,
-                padding: EdgeInsets.zero, // 기본 패딩 제거
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 기본 높이 제한 해제
-              ),
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "${AppString.evaluation}\u00A0",
-                      style: TextStyle(
-                        color: mainWhite,
-                        fontSize: 16,
-                        fontFamily: FontString.pretendardBold,
+class _ButtonBoardRatingGameState extends State<ButtonBoardRatingGame> {
+  late BoardGameViewModel ratingViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+    ratingViewModel =
+        categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDisabled = widget.onPressed == null;
+
+    return ChangeNotifierProvider.value(
+      value: ratingViewModel,
+      child: Opacity(
+        opacity: isDisabled && widget.disableWithOpacity ? 0.4 : 1.0,
+        child: SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: IntrinsicHeight(
+            child: AbsorbPointer(
+              absorbing: isDisabled && widget.disableWithOpacity,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.onPressed!();
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: secondaryBlack,
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Consumer<BoardGameViewModel>(
+                  builder: (context, viewModel, child) {
+                    return Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "${AppString.evaluation}\u00A0",
+                            style: TextStyle(
+                              color: mainWhite,
+                              fontSize: 16,
+                              fontFamily: FontString.pretendardBold,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                "(${viewModel.boardGameDetail?.gameRating ?? widget.rating})",
+                            style: TextStyle(
+                              color: mainGold,
+                              fontSize: 16,
+                              fontFamily: FontString.pretendardBold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    TextSpan(
-                      text: "($rating)",
-                      style: TextStyle(
-                        color: mainGold,
-                        fontSize: 16,
-                        fontFamily: FontString.pretendardBold,
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
