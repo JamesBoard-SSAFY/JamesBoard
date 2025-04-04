@@ -301,4 +301,8 @@ class CommonUtils {
 
     return "$minPlayer~$maxPlayer명";
   }
+
+  static double roundToTwoDecimalPlaces(double value) {
+    return double.parse(value.toStringAsFixed(2));
+  }
 }

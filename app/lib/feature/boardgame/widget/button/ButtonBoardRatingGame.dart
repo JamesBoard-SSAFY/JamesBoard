@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:provider/provider.dart';
 
 import '../../viewmodel/BoardGameViewModel.dart';
@@ -77,8 +78,10 @@ class _ButtonBoardRatingGameState extends State<ButtonBoardRatingGame> {
                             ),
                           ),
                           TextSpan(
-                            text:
-                                "(${viewModel.boardGameDetail?.gameRating ?? widget.rating})",
+                            text: "(${CommonUtils.roundToTwoDecimalPlaces(
+                              viewModel.boardGameDetail?.gameRating ??
+                                  widget.rating,
+                            )})",
                             style: TextStyle(
                               color: mainGold,
                               fontSize: 16,
