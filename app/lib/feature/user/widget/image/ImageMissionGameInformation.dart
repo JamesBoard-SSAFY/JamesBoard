@@ -56,9 +56,10 @@ class ImageMissionGameInformation extends StatelessWidget {
                     ),
             ),
             Positioned(
-              left: 20,
+              left: 0,
               bottom: 0,
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -69,12 +70,15 @@ class ImageMissionGameInformation extends StatelessWidget {
                     ],
                   ),
                 ),
-                child: Text(
-                  gameData.gameTitle ?? '',
-                  style: TextStyle(
-                    color: mainWhite,
-                    fontSize: 44,
-                    fontFamily: FontString.pretendardBold,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    gameData.gameTitle ?? '',
+                    style: TextStyle(
+                      color: mainWhite,
+                      fontSize: 44,
+                      fontFamily: FontString.pretendardBold,
+                    ),
                   ),
                 ),
               ),
