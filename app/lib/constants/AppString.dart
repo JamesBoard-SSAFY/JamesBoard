@@ -52,7 +52,7 @@ class AppString {
   static const String missionContentInput = "문구 입력";
 
   //EditBoxRegisterMissionBoardGameCount
-  static const String gameCountInput = "판수 입력";
+  static const String gameCountInput = "최대 9판까지 입력 가능합니다.";
 
   //ProfileMissionDetail
   static const String missionDialogMainMessage = "해당 보고를 삭제하실 건가요?";
