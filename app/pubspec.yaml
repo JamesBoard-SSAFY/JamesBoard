@@ -63,6 +63,9 @@ dependencies:
   # provider:
   provider: ^6.1.4
 
+  # 텍스트 흐르게하기
+  marquee: ^2.2.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
