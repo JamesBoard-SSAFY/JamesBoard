@@ -37,7 +37,7 @@ def setup_scheduler():
     # 하이브리드 추천 (3:30 AM)
     scheduler.add_job(
         generate_hybrid_recommendations_job,
-        CronTrigger(minute="*/20"),
+        CronTrigger(minute="*/3"),
         id='generate_hybrid_recommendations_job'
     )
     
