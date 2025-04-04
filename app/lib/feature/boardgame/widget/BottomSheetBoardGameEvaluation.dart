@@ -67,7 +67,7 @@ class _BottomSheetBoardGameEvaluationState
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Text(
-              "클루",
+              "별점",
               style: TextStyle(
                 color: mainWhite,
                 fontSize: 20,
