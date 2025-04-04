@@ -194,6 +194,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     final viewModel = context.watch<MissionViewModel>();
     final myPageViewModel = context.watch<MyPageViewModel>();
 
+    DateTime? _lastSnackBarTime;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -272,6 +274,27 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             child: ButtonRegisterArchivePicture(
                               icon: IconPath.addPicture,
                               onTap: () async {
+                                if (_imageFiles.length >= 9) {
+                                  final now = DateTime.now();
+
+                                  if (_lastSnackBarTime == null ||
+                                      now
+                                              .difference(_lastSnackBarTime!)
+                                              .inSeconds >=
+                                          2) {
+                                    _lastSnackBarTime = now;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text('이미지는 최대 9장까지 업로드할 수 있습니다.'),
+                                      ),
+                                    );
+                                  }
+
+                                  return;
+                                }
+
                                 final result =
                                     await _cropCompressAndUploadImage(
                                         ImageSource.gallery, myPageViewModel);
@@ -293,6 +316,27 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             child: ButtonRegisterArchivePicture(
                               icon: IconPath.camera,
                               onTap: () async {
+                                if (_imageFiles.length >= 9) {
+                                  final now = DateTime.now();
+
+                                  if (_lastSnackBarTime == null ||
+                                      now
+                                              .difference(_lastSnackBarTime!)
+                                              .inSeconds >=
+                                          2) {
+                                    _lastSnackBarTime = now;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text('이미지는 최대 9장까지 업로드할 수 있습니다.'),
+                                      ),
+                                    );
+                                  }
+
+                                  return;
+                                }
+
                                 final result =
                                     await _cropCompressAndUploadImage(
                                         ImageSource.camera, myPageViewModel);
