@@ -78,91 +78,95 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
       appBar: DefaultCommonAppBar(
         title: widget.title,
       ),
-      body: Column(
-        children: [
-          // 프로필 영역
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: ProfileMissionDetail(
-              imageUrl: archiveDetailResponse.userProfile,
-              userName: archiveDetailResponse.userNickName,
-              archiveUserId: archiveDetailResponse.userId,
-              loginUserId: viewModel.loginUserId!,
-              archiveId: widget.archiveId,
-              onDeleteSuccess: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // 사진 영역 (최대 9장까지 지원)
-          AspectRatio(
-            aspectRatio: 1, // 1:1 비율
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: archiveDetailResponse.archiveImageList.length ?? 0,
-              itemBuilder: (context, index) {
-                return Image.network(
-                  archiveDetailResponse
-                      .archiveImageList[index], // 또는 Image.network 가능
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // 인디케이터
-          if (archiveDetailResponse.archiveImageList.length > 1)
-            SmoothPageIndicator(
-              controller: _pageController,
-              count: archiveDetailResponse.archiveImageList.length,
-              effect: ScaleEffect(
-                activeDotColor: mainRed,
-                dotColor: mainGrey,
-                dotHeight: 6,
-                dotWidth: 6,
-                spacing: 6,
-                scale: 1.5,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 프로필 영역
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ProfileMissionDetail(
+                imageUrl: archiveDetailResponse.userProfile,
+                userName: archiveDetailResponse.userNickName,
+                archiveUserId: archiveDetailResponse.userId,
+                loginUserId: viewModel.loginUserId!,
+                archiveId: widget.archiveId,
+                onDeleteSuccess: () {
+                  Navigator.of(context).pop(true);
+                },
               ),
             ),
 
-          // 게시물 설명
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 12.0, right: 12.0, top: 16.0, bottom: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  archiveDetailResponse.archiveContent,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: FontString.pretendardMedium,
-                    color: mainWhite,
-                  ),
-                ),
+            const SizedBox(height: 12),
 
-                const SizedBox(height: 12),
-
-                // 해시태그
-                Row(
-                  children: [
-                    HashTagMissionDetail(info: archiveDetailResponse.gameTitle),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    HashTagMissionDetail(
-                        info: '${archiveDetailResponse.archiveGamePlayCount}판')
-                  ],
-                )
-              ],
+            // 사진 영역 (최대 9장까지 지원)
+            AspectRatio(
+              aspectRatio: 1, // 1:1 비율
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: archiveDetailResponse.archiveImageList.length ?? 0,
+                itemBuilder: (context, index) {
+                  return Image.network(
+                    archiveDetailResponse
+                        .archiveImageList[index], // 또는 Image.network 가능
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 12),
+
+            // 인디케이터
+            if (archiveDetailResponse.archiveImageList.length > 1)
+              SmoothPageIndicator(
+                controller: _pageController,
+                count: archiveDetailResponse.archiveImageList.length,
+                effect: ScaleEffect(
+                  activeDotColor: mainRed,
+                  dotColor: mainGrey,
+                  dotHeight: 6,
+                  dotWidth: 6,
+                  spacing: 6,
+                  scale: 1.5,
+                ),
+              ),
+
+            // 게시물 설명
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 12.0, right: 12.0, top: 16.0, bottom: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    archiveDetailResponse.archiveContent,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: FontString.pretendardMedium,
+                      color: mainWhite,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // 해시태그
+                  Row(
+                    children: [
+                      HashTagMissionDetail(
+                          info: archiveDetailResponse.gameTitle),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      HashTagMissionDetail(
+                          info:
+                              '${archiveDetailResponse.archiveGamePlayCount}판')
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
