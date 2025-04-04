@@ -75,6 +75,9 @@ dependencies:
   # 텍스트 흐르게하기
   marquee: ^2.2.3
 
+  #스캘래톤 효과
+  shimmer: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
