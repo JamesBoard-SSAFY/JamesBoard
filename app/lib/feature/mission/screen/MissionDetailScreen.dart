@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/feature/mission/widget/HashTagMissionDetail.dart';
 import 'package:jamesboard/feature/mission/widget/ProfileMissionDetail.dart';
@@ -91,7 +93,15 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                 loginUserId: viewModel.loginUserId!,
                 archiveId: widget.archiveId,
                 onDeleteSuccess: () {
-                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const MyHomePage(
+                        title: 'Flutter Demo Home Page',
+                        selectedIndex: 3,
+                      ),
+                    ),
+                    (route) => false, // 모든 이전 스택 제거
+                  );
                 },
               ),
             ),

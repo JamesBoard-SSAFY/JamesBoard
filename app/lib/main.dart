@@ -146,9 +146,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, this.selectedIndex = 0});
 
   final String title;
+  final int selectedIndex;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -165,6 +166,12 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
