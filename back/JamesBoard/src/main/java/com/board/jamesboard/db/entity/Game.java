@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -74,6 +75,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameDesigner> gameDesigners = new ArrayList<>();
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameTheme> gameThemes = new ArrayList<>();
 

@@ -13,6 +13,14 @@ import com.board.jamesboard.db.entity.RecommendContent;
 @Repository
 public interface RecommendContentRepository extends JpaRepository<RecommendContent, Long> {
     // 게임 기준으로 유사도가 높은 순서로 10개(limit 만큼) 반환
-    @Query("SELECT rc FROM RecommendContent rc WHERE rc.game = :game AND rc.recommendContentRank BETWEEN 1 AND 30 ORDER BY rc.recommendContentRank ASC")
+    @Query("""
+                SELECT DISTINCT rc
+                FROM RecommendContent rc
+                JOIN FETCH rc.recommendGame rg
+                LEFT JOIN FETCH rg.gameCategories gc
+                WHERE rc.game = :game
+                  AND rc.recommendContentRank BETWEEN 1 AND 30
+                ORDER BY rc.recommendContentRank ASC
+            """)
     List<RecommendContent> findTopNByGameOrderByRecommendContentRankAsc(Game game, Integer limit);
 }
