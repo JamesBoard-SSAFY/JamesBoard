@@ -14,7 +14,7 @@ UserActivityRepository extends JpaRepository<UserActivity, Long> {
     Optional<UserActivity> findByUserAndGame(User user, Game game);
 
     @Query("SELECT DISTINCT ua.game FROM UserActivity ua WHERE ua.user.userId = :userId " +
-            "AND ua.userActivityRating IS NOT NULL AND ua.userActivityRating > 0")
+            "AND ua.userActivityTime IS NOT NULL AND ua.userActivityTime > 0")
     List<Game> findDistinctGameByUserUserId(Long userId);
 
     List<UserActivity> findAllByUserAndGame(User user, Game game);
