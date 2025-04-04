@@ -74,8 +74,7 @@ public class Game {
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameDesigner> gameDesigners = new ArrayList<>();
-
-    @BatchSize(size = 100)
+    
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameTheme> gameThemes = new ArrayList<>();
 
@@ -101,7 +100,7 @@ public class Game {
     // 사용자가 선호한 게임
     @OneToMany(mappedBy = "game")
     private List<RecommendContent> recommendContents = new ArrayList<>();
-    
+
     // 추천된 게임
     @OneToMany(mappedBy = "recommendGame")
     private List<RecommendContent> recommendedContent = new ArrayList<>();
