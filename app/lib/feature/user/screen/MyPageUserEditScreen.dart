@@ -72,72 +72,73 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
       appBar: DefaultCommonAppBar(
         title: widget.title,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 24,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ImageUserProfile(
-                    imageUrl: _userImage,
-                    onImagePicked: _onProfileImageChanged,
-                    viewModel: viewModel,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              TextFieldUserNickname(
-                userName: widget.userName,
-                onNicknameChanged: _onNicknameChanged,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "닉네임 2자 이상부터 16자까지 입력이 가능해요.",
-                    style: TextStyle(
-                        color: mainGrey,
-                        fontSize: 12,
-                        fontFamily: FontString.pretendardBold),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ButtonCommonPrimaryBottom(
-                  text: '변경',
-                  disableWithOpacity: true,
-                  onPressed: (_isNicknameValid || _userImage != widget.userImg)
-                      ? () async {
-                          viewModel.editUserInfo(MyPageUserInfoRequest(
-                              userName: _nickname, userProfile: _userImage));
-
-                          print("닉네임 변경 완료: $_nickname");
-                          print("프로필 이미지 변경 완료: $_userImage");
-
-                          Navigator.pop(context);
-                        }
-                      : null, // 유효하지 않으면 버튼 비활성화
-                  // 유효하지 않으면 버튼 비활성화
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 24,
                 ),
-              ),
-            ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImageUserProfile(
+                      imageUrl: _userImage,
+                      onImagePicked: _onProfileImageChanged,
+                      viewModel: viewModel,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                TextFieldUserNickname(
+                  userName: widget.userName,
+                  onNicknameChanged: _onNicknameChanged,
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "닉네임 2자 이상부터 16자까지 입력이 가능해요.",
+                      style: TextStyle(
+                          color: mainGrey,
+                          fontSize: 12,
+                          fontFamily: FontString.pretendardBold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ButtonCommonPrimaryBottom(
+                    text: '변경',
+                    disableWithOpacity: true,
+                    onPressed: (_isNicknameValid || _userImage != widget.userImg)
+                        ? () async {
+                            viewModel.editUserInfo(MyPageUserInfoRequest(
+                                userName: _nickname, userProfile: _userImage));
+                            Navigator.pop(context);
+                          }
+                        : null, // 유효하지 않으면 버튼 비활성화
+                    // 유효하지 않으면 버튼 비활성화
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
