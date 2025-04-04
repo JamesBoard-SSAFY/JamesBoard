@@ -9,8 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 import com.board.jamesboard.db.entity.Game;
 
-public interface GameRepository extends JpaRepository<Game,Long>, GameRepositoryCustom {
+public interface GameRepository extends JpaRepository<Game, Long>, GameRepositoryCustom {
     List<Game> findTop30ByGameIdInOrderByGameRank(List<Long> gameIds);
+
+    List<Game> findByGameIdIn(List<Long> gameIds);
 
     // 게임 ID로 게임정보 조회
     Optional<Game> findByGameId(Long gameId);
@@ -46,5 +48,13 @@ public interface GameRepository extends JpaRepository<Game,Long>, GameRepository
 
     @Query("SELECT AVG(ua.userActivityRating) FROM UserActivity ua WHERE ua.game = :game AND ua.userActivityRating IS NOT NULL")
     Float findAverageRatingByGame(Game game);
+
+    @Query("""
+                SELECT DISTINCT g\s
+                FROM Game g\s
+                LEFT JOIN FETCH g.gameThemes\s
+                WHERE g.gameId IN :gameIds
+           \s""")
+    List<Game> findByGameIdInWithThemes(@Param("gameIds") List<Long> gameIds);
 
 }
