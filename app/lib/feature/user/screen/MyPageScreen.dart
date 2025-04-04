@@ -220,7 +220,7 @@ class _MyPageScreenState extends State<MyPageScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "임무 누적 판수 순위",
+                  "임무 누적 판수 Top5",
                   style: TextStyle(
                     fontSize: 24,
                     color: mainWhite,
@@ -233,7 +233,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                       context,
                       MaterialPageRoute(
                         builder: (context) => MyPagePlayTimeScreen(
-                          title: "작전 누적 판수 순위",
+                          title: "전체 임무 누적 판수",
                           gameData: viewModel.gameStats?.topPlayedGames ?? [],
                         ),
                       ),

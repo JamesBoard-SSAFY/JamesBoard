@@ -72,6 +72,8 @@ dependencies:
   # path_provider:
   path_provider: ^2.1.5
 
+  # 텍스트 흐르게하기
+  marquee: ^2.2.3
 
 dev_dependencies:
   flutter_test:

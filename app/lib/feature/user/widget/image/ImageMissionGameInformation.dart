@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:marquee/marquee.dart';
 import '../../../../datasource/model/response/MyPage/MyPageMissionRecordResponse.dart';
 import '../../../../widget/button/ButtonCommonGameTag.dart';
 
@@ -56,9 +57,10 @@ class ImageMissionGameInformation extends StatelessWidget {
                     ),
             ),
             Positioned(
-              left: 20,
+              left: 0,
               bottom: 0,
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -69,12 +71,47 @@ class ImageMissionGameInformation extends StatelessWidget {
                     ],
                   ),
                 ),
-                child: Text(
-                  gameData.gameTitle ?? '',
-                  style: TextStyle(
-                    color: mainWhite,
-                    fontSize: 44,
-                    fontFamily: FontString.pretendardBold,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final text = gameData.gameTitle ?? '';
+                      final textStyle = TextStyle(
+                        color: mainWhite,
+                        fontSize: 44,
+                        fontFamily: FontString.pretendardBold,
+                      );
+
+                      final textPainter = TextPainter(
+                        text: TextSpan(text: text, style: textStyle),
+                        maxLines: 1,
+                        textDirection: TextDirection.ltr,
+                      )..layout(maxWidth: double.infinity);
+
+                      final textWidth = textPainter.size.width;
+                      final availableWidth = constraints.maxWidth - 40; // 패딩 고려
+
+                      final shouldScroll = textWidth > availableWidth;
+
+                      return Container(
+                        width: screenWidth,
+                        height: 60,
+                        alignment: Alignment.centerLeft,
+                        child: shouldScroll
+                            ? Marquee(
+                                text: text,
+                                scrollAxis: Axis.horizontal,
+                                velocity: 30.0,
+                                blankSpace: 50.0,
+                                style: textStyle,
+                              )
+                            : Text(
+                                text,
+                                style: textStyle,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                      );
+                    },
                   ),
                 ),
               ),

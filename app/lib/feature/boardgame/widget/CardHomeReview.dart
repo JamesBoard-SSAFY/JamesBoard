@@ -64,7 +64,7 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                     crossAxisCount: 3, // 3개의 아이템
                     childAspectRatio: 8 / 17, // 비율
                     crossAxisSpacing: 8,
-                    mainAxisSpacing: 8),
+                    mainAxisSpacing: 0),
                 itemCount: widget.images.length,
                 itemBuilder: (context, index) {
                   final imageUrl = games[index].bigThumbnail;
@@ -81,9 +81,8 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                               child: Stack(
                                 clipBehavior: Clip.none,
                                 children: [
-                                  // 이미지를 오른쪽으로 옮기기 위해 Transform 사용
                                   Transform.translate(
-                                    offset: Offset(itemWidth * 0.175, 0),
+                                    offset: Offset(itemWidth * 0.12, 0),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
@@ -95,11 +94,12 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                                     ),
                                   ),
                                   Positioned(
-                                    top: -height * 0.15,
+                                    top: height * 0.13,
+                                    left: 0,
                                     child: Text(
                                       '${index + 1}',
                                       style: TextStyle(
-                                        fontSize: height, // 숫자 크기 조정
+                                        fontSize: height * 0.7, // 숫자 크기 조정
                                         fontFamily: FontString.pretendardBold,
                                         foreground: Paint()
                                           ..style = PaintingStyle.stroke
@@ -109,11 +109,12 @@ class _CardHomeReviewState extends State<CardHomeReview> {
                                     ),
                                   ),
                                   Positioned(
-                                    top: -height * 0.15,
+                                    top: height * 0.13,
+                                    left: 0,
                                     child: Text(
                                       '${index + 1}',
                                       style: TextStyle(
-                                        fontSize: height,
+                                        fontSize: height * 0.7, // 숫자 크기 조정
                                         fontFamily: FontString.pretendardBold,
                                         color: mainRed, // 내부 색상
                                       ),

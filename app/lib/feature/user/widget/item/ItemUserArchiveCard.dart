@@ -16,6 +16,13 @@ class ItemUserArchiveCard extends StatelessWidget {
     // 월별로 그룹화된 데이터
     Map<String, List<MyPageArchiveResponse>> groupedData = {};
 
+    // 날짜 오름차순 정렬
+    missionDataList.sort((a, b) {
+      DateTime dateA = DateTime.parse(a.createdAt);
+      DateTime dateB = DateTime.parse(b.createdAt);
+      return dateA.compareTo(dateB);
+    });
+
     // missionDataList를 월별로 그룹화
     for (var missionData in missionDataList) {
       String month = CommonUtils.extractMonth(missionData.createdAt);

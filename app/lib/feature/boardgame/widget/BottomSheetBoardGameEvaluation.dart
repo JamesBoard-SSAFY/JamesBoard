@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/UserActivityViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +9,7 @@ import '../../../datasource/model/request/user/UserActivityPatchRequest.dart';
 import '../../../datasource/model/request/user/UserActivityRequest.dart';
 import '../../../main.dart';
 import '../../../theme/Colors.dart';
+import '../viewmodel/CategoryGameViewModel.dart';
 import 'RatingBarBoardGameDetailReview.dart';
 
 class BottomSheetBoardGameEvaluation extends StatefulWidget {
@@ -27,6 +29,7 @@ class BottomSheetBoardGameEvaluation extends StatefulWidget {
 
 class _BottomSheetBoardGameEvaluationState
     extends State<BottomSheetBoardGameEvaluation> {
+  late BoardGameViewModel ratingBoardGameViewModel;
   late UserActivityViewModel viewModel;
 
   double _rating = 0.0;
@@ -42,6 +45,10 @@ class _BottomSheetBoardGameEvaluationState
     super.initState();
 
     viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+    ratingBoardGameViewModel =
+        categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
   }
 
   @override
@@ -91,7 +98,6 @@ class _BottomSheetBoardGameEvaluationState
               onPressed: () async {
                 if (_rating == 0.0) {
                   logger.d("rating $_rating");
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("평점을 선택해주세요.")),
                   );
@@ -118,7 +124,8 @@ class _BottomSheetBoardGameEvaluationState
                   logger.d("updateUserActivityRating update success $success");
 
                   if (success) {
-                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
+                    ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
+                    Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("활동 수정에 실패했습니다. 다시 시도해주세요.")),
@@ -136,6 +143,7 @@ class _BottomSheetBoardGameEvaluationState
                   logger.d("updateUserActivityRating write success $success");
 
                   if (success) {
+                    ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
                     Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
