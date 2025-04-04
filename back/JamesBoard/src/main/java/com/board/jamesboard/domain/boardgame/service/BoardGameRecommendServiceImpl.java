@@ -2,6 +2,7 @@ package com.board.jamesboard.domain.boardgame.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.board.jamesboard.db.entity.*;
@@ -37,9 +38,7 @@ public class BoardGameRecommendServiceImpl implements BoardGameRecommendService 
             throw new RuntimeException("온보딩 값이 없거나 선호게임이 없는 유저입니다.");
         }
 
-        // 사용자가 남긴 전체 리뷰 수 조회
-        List<Game> userGames = userActivityRepository.findDistinctGameByUserUserId(userId);
-        int totalReviewCount = userGames.size();
+        Long totalReviewCount = userActivityRepository.countByUserUserIdAndUserActivityRatingIsNotNull(userId);
 
         if (totalReviewCount < 30) {
             // 콘텐츠 기반 추천

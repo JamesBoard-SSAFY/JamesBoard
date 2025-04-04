@@ -20,4 +20,7 @@ UserActivityRepository extends JpaRepository<UserActivity, Long> {
     List<UserActivity> findAllByUserAndGame(User user, Game game);
 
     UserActivity findByUserActivityId(long userActivityId);
+
+    // 해당 유저가 작성한 리뷰개수
+    Long countByUserUserIdAndUserActivityRatingIsNotNull(Long userId);
 }
