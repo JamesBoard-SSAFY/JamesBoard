@@ -9,7 +9,7 @@ class UserActivityPatchRequest {
   UserActivityPatchRequest({required this.rating});
 
   factory UserActivityPatchRequest.fromJson(Map<String, dynamic> json) =>
-      _$UserActivityPatchResponseFromJson(json);
+      _$UserActivityPatchRequestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserActivityPatchResponseToJson(this);
+  Map<String, dynamic> toJson() => _$UserActivityPatchRequestToJson(this);
 }
