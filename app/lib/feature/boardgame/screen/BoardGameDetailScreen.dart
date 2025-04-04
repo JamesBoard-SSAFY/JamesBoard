@@ -10,6 +10,7 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/AppString.dart';
@@ -118,19 +119,56 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                                 ],
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  boardGameDetail.gameTitle,
-                                  style: TextStyle(
-                                    color: mainWhite,
-                                    fontSize: 44,
-                                    fontFamily: FontString.pretendardBold,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                // 텍스트 크기 측정
+                                final textPainter = TextPainter(
+                                  text: TextSpan(
+                                    text: boardGameDetail.gameTitle,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 44,
+                                      fontFamily: 'Pretendard-Bold',
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  maxLines: 1,
+                                  textDirection: TextDirection.ltr,
+                                )..layout(maxWidth: constraints.maxWidth - 20); // 패딩 고려
+
+                                final isOverflowing = textPainter.didExceedMaxLines; // 텍스트가 넘치는지 확인
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    isOverflowing
+                                        ? SizedBox(
+                                      width: constraints.maxWidth - 20, // 패딩 고려
+                                      height: 50, // 높이 조정
+                                      child: Marquee(
+                                        text: boardGameDetail.gameTitle,
+                                        style: TextStyle(
+                                          color: mainWhite,
+                                          fontSize: 44,
+                                          fontFamily: FontString.pretendardBold,
+                                        ),
+                                        scrollAxis: Axis.horizontal,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        blankSpace: 50.0,
+                                        velocity: 30.0,
+                                      ),
+                                    )
+                                        : Text(
+                                      boardGameDetail.gameTitle,
+                                      style: TextStyle(
+                                        color: mainWhite,
+                                        fontSize: 44,
+                                        fontFamily: 'Pretendard-Bold',
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
