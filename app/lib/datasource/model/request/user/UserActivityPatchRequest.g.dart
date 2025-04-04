@@ -2,14 +2,17 @@
 
 part of 'UserActivityPatchRequest.dart';
 
-UserActivityPatchRequest _$UserActivityPatchResponseFromJson(
-    Map<String, dynamic> json) {
-  return UserActivityPatchRequest(
-    rating: (json['rating'] as num).toDouble(),
-  );
-}
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-Map<String, dynamic> _$UserActivityPatchResponseToJson(
+UserActivityPatchRequest _$UserActivityPatchRequestFromJson(
+        Map<String, dynamic> json) =>
+    UserActivityPatchRequest(
+      rating: (json['rating'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$UserActivityPatchRequestToJson(
         UserActivityPatchRequest instance) =>
     <String, dynamic>{
       'rating': instance.rating,
