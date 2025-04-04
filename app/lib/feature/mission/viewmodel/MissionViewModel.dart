@@ -126,6 +126,9 @@ class MissionViewModel extends ChangeNotifier {
 
   // 아카이브 전체 조회
   Future<void> getAllArchives() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       _archives = await _archiveRepository.getAllArchives();
       notifyListeners();
@@ -137,6 +140,9 @@ class MissionViewModel extends ChangeNotifier {
     } catch (e) {
       logger.e('아카이브 전체 조회 실패 : $e');
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 
   // 아카이브 상세 조회
