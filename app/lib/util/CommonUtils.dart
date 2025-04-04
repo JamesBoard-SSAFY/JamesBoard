@@ -303,6 +303,6 @@ class CommonUtils {
   }
 
   static double roundToTwoDecimalPlaces(double value) {
-    return double.parse(value.toStringAsFixed(2));
+    return double.parse(value.toStringAsFixed(1));
   }
 }
