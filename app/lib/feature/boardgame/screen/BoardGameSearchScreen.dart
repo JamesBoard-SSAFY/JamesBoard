@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/datasource/model/local/AppDatabase.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/mission/viewmodel/MissionViewModel.dart';
 import 'package:jamesboard/main.dart';
+import 'package:jamesboard/repository/RecentSearchRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
 import 'package:jamesboard/widget/image/ImageCommonGameCard.dart';
@@ -31,10 +33,16 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   late BoardGameViewModel boardGameViewModel;
 
-  void _searchBoardGames() {
+  void _searchBoardGames() async {
     final keyword = _searchController.text.trim();
 
     if (keyword.isEmpty) return;
+
+    FocusScope.of(context).unfocus();
+
+    if (widget.purpose == BoardGameSearchPurpose.fromHome) {
+      await boardGameViewModel.saveRecentSearch(keyword);
+    }
 
     boardGameViewModel.getBoardGames({'boardGameName': keyword});
   }
@@ -46,8 +54,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
     final categoryViewModel =
         Provider.of<CategoryGameViewModel>(context, listen: false);
 
-    boardGameViewModel =
-        categoryViewModel.getCategoryViewModel('boardGameName');
+    boardGameViewModel = categoryViewModel.getCategoryViewModel(
+        'boardGameName', RecentSearchRepository(AppDatabase()));
     boardGameViewModel.clearSearchResults();
   }
 
@@ -78,61 +86,113 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      return GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 3 / 4,
-                        ),
-                        itemCount: viewModel.games.length,
-                        itemBuilder: (context, index) {
-                          final game = viewModel.games[index];
-                          logger.d('검색 결과 : $game');
+                      final hasSearchResults = viewModel.games.isNotEmpty;
+                      final hasRecentSearches =
+                          viewModel.recentSearches.isNotEmpty;
 
-                          return GestureDetector(
-                            onTap: () {
-                              final selectedGameId = game.gameId;
-                              final selectedGameTitle = game.gameTitle;
-                              final selectedGamePlayTime = game.playTime;
+                      // 검색 결과가 있다면 → 그리드뷰
+                      if (hasSearchResults) {
+                        return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 3 / 4,
+                          ),
+                          itemCount: viewModel.games.length,
+                          itemBuilder: (context, index) {
+                            final game = viewModel.games[index];
 
-                              if (widget.purpose ==
-                                  BoardGameSearchPurpose.fromHome) {
-                                viewModel.setSelectedGameId(
-                                  gameId: selectedGameId,
-                                );
+                            return GestureDetector(
+                              onTap: () async {
+                                final selectedGameId = game.gameId;
+                                final selectedGameTitle = game.gameTitle;
+                                final selectedGamePlayTime = game.playTime;
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => BoardGameDetailScreen(
-                                      gameId: selectedGameId,
+                                if (widget.purpose ==
+                                    BoardGameSearchPurpose.fromHome) {
+                                  viewModel.setSelectedGameId(
+                                      gameId: selectedGameId);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => BoardGameDetailScreen(
+                                          gameId: selectedGameId),
                                     ),
-                                  ),
-                                );
-                              } else if (widget.purpose ==
-                                  BoardGameSearchPurpose.fromMission) {
-                                final missionViewModel =
-                                    context.read<MissionViewModel>();
+                                  );
+                                } else if (widget.purpose ==
+                                    BoardGameSearchPurpose.fromMission) {
+                                  final missionViewModel =
+                                      context.read<MissionViewModel>();
 
-                                missionViewModel.setSelectedBoardGame(
-                                  gameId: selectedGameId,
-                                  gameTitle: selectedGameTitle,
-                                  gamePlayTime: selectedGamePlayTime,
-                                );
+                                  missionViewModel.setSelectedBoardGame(
+                                    gameId: selectedGameId,
+                                    gameTitle: selectedGameTitle,
+                                    gamePlayTime: selectedGamePlayTime,
+                                  );
 
-                                logger.d(
-                                    'BoardGameSearchScreen에서 MissionViewModel.gameTitle : ${missionViewModel.selectedGameTitle}');
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: ImageCommonGameCard(
+                                imageUrl: game.gameImage ?? '',
+                              ),
+                            );
+                          },
+                        );
+                      }
 
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: ImageCommonGameCard(
-                              imageUrl: game.gameImage ?? '',
+                      // 검색 결과가 없고 최근 검색어가 있으면 → 최근 검색어 리스트
+                      if (hasRecentSearches &&
+                          widget.purpose == BoardGameSearchPurpose.fromHome) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '최근 검색',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: FontString.pretendardSemiBold,
+                              ),
                             ),
-                          );
-                        },
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: viewModel.recentSearches.length,
+                                itemBuilder: (context, index) {
+                                  final recent =
+                                      viewModel.recentSearches[index];
+
+                                  return ItemCommonRecentSearch(
+                                    title: recent.keyword,
+                                    onTap: () {
+                                      _searchController.text = recent.keyword;
+                                      _searchBoardGames();
+                                    },
+                                    onDelete: () {
+                                      viewModel.deleteRecentSearch(recent.id);
+                                    },
+                                    iconPath: IconPath.close,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
+                      // ✅ 3. 아무것도 없으면 빈 화면
+                      return const Center(
+                        child: Text(
+                          '검색어를 입력해보세요!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: FontString.pretendardSemiBold,
+                            fontSize: 20,
+                          ),
+                        ),
                       );
                     },
                   ),

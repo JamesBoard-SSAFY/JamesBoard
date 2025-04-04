@@ -63,6 +63,16 @@ dependencies:
   # provider:
   provider: ^6.1.4
 
+  # drift:
+  drift: ^2.26.0
+  #sqlite3_flutter_libs:
+  sqlite3_flutter_libs: ^0.5.32
+  # path:
+  path: 1.9.0
+  # path_provider:
+  path_provider: ^2.1.5
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,6 +83,8 @@ dev_dependencies:
   retrofit_generator: ^9.1.9
   json_serializable: ^6.9.4
   change_app_package_name: ^1.4.0
+
+  drift_dev: ^2.26.0
 
 flutter:
 

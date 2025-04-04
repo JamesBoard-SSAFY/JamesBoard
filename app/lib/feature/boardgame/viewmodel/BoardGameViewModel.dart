@@ -1,15 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
+import 'package:jamesboard/datasource/model/local/AppDatabase.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameRecommendResponse.dart';
 
 import 'package:jamesboard/datasource/model/response/BoardGameResponse.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameTopResponse.dart';
 import 'package:jamesboard/main.dart';
+import 'package:jamesboard/repository/RecentSearchRepository.dart';
 
 import '../../../datasource/model/response/BoardGameDetailResponse.dart';
 import '../../../repository/BoardGameRepository.dart';
 
 class BoardGameViewModel extends ChangeNotifier {
   final BoardGameRepository _repository;
+  final RecentSearchRepository? _recentSearchRepository;
+
+  List<RecentSearche> _recentSearches = [];
+  List<RecentSearche> get recentSearches => _recentSearches;
 
   List<BoardGameRecommendResponse> _recommendedGames = [];
   List<BoardGameRecommendResponse> get recommendedGames => _recommendedGames;
@@ -32,7 +40,7 @@ class BoardGameViewModel extends ChangeNotifier {
   int? _selectedGameId;
   int? get selectedGameId => _selectedGameId;
 
-  BoardGameViewModel(this._repository);
+  BoardGameViewModel(this._repository, [this._recentSearchRepository]);
 
   Future<void> getRecommendedGames({int limit = 10}) async {
     _isLoading = true;
@@ -107,5 +115,26 @@ class BoardGameViewModel extends ChangeNotifier {
   void clearSearchResults() {
     _games = [];
     notifyListeners();
+  }
+
+  // 최근 검색어 저장
+  Future<void> saveRecentSearch(String keyword) async {
+    if (_recentSearchRepository == null) return;
+    await _recentSearchRepository.saveRecentSearch(keyword);
+    await getRecentSearches();
+  }
+
+  // 최근 검색어 최대 10개 최신순으로 가져오기
+  Future<void> getRecentSearches() async {
+    if (_recentSearchRepository == null) return;
+    _recentSearches = await _recentSearchRepository.getRecentSearches();
+    notifyListeners();
+  }
+
+  // 특정 검색어 삭제
+  Future<void> deleteRecentSearch(int id) async {
+    if (_recentSearchRepository == null) return;
+    await _recentSearchRepository.deleteRecentSearch(id);
+    await getRecentSearches();
   }
 }
