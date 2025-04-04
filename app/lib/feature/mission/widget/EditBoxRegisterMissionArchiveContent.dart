@@ -59,6 +59,8 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionArchiveContent> {
                 fontSize: 16,
                 fontFamily: FontString.pretendardMedium),
             border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
             isDense: true,
             contentPadding: EdgeInsets.zero),
       ),

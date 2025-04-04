@@ -166,6 +166,10 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     missionViewModel.clearAll();
     _imageFiles.clear();
 
+    _descriptionController.addListener(() {
+      setState(() {});
+    });
+
     if (widget.archiveId != null) {
       // 수정 모드
       missionViewModel.getArchiveById(widget.archiveId!).then((_) {
@@ -356,6 +360,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(AppString.missionResultTitle,
@@ -363,7 +368,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               color: mainWhite,
                               fontSize: 20,
                               fontFamily: FontString.pretendardSemiBold)),
-                      Text(AppString.missionResultLimit,
+                      Text('(${_descriptionController.text.length} / 255)',
                           style: TextStyle(
                               color: mainGrey,
                               fontSize: 14,
