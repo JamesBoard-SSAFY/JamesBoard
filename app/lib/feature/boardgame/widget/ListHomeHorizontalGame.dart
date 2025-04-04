@@ -77,9 +77,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                               baseColor: Colors.grey[700]!,
                               highlightColor: Colors.grey[500]!,
                               child: Container(
-                                width: widget.title.length *
-                                    14.0, // 대략적인 텍스트 크기 유지
-                                height: 24, // 폰트 크기에 맞춰 설정
+                                width: widget.title.length * 14.0,
+                                height: 28,
                                 color: Colors.grey[800],
                               ),
                             ),
