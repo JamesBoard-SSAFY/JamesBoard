@@ -194,206 +194,213 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     final viewModel = context.watch<MissionViewModel>();
     final myPageViewModel = context.watch<MyPageViewModel>();
 
-    return Scaffold(
-      backgroundColor: mainBlack,
-      appBar: DefaultCommonAppBar(
-          title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 보드게임 선택 영역
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BoardGameSearchScreen(
-                    purpose: BoardGameSearchPurpose.fromMission,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: mainBlack,
+        appBar: DefaultCommonAppBar(
+            title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 보드게임 선택 영역
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BoardGameSearchScreen(
+                      purpose: BoardGameSearchPurpose.fromMission,
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppString.missionChoice,
+                          style: TextStyle(
+                              color: mainWhite,
+                              fontSize: 20,
+                              fontFamily: FontString.pretendardSemiBold)),
+                      const SizedBox(height: 12),
+                      SelectBoxRegisterMissionBoardGame(
+                        selectedGameTitle: viewModel.selectedGameTitle,
+                      ),
+                    ],
                   ),
                 ),
               ),
-              child: Padding(
+              // 진행한 임무 수 영역
+              Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppString.missionChoice,
+                    Text(AppString.missionCompletedCount,
                         style: TextStyle(
                             color: mainWhite,
                             fontSize: 20,
                             fontFamily: FontString.pretendardSemiBold)),
                     const SizedBox(height: 12),
-                    SelectBoxRegisterMissionBoardGame(
-                      selectedGameTitle: viewModel.selectedGameTitle,
+                    EditBoxRegisterMissionBoardGameCount(
+                      controller: _countController,
                     ),
                   ],
                 ),
               ),
-            ),
-            // 진행한 임무 수 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(AppString.missionCompletedCount,
-                      style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: FontString.pretendardSemiBold)),
-                  const SizedBox(height: 12),
-                  EditBoxRegisterMissionBoardGameCount(
-                    controller: _countController,
-                  ),
-                ],
-              ),
-            ),
-            // 임무 사진 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(AppString.missionPhotoTitle,
-                      style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: FontString.pretendardSemiBold)),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: ButtonRegisterArchivePicture(
-                            icon: IconPath.addPicture,
-                            onTap: () async {
-                              final result = await _cropCompressAndUploadImage(
-                                  ImageSource.gallery, myPageViewModel);
-                              if (result != null) {
-                                final (imageUrl, file) = result;
-                                setState(() {
-                                  _imageFiles.add(file);
-                                });
-                                viewModel.addImageUrl(imageUrl);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: ButtonRegisterArchivePicture(
-                            icon: IconPath.camera,
-                            onTap: () async {
-                              final result = await _cropCompressAndUploadImage(
-                                  ImageSource.camera, myPageViewModel);
-                              if (result != null) {
-                                final (imageUrl, file) = result;
-                                setState(() {
-                                  _imageFiles.add(file);
-                                });
-                                viewModel.addImageUrl(imageUrl);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  if (_imageFiles.isNotEmpty)
-                    SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _imageFiles.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ImageItemRegisterMission(
-                            imageFile: _imageFiles[index],
-                            onRemove: () {
-                              setState(() {
-                                _imageFiles.removeAt(index);
-                              });
-                              viewModel.removeImageUrl(index);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (viewModel.imageUrls.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 1,
-                              color: mainGrey,
-                              margin: const EdgeInsets.only(right: 8),
+              // 임무 사진 영역
+              Padding(
+                padding: const EdgeInsets.only(left: 20, top: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppString.missionPhotoTitle,
+                        style: TextStyle(
+                            color: mainWhite,
+                            fontSize: 20,
+                            fontFamily: FontString.pretendardSemiBold)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ButtonRegisterArchivePicture(
+                              icon: IconPath.addPicture,
+                              onTap: () async {
+                                final result =
+                                    await _cropCompressAndUploadImage(
+                                        ImageSource.gallery, myPageViewModel);
+                                if (result != null) {
+                                  final (imageUrl, file) = result;
+                                  setState(() {
+                                    _imageFiles.add(file);
+                                  });
+                                  viewModel.addImageUrl(imageUrl);
+                                }
+                              },
                             ),
                           ),
-                          Text(
-                            '(${viewModel.imageUrls.length} / 9)',
+                        ),
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ButtonRegisterArchivePicture(
+                              icon: IconPath.camera,
+                              onTap: () async {
+                                final result =
+                                    await _cropCompressAndUploadImage(
+                                        ImageSource.camera, myPageViewModel);
+                                if (result != null) {
+                                  final (imageUrl, file) = result;
+                                  setState(() {
+                                    _imageFiles.add(file);
+                                  });
+                                  viewModel.addImageUrl(imageUrl);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (_imageFiles.isNotEmpty)
+                      SizedBox(
+                        height: 150,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _imageFiles.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ImageItemRegisterMission(
+                              imageFile: _imageFiles[index],
+                              onRemove: () {
+                                setState(() {
+                                  _imageFiles.removeAt(index);
+                                });
+                                viewModel.removeImageUrl(index);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (viewModel.imageUrls.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: mainGrey,
+                                margin: const EdgeInsets.only(right: 8),
+                              ),
+                            ),
+                            Text(
+                              '(${viewModel.imageUrls.length} / 9)',
+                              style: TextStyle(
+                                color: mainGrey,
+                                fontSize: 16,
+                                fontFamily: FontString.pretendardSemiBold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // 임무 결과 영역
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 24, bottom: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(AppString.missionResultTitle,
                             style: TextStyle(
-                              color: mainGrey,
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardSemiBold,
-                            ),
-                          )
-                        ],
-                      ),
+                                color: mainWhite,
+                                fontSize: 20,
+                                fontFamily: FontString.pretendardSemiBold)),
+                        Text('(${_descriptionController.text.length} / 255)',
+                            style: TextStyle(
+                                color: mainGrey,
+                                fontSize: 14,
+                                fontFamily: FontString.pretendardSemiBold)),
+                      ],
                     ),
-                ],
+                    const SizedBox(height: 12),
+                    EditBoxRegisterMissionArchiveContent(
+                      controller: _descriptionController,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // 임무 결과 영역
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 24, bottom: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(AppString.missionResultTitle,
-                          style: TextStyle(
-                              color: mainWhite,
-                              fontSize: 20,
-                              fontFamily: FontString.pretendardSemiBold)),
-                      Text('(${_descriptionController.text.length} / 255)',
-                          style: TextStyle(
-                              color: mainGrey,
-                              fontSize: 14,
-                              fontFamily: FontString.pretendardSemiBold)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  EditBoxRegisterMissionArchiveContent(
-                    controller: _descriptionController,
-                  ),
-                ],
+              // 등록 버튼 영역
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
+                child: ButtonCommonPrimaryBottom(
+                  text: widget.archiveId == null
+                      ? AppString.register
+                      : AppString.modify,
+                  onPressed: () => _onSubmit(viewModel),
+                  disableWithOpacity: false,
+                ),
               ),
-            ),
-            // 등록 버튼 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
-              child: ButtonCommonPrimaryBottom(
-                text: widget.archiveId == null
-                    ? AppString.register
-                    : AppString.modify,
-                onPressed: () => _onSubmit(viewModel),
-                disableWithOpacity: false,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
