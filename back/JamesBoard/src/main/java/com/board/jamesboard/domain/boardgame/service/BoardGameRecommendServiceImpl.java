@@ -3,6 +3,7 @@ package com.board.jamesboard.domain.boardgame.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.board.jamesboard.db.entity.Game;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BoardGameRecommendServiceImpl implements BoardGameRecommendService {
 
     private final UserRepository userRepository;
@@ -44,6 +46,8 @@ public class BoardGameRecommendServiceImpl implements BoardGameRecommendService 
         // 사용자가 남긴 전체 리뷰 수 조회
         List<Game> userGames = userActivityRepository.findDistinctGameByUserUserId(userId);
         int totalReviewCount = userGames.size();
+
+        log.error("review count {}", totalReviewCount);
 
         if (totalReviewCount < 30) {
             // 콘텐츠 기반 추천

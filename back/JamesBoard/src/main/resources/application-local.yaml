@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/board?serverTimezone=Asia/Seoul
-    username: root
-    password: ssafy
+    url: jdbc:mysql://j12d205.p.ssafy.io:3306/board_game?serverTimezone=Asia/Seoul
+    username: d205
+    password: jamesboard
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
