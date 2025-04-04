@@ -59,8 +59,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  final prefs = await SharedPreferences.getInstance();
-  final accessToken = prefs.getString('accessToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
@@ -108,7 +107,7 @@ void main() async {
           ),
         ),
       ],
-      child: MyApp(isLoggedIn: false),
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
