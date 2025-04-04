@@ -4,7 +4,6 @@ import 'package:jamesboard/feature/user/widget/image/ImageUserProfile.dart';
 import 'package:jamesboard/feature/user/widget/textfield/TextFieldUserNickname.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/AppString.dart';
 import '../../../datasource/model/request/MyPage/MyPageUserInfoRequest.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 import '../../../widget/button/ButtonCommonPrimaryBottom.dart';
