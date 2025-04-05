@@ -72,7 +72,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
         title: widget.title,
       ),
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
@@ -126,14 +126,18 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                   child: ButtonCommonPrimaryBottom(
                     text: '변경',
                     disableWithOpacity: true,
-                    onPressed: (_isNicknameValid || _userImage != widget.userImg)
+                    onPressed: (_isNicknameValid ||
+                            _userImage != widget.userImg)
                         ? () async {
-                            viewModel.editUserInfo(MyPageUserInfoRequest(
-                                userName: _nickname, userProfile: _userImage));
-                            Navigator.pop(context);
+                            await viewModel.editUserInfo(MyPageUserInfoRequest(
+                              userName: _nickname,
+                              userProfile: _userImage,
+                            ));
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
                           }
-                        : null, // 유효하지 않으면 버튼 비활성화
-                    // 유효하지 않으면 버튼 비활성화
+                        : null,
                   ),
                 ),
               ],
