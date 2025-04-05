@@ -154,13 +154,13 @@ class _BottomSheetBoardGameEvaluationState
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
-                padding: const EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
               child: Text(
                 AppString.apply,
                 style: TextStyle(
                   color: mainWhite,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontFamily: FontString.pretendardBold,
                 ),
               ),

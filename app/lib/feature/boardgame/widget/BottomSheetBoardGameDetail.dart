@@ -191,13 +191,13 @@ class BottomSheetBoardGameDetail extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
-                padding: const EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
               child: Text(
                 AppString.close,
                 style: TextStyle(
                   color: mainWhite,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontFamily: FontString.pretendardBold,
                 ),
               ),
