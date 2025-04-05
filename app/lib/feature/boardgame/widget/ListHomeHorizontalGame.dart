@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
+import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../theme/Colors.dart';
@@ -103,12 +105,16 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                 ),
                 SizedBox(height: 16),
                 SizedBox(
-                  height: 160, // ListView의 높이
+                  height: 160,
                   child: ListView.builder(
+                    addAutomaticKeepAlives: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: isLoading ? 5 : games.length, // 로딩 중이면 5개 스켈레톤
+                    itemCount: isLoading ? 5 : games.length,
                     itemBuilder: (context, index) {
                       return KeepAliveView(
+                        key: isLoading
+                            ? ValueKey('skeleton_$index')
+                            : ValueKey(games[index].gameId),
                         child: Container(
                           margin: EdgeInsets.only(right: 8.0),
                           child: GestureDetector(
@@ -139,7 +145,9 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                                     ),
                                   )
                                 : ImageCommonGameCard(
-                                    imageUrl: games[index].gameImage),
+                                    key: ValueKey(games[index].gameId),
+                                    imageUrl: games[index].gameImage,
+                                  ),
                           ),
                         ),
                       );

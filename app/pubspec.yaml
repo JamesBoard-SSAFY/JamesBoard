@@ -78,6 +78,9 @@ dependencies:
   #스캘래톤 효과
   shimmer: ^3.0.0
 
+  #이미지 로딩 캐시
+  cached_network_image: ^3.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
