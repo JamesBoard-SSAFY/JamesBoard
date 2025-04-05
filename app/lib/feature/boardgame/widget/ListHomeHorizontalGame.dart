@@ -107,7 +107,7 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                 SizedBox(
                   height: 160,
                   child: ListView.builder(
-                    physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                    physics: CustomScrollPhysics(scrollSpeedFactor: 0.3),
                     addAutomaticKeepAlives: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: isLoading ? 5 : games.length,

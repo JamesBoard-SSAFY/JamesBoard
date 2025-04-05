@@ -133,9 +133,12 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                                   ),
                                   maxLines: 1,
                                   textDirection: TextDirection.ltr,
-                                )..layout(maxWidth: constraints.maxWidth - 20); // 패딩 고려
+                                )..layout(
+                                    maxWidth:
+                                        constraints.maxWidth - 20); // 패딩 고려
 
-                                final isOverflowing = textPainter.didExceedMaxLines; // 텍스트가 넘치는지 확인
+                                final isOverflowing = textPainter
+                                    .didExceedMaxLines; // 텍스트가 넘치는지 확인
 
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -143,29 +146,32 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                                   children: [
                                     isOverflowing
                                         ? SizedBox(
-                                      width: constraints.maxWidth - 20, // 패딩 고려
-                                      height: 50, // 높이 조정
-                                      child: Marquee(
-                                        text: boardGameDetail.gameTitle,
-                                        style: TextStyle(
-                                          color: mainWhite,
-                                          fontSize: 44,
-                                          fontFamily: FontString.pretendardBold,
-                                        ),
-                                        scrollAxis: Axis.horizontal,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        blankSpace: 50.0,
-                                        velocity: 30.0,
-                                      ),
-                                    )
+                                            width: constraints.maxWidth -
+                                                20, // 패딩 고려
+                                            height: 50, // 높이 조정
+                                            child: Marquee(
+                                              text: boardGameDetail.gameTitle,
+                                              style: TextStyle(
+                                                color: mainWhite,
+                                                fontSize: 44,
+                                                fontFamily:
+                                                    FontString.pretendardBold,
+                                              ),
+                                              scrollAxis: Axis.horizontal,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              blankSpace: 50.0,
+                                              velocity: 30.0,
+                                            ),
+                                          )
                                         : Text(
-                                      boardGameDetail.gameTitle,
-                                      style: TextStyle(
-                                        color: mainWhite,
-                                        fontSize: 44,
-                                        fontFamily: 'Pretendard-Bold',
-                                      ),
-                                    ),
+                                            boardGameDetail.gameTitle,
+                                            style: TextStyle(
+                                              color: mainWhite,
+                                              fontSize: 44,
+                                              fontFamily: 'Pretendard-Bold',
+                                            ),
+                                          ),
                                   ],
                                 );
                               },
@@ -174,7 +180,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(height: 16),
                     Container(
                       margin: EdgeInsets.only(left: 20),
                       child: SingleChildScrollView(
