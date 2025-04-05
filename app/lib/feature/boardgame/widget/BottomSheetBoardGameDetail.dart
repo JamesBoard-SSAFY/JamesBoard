@@ -5,8 +5,13 @@ import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/widget/DividerBottomSheetBoardGameDetail.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:provider/provider.dart';
 
-class BottomSheetBoardGameDetail extends StatelessWidget {
+import '../viewmodel/BoardGameViewModel.dart';
+import '../viewmodel/CategoryGameViewModel.dart';
+
+class BottomSheetBoardGameDetail extends StatefulWidget {
+  final int gameId;
   final String gameTitle;
   final int gameReleaseYear;
   final List<String> gameCategories;
@@ -24,6 +29,7 @@ class BottomSheetBoardGameDetail extends StatelessWidget {
 
   const BottomSheetBoardGameDetail({
     super.key,
+    required this.gameId,
     required this.gameTitle,
     required this.gameReleaseYear,
     required this.gameCategories,
@@ -39,6 +45,15 @@ class BottomSheetBoardGameDetail extends StatelessWidget {
     required this.gameDesigners,
     required this.scrollController,
   });
+
+  @override
+  State<BottomSheetBoardGameDetail> createState() =>
+      _BottomSheetBoardGameDetailState();
+}
+
+class _BottomSheetBoardGameDetailState
+    extends State<BottomSheetBoardGameDetail> {
+  late BoardGameViewModel ratingViewModel;
 
   // key 영역 중 가장 긴 값.
   double _getMaxKeyWidth(
@@ -68,22 +83,34 @@ class BottomSheetBoardGameDetail extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
+    ratingViewModel =
+        categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
+
+    ratingViewModel.getBoardGameDetail(widget.gameId);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> gameDefaultInfo = [
-      {'title': '발매년도', 'value': gameReleaseYear},
-      {'title': '장르', 'value': gameCategories},
-      {'title': '테마', 'value': gameThemes},
-      {'title': '평점', 'value': gameAverageRating},
-      {'title': '난이도', 'value': gameDifficulty},
-      {'title': '연령', 'value': gameAge},
-      {'title': '최소 인원 수', 'value': gameMinPlayer},
-      {'title': '최대 인원 수', 'value': gameMaxPlayer},
-      {'title': '평균 플레이 시간', 'value': gamePlayTime},
+      {'title': '발매년도', 'value': widget.gameReleaseYear},
+      {'title': '장르', 'value': widget.gameCategories},
+      {'title': '테마', 'value': widget.gameThemes},
+      {'title': '평점', 'value': widget.gameAverageRating},
+      {'title': '난이도', 'value': widget.gameDifficulty},
+      {'title': '연령', 'value': widget.gameAge},
+      {'title': '최소 인원 수', 'value': widget.gameMinPlayer},
+      {'title': '최대 인원 수', 'value': widget.gameMaxPlayer},
+      {'title': '평균 플레이 시간', 'value': widget.gamePlayTime},
     ];
 
     final List<Map<String, dynamic>> gameMakerInfo = [
-      {'title': '제작사', 'value': gamePublisher},
-      {'title': '제작자', 'value': gameDesigners},
+      {'title': '제작사', 'value': widget.gamePublisher},
+      {'title': '제작자', 'value': widget.gameDesigners},
     ];
 
     final double maxKeyWidth = [
@@ -91,119 +118,133 @@ class BottomSheetBoardGameDetail extends StatelessWidget {
       _getMaxKeyWidth(gameMakerInfo, context),
     ].reduce((a, b) => a > b ? a : b);
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
-      ),
-      decoration: BoxDecoration(
-        color: secondaryBlack,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 크기 조절 핸들 추가
-          Container(
-            width: 40,
-            height: 6,
-            margin: const EdgeInsets.symmetric(vertical: 10),
+    return ChangeNotifierProvider.value(
+      value: ratingViewModel,
+      child: Consumer<BoardGameViewModel>(
+        builder: (context, viewModel, child) {
+          final boardGameDetail = viewModel.boardGameDetail;
+          final double updatedRating =
+              boardGameDetail?.gameRating ?? widget.gameAverageRating;
+
+          gameDefaultInfo[3]['value'] = updatedRating;
+
+          return Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+            ),
             decoration: BoxDecoration(
-              color: Colors.grey[600],
-              borderRadius: BorderRadius.circular(3),
+              color: secondaryBlack,
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
             ),
-          ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 크기 조절 핸들 추가
+                Container(
+                  width: 40,
+                  height: 6,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[600],
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
 
-          // 스크롤 가능 영역
-          Expanded(
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 게임 이름
-                    Text(
-                      gameTitle,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: FontString.pretendardBold,
-                        color: mainWhite,
+                // 스크롤 가능 영역
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: widget.scrollController,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 게임 이름
+                          Text(
+                            widget.gameTitle,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontFamily: FontString.pretendardBold,
+                              color: mainWhite,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // 기본 정보 섹션
+                          _buildSectionTitle(AppString.basicInfo),
+                          const SizedBox(height: 4),
+                          ...gameDefaultInfo.map((info) => Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: _buildSectionInfo(
+                                    info['title'], info['value'], maxKeyWidth),
+                              )),
+
+                          const Dividerbottomsheetboardgamedetail(
+                              height: 24, color: mainGrey),
+
+                          // 설명 섹션
+                          _buildSectionTitle(AppString.explanation),
+                          const SizedBox(height: 24),
+                          Text(
+                            widget.gameDescription,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: FontString.pretendardMedium,
+                              color: mainGrey,
+                            ),
+                          ),
+
+                          const Dividerbottomsheetboardgamedetail(
+                              height: 24, color: mainGrey),
+
+                          // 제작사/제작자 섹션
+                          _buildSectionTitle(AppString.producer),
+                          const SizedBox(height: 4),
+                          ...gameMakerInfo.map((info) => Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: _buildSectionInfo(
+                                    info['title'], info['value'], maxKeyWidth),
+                              )),
+
+                          const SizedBox(height: 24),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                  ),
+                ),
 
-                    // 기본 정보 섹션
-                    _buildSectionTitle(AppString.basicInfo),
-                    const SizedBox(height: 4),
-                    ...gameDefaultInfo.map((info) => Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: _buildSectionInfo(
-                              info['title'], info['value'], maxKeyWidth),
-                        )),
-
-                    const Dividerbottomsheetboardgamedetail(
-                        height: 24, color: mainGrey),
-
-                    // 설명 섹션
-                    _buildSectionTitle(AppString.explanation),
-                    const SizedBox(height: 24),
-                    Text(
-                      gameDescription,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontString.pretendardMedium,
+                // 닫기 버튼 (고정 영역)
+                Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
                         color: mainGrey,
+                        width: 1.0,
                       ),
                     ),
-
-                    const Dividerbottomsheetboardgamedetail(
-                        height: 24, color: mainGrey),
-
-                    // 제작사/제작자 섹션
-                    _buildSectionTitle(AppString.producer),
-                    const SizedBox(height: 4),
-                    ...gameMakerInfo.map((info) => Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: _buildSectionInfo(
-                              info['title'], info['value'], maxKeyWidth),
-                        )),
-
-                    const SizedBox(height: 24),
-                  ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: secondaryBlack,
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                    ),
+                    child: Text(
+                      AppString.close,
+                      style: TextStyle(
+                        color: mainWhite,
+                        fontSize: 16,
+                        fontFamily: FontString.pretendardBold,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-
-          // 닫기 버튼 (고정 영역)
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: mainGrey,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: secondaryBlack,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-              ),
-              child: Text(
-                AppString.close,
-                style: TextStyle(
-                  color: mainWhite,
-                  fontSize: 16,
-                  fontFamily: FontString.pretendardBold,
-                ),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

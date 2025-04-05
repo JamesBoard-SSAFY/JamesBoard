@@ -24,6 +24,7 @@ class BottomSheetUtil {
           expand: false,
           builder: (context, scrollController) {
             return BottomSheetBoardGameDetail(
+              gameId: boardGameDetail.gameId,
               gameTitle: boardGameDetail.gameTitle,
               gameReleaseYear: boardGameDetail.gameYear,
               gameCategories: boardGameDetail.gameCategories,
@@ -45,8 +46,10 @@ class BottomSheetUtil {
     );
   }
 
-  static void showRatingBottomSheet(BuildContext context,
-      {required int gameId}) async {
+  static void showRatingBottomSheet(
+    BuildContext context, {
+    required int gameId,
+  }) async {
     String userIdStr = await storage.read(key: 'userId') ?? '';
 
     int userId = int.parse(userIdStr);
