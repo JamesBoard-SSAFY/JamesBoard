@@ -8,6 +8,7 @@ import '../../../main.dart';
 import '../../../widget/button/ButtonCommonFilter.dart';
 import '../../../widget/bottomsheet/BottomSheetCommonFilter.dart';
 import '../../../widget/image/ImageCommonGameCard.dart';
+import '../../../widget/physics/CustomScrollPhysics.dart';
 import '../viewmodel/BoardGameViewModel.dart';
 import '../viewmodel/CategoryGameViewModel.dart';
 import 'BoardGameDetailScreen.dart';
@@ -152,105 +153,126 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 16),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  ...AppDummyData.filters.map(
-                    (filter) {
-                      return Container(
-                        margin: EdgeInsets.only(right: 16),
-                        child: ButtonCommonFilter(
-                          text: AppDummyData
-                                  .filterDisplayMap[queryParameters[filter]] ??
-                              AppDummyData.filterButtonMap[filter]!,
-                          onTap: () {
-                            logger
-                                .d("key : onTap : ${queryParameters[filter]}");
-
-                            _showFilterBottomSheet(filter);
-                          },
-                          isSelected: queryParameters.containsKey(filter),
-                        ),
-                      );
-                    },
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      queryParameters.clear();
-                      viewModel.getBoardGames(
-                          buildRequestQueryParameters(queryParameters));
-                      setState(() {});
-                    },
-                    child: Text(
-                      AppString.clear,
-                      style: TextStyle(
-                          color: mainGrey,
-                          fontSize: 16,
-                          fontFamily: FontString.pretendardSemiBold,
-                          decoration: TextDecoration.underline,
-                          decorationColor: mainGrey,
-                          decorationThickness: 1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            child: ChangeNotifierProvider.value(
-              value: viewModel,
-              child: Consumer<BoardGameViewModel>(
-                builder: (context, viewModel, child) {
-                  if (viewModel.isLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(color: mainGold),
-                    );
-                  }
-
-                  final games = viewModel.games;
-
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 3 / 4,
-                    ),
-                    itemCount: games.length, // ViewModel에서 데이터 사용
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: 20, right: 20, top: 16),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ...AppDummyData.filters.map(
+                  (filter) {
+                    return Container(
+                      margin: EdgeInsets.only(right: 16),
+                      child: ButtonCommonFilter(
+                        text: AppDummyData
+                                .filterDisplayMap[queryParameters[filter]] ??
+                            AppDummyData.filterButtonMap[filter]!,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BoardGameDetailScreen(
-                                gameId: games[index].gameId,
-                              ),
-                            ),
-                          );
+                          logger.d("key : onTap : ${queryParameters[filter]}");
+
+                          _showFilterBottomSheet(filter);
                         },
-                        child: ImageCommonGameCard(
-                          imageUrl: games[index].gameImage, // ViewModel 데이터 적용
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+                        isSelected: queryParameters.containsKey(filter),
+                      ),
+                    );
+                  },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    queryParameters.clear();
+                    viewModel.getBoardGames(
+                        buildRequestQueryParameters(queryParameters));
+                    setState(() {});
+                  },
+                  child: Text(
+                    AppString.clear,
+                    style: TextStyle(
+                        color: mainGrey,
+                        fontSize: 16,
+                        fontFamily: FontString.pretendardSemiBold,
+                        decoration: TextDecoration.underline,
+                        decorationColor: mainGrey,
+                        decorationThickness: 1),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 16),
+        ChangeNotifierProvider.value(
+          value: viewModel,
+          child: Consumer<BoardGameViewModel>(
+            builder: (context, viewModel, child) {
+              if (viewModel.isLoading) {
+                return Center(
+                  child: CircularProgressIndicator(color: mainGold),
+                );
+              }
+
+              final games = viewModel.games;
+
+              if (games.isEmpty) {
+                return Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "조회된 임무가 없습니다.",
+                        style: TextStyle(
+                          color: mainWhite,
+                          fontSize: 24,
+                          fontFamily: FontString.pretendardBold,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Expanded(
+                child: SingleChildScrollView(
+                  physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 3 / 4,
+                      ),
+                      itemCount: games.length, // ViewModel에서 데이터 사용
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BoardGameDetailScreen(
+                                  gameId: games[index].gameId,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ImageCommonGameCard(
+                            imageUrl:
+                                games[index].gameImage, // ViewModel 데이터 적용
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
