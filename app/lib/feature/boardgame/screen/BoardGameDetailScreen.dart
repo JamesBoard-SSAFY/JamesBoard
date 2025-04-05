@@ -12,11 +12,13 @@ import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/AppString.dart';
 import '../../../util/BottomSheetUtil.dart';
 import '../viewmodel/BoardGameViewModel.dart';
 import '../widget/BoardGameDetailGameList.dart';
+import '../widget/skeleton/BoardGameDetailSkeleton.dart';
 
 class BoardGameDetailScreen extends StatefulWidget {
   final int gameId;
@@ -51,10 +53,8 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
           child: Consumer<BoardGameViewModel>(
             builder: (context, viewModel, child) {
               if (viewModel.isLoading) {
-                return Center(
-                    child: CircularProgressIndicator(color: mainGold));
+                return BoardGameDetailSkeleton();
               }
-
               final boardGameDetail = viewModel.boardGameDetail;
 
               if (boardGameDetail == null) {
