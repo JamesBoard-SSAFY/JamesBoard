@@ -93,7 +93,11 @@ class _MyPageScreenState extends State<MyPageScreen>
                             userImg: viewModel.userInfo!.userProfile,
                           ),
                         ),
-                      );
+                      ).then((result) {
+                        if (result == true) {
+                          viewModel.loadUserId();
+                        }
+                      });
                     },
                     child: Container(
                       width: 30,

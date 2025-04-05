@@ -134,7 +134,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                               userProfile: _userImage,
                             ));
                             if (context.mounted) {
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             }
                           }
                         : null,
