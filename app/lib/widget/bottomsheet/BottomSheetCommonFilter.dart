@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -84,10 +85,10 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
                   top: BorderSide(color: mainGrey, width: 1.0),
                 ),
               ),
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: 20),
               alignment: Alignment.center,
               child: Text(
-                '닫기',
+                AppString.apply,
                 style: TextStyle(
                   fontSize: 16,
                   color: mainWhite,
