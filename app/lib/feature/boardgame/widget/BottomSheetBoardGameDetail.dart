@@ -5,6 +5,7 @@ import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/widget/DividerBottomSheetBoardGameDetail.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/BoardGameViewModel.dart';
@@ -100,7 +101,10 @@ class _BottomSheetBoardGameDetailState
       {'title': '발매년도', 'value': widget.gameReleaseYear},
       {'title': '장르', 'value': widget.gameCategories},
       {'title': '테마', 'value': widget.gameThemes},
-      {'title': '평점', 'value': widget.gameAverageRating},
+      {
+        'title': '평점',
+        'value': CommonUtils.roundToTwoDecimalPlaces(widget.gameAverageRating)
+      },
       {'title': '난이도', 'value': widget.gameDifficulty},
       {'title': '연령', 'value': widget.gameAge},
       {'title': '최소 인원 수', 'value': widget.gameMinPlayer},
@@ -126,7 +130,8 @@ class _BottomSheetBoardGameDetailState
           final double updatedRating =
               boardGameDetail?.gameRating ?? widget.gameAverageRating;
 
-          gameDefaultInfo[3]['value'] = updatedRating;
+          gameDefaultInfo[3]['value'] =
+              CommonUtils.roundToTwoDecimalPlaces(updatedRating);
 
           return Container(
             constraints: BoxConstraints(
