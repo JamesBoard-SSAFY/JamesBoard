@@ -4,7 +4,7 @@ import 'package:jamesboard/theme/Colors.dart';
 import '../constants/AppString.dart';
 import '../constants/FontString.dart';
 import '../datasource/model/response/BoardGameDetailResponse.dart';
-import '../feature/boardgame/widget/BottomSheetBoardGameDetailDetail.dart';
+import '../feature/boardgame/widget/BottomSheetBoardGameDetail.dart';
 import '../feature/boardgame/widget/BottomSheetBoardGameEvaluation.dart';
 import '../feature/boardgame/widget/RatingBarBoardGameDetailReview.dart';
 import '../main.dart';
@@ -17,20 +17,29 @@ class BottomSheetUtil {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return BottomSheetBoardGameDetailDetail(
-          gameTitle: boardGameDetail.gameTitle,
-          gameReleaseYear: boardGameDetail.gameYear,
-          gameCategories: boardGameDetail.gameCategories,
-          gameThemes: boardGameDetail.gameThemes,
-          gameAverageRating: boardGameDetail.gameRating,
-          gameDifficulty: boardGameDetail.difficulty,
-          gameAge: boardGameDetail.gameMinAge,
-          gameMinPlayer: boardGameDetail.minPlayers,
-          gameMaxPlayer: boardGameDetail.maxPlayers,
-          gamePlayTime: boardGameDetail.playTime,
-          gameDescription: boardGameDetail.description,
-          gamePublisher: boardGameDetail.gamePublisher,
-          gameDesigners: boardGameDetail.gameDesigners,
+        return DraggableScrollableSheet(
+          initialChildSize: 0.5,
+          minChildSize: 0.3, // 최소 높이 (40% 화면)
+          maxChildSize: 0.7, // 최대 높이 (90% 화면)
+          expand: false,
+          builder: (context, scrollController) {
+            return BottomSheetBoardGameDetail(
+              gameTitle: boardGameDetail.gameTitle,
+              gameReleaseYear: boardGameDetail.gameYear,
+              gameCategories: boardGameDetail.gameCategories,
+              gameThemes: boardGameDetail.gameThemes,
+              gameAverageRating: boardGameDetail.gameRating,
+              gameDifficulty: boardGameDetail.difficulty,
+              gameAge: boardGameDetail.gameMinAge,
+              gameMinPlayer: boardGameDetail.minPlayers,
+              gameMaxPlayer: boardGameDetail.maxPlayers,
+              gamePlayTime: boardGameDetail.playTime,
+              gameDescription: boardGameDetail.description,
+              gamePublisher: boardGameDetail.gamePublisher,
+              gameDesigners: boardGameDetail.gameDesigners,
+              scrollController: scrollController,
+            );
+          },
         );
       },
     );
