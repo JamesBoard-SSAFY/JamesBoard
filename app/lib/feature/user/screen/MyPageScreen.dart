@@ -28,10 +28,11 @@ class _MyPageScreenState extends State<MyPageScreen>
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
+    Future.microtask(() async {
       final viewModel = context.read<MyPageViewModel>();
-      viewModel.getAllPlayedGames();
-      viewModel.getTopPlayedGame();
+      await viewModel.loadUserId();
+      await viewModel.getAllPlayedGames();
+      await viewModel.getTopPlayedGame();
     });
     _tabController = TabController(length: 2, vsync: this); // 두 개의 탭 설정
   }
@@ -45,7 +46,6 @@ class _MyPageScreenState extends State<MyPageScreen>
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyPageViewModel>(context);
-    viewModel.loadUserId();
 
     return Scaffold(
       backgroundColor: mainBlack,
@@ -93,7 +93,11 @@ class _MyPageScreenState extends State<MyPageScreen>
                             userImg: viewModel.userInfo!.userProfile,
                           ),
                         ),
-                      );
+                      ).then((result) {
+                        if (result == true) {
+                          viewModel.loadUserId();
+                        }
+                      });
                     },
                     child: Container(
                       width: 30,
@@ -160,7 +164,6 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 임무 보고
   Widget _buildTabContentMissionReport() {
     final viewModel = Provider.of<MyPageViewModel>(context);
-    viewModel.getAllPlayedGames();
 
     void handleImageTap(String id) {
       print('클릭한 이미지 ID: $id');
@@ -178,7 +181,6 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 임무 통계
   Widget _buildTabContentMissionStatistics() {
     final viewModel = Provider.of<MyPageViewModel>(context);
-    viewModel.getTopPlayedGame();
 
     return SingleChildScrollView(
       child: Padding(
