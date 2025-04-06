@@ -7,7 +7,7 @@ import '../item/ItemCommonFilter.dart';
 
 class BottomSheetCommonFilter extends StatefulWidget {
   final List<String> items;
-  final String? initialValue; // 초기 선택값
+  final String? initialValue;
 
   const BottomSheetCommonFilter(
       {super.key, required this.items, this.initialValue});
@@ -18,21 +18,33 @@ class BottomSheetCommonFilter extends StatefulWidget {
 }
 
 class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
-  int? selectedIndex; // 선택된 인덱스
+  int? selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null) {
+      int index = widget.items.indexOf(widget.initialValue!);
+      selectedIndex = index != -1 ? index : null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final itemHeight = 90.0; // 아이템 하나의 높이 (패딩 포함)
-    final minItemCount = 2; // 최소한 표시할 아이템 개수
-    final maxListHeight = widget.items.length * itemHeight;
-    final minListHeight =
-        (minItemCount * itemHeight).clamp(100.0, maxListHeight);
-    final maxSheetHeight = screenHeight * 0.9;
+    final itemHeight = 90.0;
+    final minItemCount = 2;
+    final maxSheetHeight = screenHeight; // 화면 전체 사용
 
-    final calculatedHeight =
-        maxListHeight > maxSheetHeight ? maxSheetHeight : maxListHeight;
-    final maxChildSize = calculatedHeight / screenHeight;
-    final minChildSize = minListHeight / screenHeight; // 최소 크기 설정
+    final maxListHeight = widget.items.length * itemHeight;
+    final minListHeight = maxListHeight < (minItemCount * itemHeight)
+        ? maxListHeight
+        : (minItemCount * itemHeight);
+
+    final calculatedHeight = (maxListHeight + 50.0).clamp(0, maxSheetHeight);
+    final maxChildSize = (calculatedHeight / screenHeight).clamp(0.3, 0.7);
+    final minChildSize =
+        (minListHeight / screenHeight).clamp(0.3, maxChildSize);
 
     return DraggableScrollableSheet(
       initialChildSize: maxChildSize,
@@ -50,12 +62,21 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
           ),
           child: Column(
             children: <Widget>[
+              Container(
+                width: 40,
+                height: 6,
+                margin: const EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[600],
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   '옵션 선택',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: FontString.pretendardBold,
                     color: mainGrey,
                   ),
