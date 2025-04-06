@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
@@ -29,11 +31,11 @@ class ChartUserGenrePercent extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '플레이 판 수\n', // 첫 번째 줄
+                    text: AppString.playCount, // 첫 번째 줄
                     style: TextStyle(
                       color: mainGold,
                       fontSize: 20,
-                      fontFamily: 'PretendardSemiBold',
+                      fontFamily: FontString.pretendardSemiBold,
                     ),
                   ),
                   TextSpan(
@@ -41,7 +43,7 @@ class ChartUserGenrePercent extends StatelessWidget {
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 32,
-                      fontFamily: 'PretendardBold',
+                      fontFamily: FontString.pretendardBold,
                     ),
                   ),
                 ],

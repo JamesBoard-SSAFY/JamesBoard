@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -16,9 +18,9 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
   int _currentPage = 0;
 
   final List<String> images = [
-    "assets/image/login_pageview_dice.png",
-    "assets/image/login_pageview_card.png",
-    "assets/image/login_pageview_hourglass.png"
+    IconPath.loginPageViewDice,
+    IconPath.loginPageViewCard,
+    IconPath.loginPageViewHourglass
   ];
 
   final List<List<TextSpan>> text1List = [
@@ -26,43 +28,61 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
       TextSpan(
           text: "좋습니다 007,\n이번엔 ",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "특별한 보드게임",
           style: TextStyle(
-              fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainGold,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "이 필요합니다.",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
     ],
     [
       TextSpan(
           text: "먼저,\n당신의 ",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "취향",
           style: TextStyle(
-              fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainGold,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "을 선택해 주셔야겠군요.",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
     ],
     [
       TextSpan(
           text: "이제 제가 선정한\n게임 목록에서 ",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "원하는 게임 ",
           style: TextStyle(
-              fontSize: 32, color: mainGold, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainGold,
+              fontFamily: FontString.pretendardBold)),
       TextSpan(
           text: "을 고르시면 됩니다.",
           style: TextStyle(
-              fontSize: 32, color: mainWhite, fontFamily: 'PretendardBold')),
+              fontSize: 32,
+              color: mainWhite,
+              fontFamily: FontString.pretendardBold)),
     ],
   ];
 
@@ -128,7 +148,7 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
                         style: TextStyle(
                           fontSize: 16,
                           color: mainWhite,
-                          fontFamily: 'PretendardBold',
+                          fontFamily: FontString.pretendardBold,
                           height: 1.2,
                           decoration: TextDecoration.none,
                         ),

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/datasource/model/request/KakaoTokenLoginRequest.dart';
 import 'package:jamesboard/datasource/model/request/RenewalAccessTokenRequest.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
@@ -49,9 +50,12 @@ class LoginViewModel extends ChangeNotifier {
           KakaoTokenLoginRequest(kakaoAccessToken: token.accessToken);
       final response = await _loginRepository.kakaoTokenLogin(request);
 
-      await storage.write(key: 'accessToken', value: response.accessToken);
-      await storage.write(key: 'refreshToken', value: response.refreshToken);
-      await storage.write(key: 'userId', value: response.userId.toString());
+      await storage.write(
+          key: AppString.keyAccessToken, value: response.accessToken);
+      await storage.write(
+          key: AppString.keyRefreshToken, value: response.refreshToken);
+      await storage.write(
+          key: AppString.keyUserId, value: response.userId.toString());
 
       logger.d('우리꺼 accessToken : ${response.accessToken}');
 
@@ -125,11 +129,14 @@ class LoginViewModel extends ChangeNotifier {
 
         if (renewalResponse.accessToken.isNotEmpty) {
           await storage.write(
-              key: 'accessToken', value: renewalResponse.accessToken);
+              key: AppString.keyAccessToken,
+              value: renewalResponse.accessToken);
           await storage.write(
-              key: 'refreshToken', value: renewalResponse.refreshToken);
+              key: AppString.keyRefreshToken,
+              value: renewalResponse.refreshToken);
           await storage.write(
-              key: 'userId', value: renewalResponse.userId.toString());
+              key: AppString.keyUserId,
+              value: renewalResponse.userId.toString());
 
           await _loginRepository.logout();
         } else {

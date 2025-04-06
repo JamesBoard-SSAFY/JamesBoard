@@ -20,7 +20,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: mainBlack,
       elevation: 0,
       title: Image.asset(
-        'assets/image/jamesboard_logo_text.png',
+        IconPath.jamesBoardLogoText,
         height: 32,
       ),
       actions: [

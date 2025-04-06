@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
@@ -30,13 +31,13 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
   String _getDifficultyText(int difficulty) {
     switch (difficulty) {
       case 0:
-        return '초급';
+        return AppString.difficultyBeginnerValue;
       case 1:
-        return '중급';
+        return AppString.difficultyIntermediateValue;
       case 2:
-        return '고급';
+        return AppString.difficultyAdvancedValue;
       default:
-        return '알 수 없음';
+        return AppString.difficultyUnKnownValue;
     }
   }
 

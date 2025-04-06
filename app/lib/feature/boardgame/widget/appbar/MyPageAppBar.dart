@@ -28,8 +28,10 @@ class MyPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconPath.logout,
             width: 24, // 아이콘 크기 조정
             height: 24,
-            colorFilter:
-                ColorFilter.mode(mainWhite, BlendMode.srcIn), // 🔹 색상 변경
+            colorFilter: ColorFilter.mode(
+              mainWhite,
+              BlendMode.srcIn,
+            ),
           ),
           onPressed: () async {
             await loginViewModel.logout(context);

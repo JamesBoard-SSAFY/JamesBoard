@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
-import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -64,7 +63,6 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
       child: Consumer<BoardGameViewModel>(
         builder: (context, viewModel, child) {
           final isLoading = viewModel.isLoading;
-          final recommendedGames = viewModel.recommendedGames;
 
           return Padding(
             padding: const EdgeInsets.only(top: 32.0),

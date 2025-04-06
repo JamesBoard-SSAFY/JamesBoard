@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/datasource/model/local/AppDatabase.dart';
@@ -187,7 +188,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '최근 검색',
+                                  AppString.recentSearch,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -223,7 +224,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                           } else {
                             return Center(
                               child: Text(
-                                '검색어를 입력해보세요!',
+                                AppString.searchInput,
                                 style: TextStyle(
                                   color: mainWhite,
                                   fontFamily: FontString.pretendardSemiBold,
@@ -235,7 +236,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         } else {
                           return Center(
                             child: Text(
-                              '검색 결과가 없습니다.',
+                              AppString.noSearchResult,
                               style: TextStyle(
                                 color: mainWhite,
                                 fontFamily: FontString.pretendardSemiBold,

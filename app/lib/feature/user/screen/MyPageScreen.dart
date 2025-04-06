@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -59,8 +62,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                 radius: 35,
                 backgroundImage: viewModel.userInfo?.userProfile != null
                     ? NetworkImage(viewModel.userInfo!.userProfile!)
-                    : AssetImage('assets/image/image_default_profile.png')
-                        as ImageProvider,
+                    : AssetImage(IconPath.defaultImage) as ImageProvider,
                 backgroundColor: mainBlack,
               ),
               SizedBox(
@@ -74,7 +76,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                     style: TextStyle(
                       color: mainWhite,
                       fontSize: 20,
-                      fontFamily: 'PretendardBold',
+                      fontFamily: FontString.pretendardBold,
                     ),
                   ),
                   SizedBox(
@@ -86,7 +88,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => MyPageUserEditScreen(
-                            title: "요원 정보 변경",
+                            title: AppString.myPageUserEditTitle,
                             userName: viewModel.userInfo?.userNickname ?? "",
                             userImg: viewModel.userInfo!.userProfile,
                           ),
@@ -107,7 +109,7 @@ class _MyPageScreenState extends State<MyPageScreen>
                       child: Padding(
                         padding: EdgeInsets.all(6),
                         child: SvgPicture.asset(
-                          'assets/image/icon_pen.svg',
+                          IconPath.pen,
                           width: 24,
                           height: 24,
                         ),
@@ -133,7 +135,7 @@ class _MyPageScreenState extends State<MyPageScreen>
               // 선택된 탭 텍스트 스타일
               fontSize: 16,
               color: mainGold,
-              fontFamily: 'PretendardBold',
+              fontFamily: FontString.pretendardBold,
             ),
             unselectedLabelStyle: TextStyle(
               fontSize: 16,
@@ -141,8 +143,8 @@ class _MyPageScreenState extends State<MyPageScreen>
               fontFamily: 'Pretendard',
             ),
             tabs: [
-              Tab(text: "임무 보고"),
-              Tab(text: "임무 통계"),
+              Tab(text: AppString.missionReport),
+              Tab(text: AppString.missionStatistics),
             ],
           ),
           Expanded(
@@ -172,7 +174,6 @@ class _MyPageScreenState extends State<MyPageScreen>
     );
   }
 
-
   // 임무 통계
   Widget _buildTabContentMissionStatistics() {
     final viewModel = Provider.of<MyPageViewModel>(context);
@@ -190,11 +191,11 @@ class _MyPageScreenState extends State<MyPageScreen>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "임무 유형별 통계",
+                  AppString.missionCategoryStatistics,
                   style: TextStyle(
                     fontSize: 24,
                     color: mainWhite,
-                    fontFamily: 'PretendardBold',
+                    fontFamily: FontString.pretendardBold,
                   ),
                 ),
               ],
@@ -217,11 +218,11 @@ class _MyPageScreenState extends State<MyPageScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "임무 누적 판수 Top5",
+                  AppString.missionTop5CumulativePlays,
                   style: TextStyle(
                     fontSize: 24,
                     color: mainWhite,
-                    fontFamily: 'PretendardBold',
+                    fontFamily: FontString.pretendardBold,
                   ),
                 ),
                 GestureDetector(
@@ -230,14 +231,14 @@ class _MyPageScreenState extends State<MyPageScreen>
                       context,
                       MaterialPageRoute(
                         builder: (context) => MyPagePlayTimeScreen(
-                          title: "전체 임무 누적 판수",
+                          title: AppString.totalMissionCumulativePlays,
                           gameData: viewModel.gameStats?.topPlayedGames ?? [],
                         ),
                       ),
                     );
                   },
                   child: Text(
-                    "더보기",
+                    AppString.seeMore,
                     style: TextStyle(
                       fontSize: 16,
                       color: mainGrey,

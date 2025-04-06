@@ -156,7 +156,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
         backgroundColor: mainBlack,
         body: Center(
           child: Text(
-            '데이터를 불러오지 못했습니다.',
+            AppString.notLoadedData,
             style: TextStyle(
               color: mainWhite,
             ),

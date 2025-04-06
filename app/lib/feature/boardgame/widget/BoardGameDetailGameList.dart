@@ -33,7 +33,7 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
         Provider.of<CategoryGameViewModel>(context, listen: false);
 
     viewModel = categoryViewModel.getCategoryViewModel(AppString.gameDetailKey);
-    viewModel.getBoardGames({"category": widget.category});
+    viewModel.getBoardGames({AppString.keyCategory: widget.category});
   }
 
   @override

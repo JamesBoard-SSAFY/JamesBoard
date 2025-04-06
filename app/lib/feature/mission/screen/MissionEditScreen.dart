@@ -58,7 +58,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: '이미지 자르기',
+            toolbarTitle: AppString.imageIncision,
             toolbarColor: Colors.black,
             toolbarWidgetColor: Colors.white,
             hideBottomControls: true,
@@ -146,21 +146,22 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     if (result != -1) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!'),
+          content: Text(widget.archiveId == null
+              ? AppString.archiveRegisterSuccess
+              : AppString.archiveUpdateSuccess),
         ),
       );
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              MissionDetailScreen(title: '임무 상세', archiveId: result),
+          builder: (_) => MissionDetailScreen(
+              title: AppString.missionDetailTitle, archiveId: result),
         ),
         (route) => route.isFirst,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('처리 중 오류가 발생했습니다.')),
+        const SnackBar(content: Text(AppString.errorOccurred)),
       );
     }
   }
@@ -208,7 +209,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
       child: Scaffold(
         backgroundColor: mainBlack,
         appBar: DefaultCommonAppBar(
-            title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
+            title: widget.archiveId == null
+                ? AppString.register
+                : AppString.archiveUpdate),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,7 +295,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content:
-                                            Text('이미지는 최대 9장까지 업로드할 수 있습니다.'),
+                                            Text(AppString.maxImageUploadLimit),
                                       ),
                                     );
                                   }
@@ -334,7 +337,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content:
-                                            Text('이미지는 최대 9장까지 업로드할 수 있습니다.'),
+                                            Text(AppString.maxImageUploadLimit),
                                       ),
                                     );
                                   }

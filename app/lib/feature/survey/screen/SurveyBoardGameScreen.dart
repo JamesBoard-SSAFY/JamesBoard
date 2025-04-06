@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/datasource/model/request/SurveyBoardGameRequest.dart';
 import 'package:jamesboard/datasource/model/response/SurveyBoardGameResponse.dart';
 import 'package:jamesboard/feature/survey/viewmodel/SurveyViewModel.dart';
@@ -114,15 +115,15 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
           bottom: 32,
         ),
         child: ButtonCommonPrimaryBottom(
-          text: '등록',
+          text: AppString.register,
           disableWithOpacity: true,
           onPressed: selectedGameId != null
               ? () async {
-                  final userId = await storage.read(key: 'userId');
+                  final userId = await storage.read(key: AppString.keyUserId);
 
                   if (userId == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('로그인이 필요합니다.')),
+                      const SnackBar(content: Text(AppString.loginRequired)),
                     );
                     return;
                   }
@@ -141,13 +142,15 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyHomePage(title: '홈'),
+                        builder: (context) =>
+                            MyHomePage(title: AppString.myHomePageTitle),
                       ),
                       (route) => false,
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('등록에 실패했어요. 다시 시도해 주세요.')),
+                      const SnackBar(
+                          content: Text(AppString.registrationFailed)),
                     );
                   }
                 }

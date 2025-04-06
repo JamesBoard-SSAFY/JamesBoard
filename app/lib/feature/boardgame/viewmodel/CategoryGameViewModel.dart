@@ -7,7 +7,6 @@ import '../../../repository/RecentSearchRepository.dart';
 class CategoryGameViewModel extends ChangeNotifier {
   final BoardGameRepository _repository;
 
-  // 카테고리별 ViewModel을 저장하는 Map
   final Map<String, BoardGameViewModel> _gameViewModels = {};
 
   CategoryGameViewModel(this._repository);

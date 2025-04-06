@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/survey/screen/SurveyBoardGameScreen.dart';
 import 'package:jamesboard/feature/survey/viewmodel/SurveyViewModel.dart';
@@ -9,6 +10,7 @@ import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/widget/button/ButtonCommonPrimaryBottom.dart';
 import 'package:provider/provider.dart';
 
+import '../../../constants/AppData.dart';
 import '../../../main.dart';
 import '../../../repository/SurveyRepository.dart';
 
@@ -23,15 +25,15 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
   String? selectedId;
 
   final Map<String, String> categoryMap = {
-    '1': '파티',
-    '2': '전략',
-    '3': '경제',
-    '4': '모험',
-    '5': '롤플레잉',
-    '6': '가족',
-    '7': '추리',
-    '8': '전쟁',
-    '9': '추상 전략',
+    '1': AppString.categoryParty,
+    '2': AppString.categoryStrategy,
+    '3': AppString.categoryEconomy,
+    '4': AppString.categoryAdventure,
+    '5': AppString.categoryRolePlaying,
+    '6': AppString.categoryFamily,
+    '7': AppString.categoryDeduction,
+    '8': AppString.categoryWar,
+    '9': AppString.categoryAbstractStrategy,
   };
 
   @override

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/util/dummy/AppDummyData.dart';
+import 'package:jamesboard/util/FilterUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../main.dart';
@@ -37,61 +38,6 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
   late Map<String, dynamic> queryParameters;
   late BoardGameViewModel viewModel;
 
-  Map<String, dynamic> buildRequestQueryParameters(
-      Map<String, dynamic> queryParameters) {
-    Map<String, dynamic> params = {};
-
-    if (queryParameters.containsKey('difficulty')) {
-      params['difficulty'] =
-          AppDummyData.difficultyMap[queryParameters['difficulty']];
-    }
-
-    if (queryParameters.containsKey('minPlayers')) {
-      params['minPlayers'] =
-          AppDummyData.minPlayersMap[queryParameters['minPlayers']];
-    }
-
-    if (queryParameters.containsKey('category')) {
-      params['category'] = queryParameters['category'];
-    }
-
-    if (queryParameters.containsKey('playTime')) {
-      final List<int>? timeRange =
-          AppDummyData.playTimeMap[queryParameters['playTime']];
-      if (timeRange != null) {
-        params['minPlayTime'] = timeRange[0];
-        params['maxPlayTime'] = timeRange[1];
-      }
-    }
-
-    return params;
-  }
-
-  Map<String, dynamic> buildFilterQueryParameters(
-      Map<String, dynamic> queryParameters) {
-    Map<String, dynamic> params = {};
-
-    if (queryParameters.containsKey('difficulty')) {
-      params['difficulty'] =
-          AppDummyData.difficultyStrMap[queryParameters['difficulty']];
-    }
-
-    if (queryParameters.containsKey('minPlayers')) {
-      params['minPlayers'] =
-          AppDummyData.minPlayerStrMap[queryParameters['minPlayers']];
-    }
-
-    if (queryParameters.containsKey('category')) {
-      params['category'] = queryParameters['category'];
-    }
-
-    if (queryParameters.containsKey("minPlayTime")) {
-      params["playTime"] = queryParameters["minPlayTime"];
-    }
-
-    return params;
-  }
-
   void updateQueryParameters(String filterType, dynamic selectedValue) {
     if (selectedValue == AppString.noCare ||
         selectedValue == AppString.difficultyAny) {
@@ -108,7 +54,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => BottomSheetCommonFilter(
-        items: AppDummyData.filterOptions[filterType]!.toList(),
+        items: AppData.filterOptions[filterType]!.toList(),
         initialValue: filterValue,
       ),
     );
@@ -121,7 +67,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
       });
 
       Map<String, dynamic> requestParameters =
-          buildRequestQueryParameters(queryParameters);
+          FilterUtil.buildRequestQueryParameters(queryParameters);
 
       requestParameters.forEach((key, value) {
         logger.d("requestParameters : key : ${key} value : $value");
@@ -142,10 +88,11 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
     final categoryViewModel =
         Provider.of<CategoryGameViewModel>(context, listen: false);
-    viewModel = categoryViewModel.getCategoryViewModel("filter");
+    viewModel = categoryViewModel.getCategoryViewModel(AppString.keyFilter);
     viewModel.getBoardGames(widget.queryParameters);
 
-    queryParameters = buildFilterQueryParameters(widget.queryParameters);
+    queryParameters =
+        FilterUtil.buildFilterQueryParameters(widget.queryParameters);
   }
 
   @override
@@ -158,14 +105,14 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                ...AppDummyData.filters.map(
+                ...AppData.filters.map(
                   (filter) {
                     return Container(
                       margin: EdgeInsets.only(right: 16),
                       child: ButtonCommonFilter(
-                        text: AppDummyData
-                                .filterDisplayMap[queryParameters[filter]] ??
-                            AppDummyData.filterButtonMap[filter]!,
+                        text:
+                            AppData.filterDisplayMap[queryParameters[filter]] ??
+                                AppData.filterButtonMap[filter]!,
                         onTap: () {
                           _showFilterBottomSheet(
                             filter,
@@ -181,7 +128,8 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                   onTap: () {
                     queryParameters.clear();
                     viewModel.getBoardGames(
-                        buildRequestQueryParameters(queryParameters));
+                        FilterUtil.buildRequestQueryParameters(
+                            queryParameters));
                     setState(() {});
                   },
                   child: Text(
@@ -213,7 +161,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "조회된 임무가 없습니다.",
+                        AppString.noContentGames,
                         style: TextStyle(
                           color: mainWhite,
                           fontSize: 24,

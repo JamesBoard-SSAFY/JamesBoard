@@ -6,6 +6,7 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../constants/AppString.dart';
 import '../viewmodel/MissionViewModel.dart';
 import '../widget/ImageItemMissionList.dart';
 
@@ -86,7 +87,7 @@ class _MissionListScreenState extends State<MissionListScreen> with RouteAware {
                       context,
                       MaterialPageRoute(
                         builder: (_) => MissionDetailScreen(
-                          title: '임무 상세',
+                          title: AppString.missionDetailTitle,
                           archiveId: archives[index].archiveId,
                         ),
                       ),

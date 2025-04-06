@@ -98,23 +98,23 @@ class _BottomSheetBoardGameDetailState
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> gameDefaultInfo = [
-      {'title': '발매년도', 'value': widget.gameReleaseYear},
-      {'title': '장르', 'value': widget.gameCategories},
-      {'title': '테마', 'value': widget.gameThemes},
+      {'title': AppString.releaseYear, 'value': widget.gameReleaseYear},
+      {'title': AppString.genre, 'value': widget.gameCategories},
+      {'title': AppString.theme, 'value': widget.gameThemes},
       {
-        'title': '평점',
+        'title': AppString.rating,
         'value': CommonUtils.roundToTwoDecimalPlaces(widget.gameAverageRating)
       },
-      {'title': '난이도', 'value': widget.gameDifficulty},
-      {'title': '연령', 'value': widget.gameAge},
-      {'title': '최소 인원 수', 'value': widget.gameMinPlayer},
-      {'title': '최대 인원 수', 'value': widget.gameMaxPlayer},
-      {'title': '평균 플레이 시간', 'value': widget.gamePlayTime},
+      {'title': AppString.difficulty, 'value': widget.gameDifficulty},
+      {'title': AppString.age, 'value': widget.gameAge},
+      {'title': AppString.minPlayers, 'value': widget.gameMinPlayer},
+      {'title': AppString.maxPlayers, 'value': widget.gameMaxPlayer},
+      {'title': AppString.averagePlayTime, 'value': widget.gamePlayTime},
     ];
 
     final List<Map<String, dynamic>> gameMakerInfo = [
-      {'title': '제작사', 'value': widget.gamePublisher},
-      {'title': '제작자', 'value': widget.gameDesigners},
+      {'title': AppString.publisher, 'value': widget.gamePublisher},
+      {'title': AppString.designer, 'value': widget.gameDesigners},
     ];
 
     final double maxKeyWidth = [
@@ -299,12 +299,12 @@ class _BottomSheetBoardGameDetailState
         }
         break;
 
-      case int _ when key == '난이도':
+      case int _ when key == AppString.difficulty:
         displayValue = switch (value) {
-          0 => '초급',
-          1 => '중급',
-          2 => '고급',
-          _ => '미정',
+          0 => AppString.difficultyBeginnerValue,
+          1 => AppString.difficultyIntermediateValue,
+          2 => AppString.difficultyAdvancedValue,
+          _ => AppString.difficultyUnKnownValue,
         };
         break;
 

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/datasource/model/response/ArchiveListResponse.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/ArchiveRepository.dart';
@@ -119,7 +120,7 @@ class MissionViewModel extends ChangeNotifier {
 
   // 로그인한 userId 조회
   Future<void> loadLoginUserId() async {
-    final userIdStr = await storage.read(key: 'userId');
+    final userIdStr = await storage.read(key: AppString.keyUserId);
     loginUserId = int.tryParse(userIdStr ?? '');
     notifyListeners();
   }

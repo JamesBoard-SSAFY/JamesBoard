@@ -62,7 +62,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
               if (boardGameDetail == null) {
                 return Center(
                   child: Text(
-                    "게임 정보가 없습니다.",
+                    AppString.noGames,
                     style: TextStyle(
                       color: mainWhite,
                     ),
@@ -305,7 +305,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                               );
                             },
                             child: Text(
-                              "더보기",
+                              AppString.seeMore,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontFamily: FontString.pretendardMedium,

@@ -74,4 +74,13 @@ class IconPath {
 
   //MissionRecordScreen
   static const String arrowDown = 'assets/image/icon_arrow_down.svg';
+  static const String jamesBoardLogoText =
+      "assets/image/jamesboard_logo_text.png";
+
+  static const String loginPageViewDice =
+      "assets/image/login_pageview_dice.png";
+  static const String loginPageViewCard =
+      "assets/image/login_pageview_card.png";
+  static const String loginPageViewHourglass =
+      "assets/image/login_pageview_hourglass.png";
 }

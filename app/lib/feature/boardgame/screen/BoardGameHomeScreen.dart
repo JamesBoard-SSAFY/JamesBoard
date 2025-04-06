@@ -5,6 +5,7 @@ import 'package:jamesboard/feature/boardgame/widget/ListHomeHorizontalGame.dart'
 import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
+import '../../../constants/AppData.dart';
 import '../widget/CardHomeSuggestion.dart';
 import 'BoardGameDetailScreen.dart';
 
@@ -34,7 +35,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
 
   void updateFilter(String key, String value) {
     setState(() {
-      AppDummyData.selectedFilters[key] = value;
+      AppData.selectedFilters[key] = value;
     });
   }
 
@@ -47,73 +48,69 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '파티',
+          AppString.keyCategory: AppString.categoryPartyValue,
         },
-        title: '파티 : 요원들의 은밀한 모임!',
+        title: AppString.categoryPartyTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '전략',
+          AppString.keyCategory: AppString.categoryStrategyValue,
         },
-        title: '전략 : 첩보 전략의 결정판!',
+        title: AppString.categoryStrategyTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '경제',
+          AppString.keyCategory: AppString.categoryEconomyValue,
         },
-        title: '경제 : 부의 흐름을 추적하라!',
+        title: AppString.categoryEconomyTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '모험',
+          AppString.keyCategory: AppString.categoryAdventureValue,
         },
-        title: '모험 : 위험과 비밀의 세계!',
+        title: AppString.categoryAdventureTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '롤플레잉',
+          AppString.keyCategory: AppString.categoryRolePlayingValue,
         },
-        title: '롤플레잉 : 위장하고 기만하라!',
+        title: AppString.categoryRolePlayingTitle,
+        updateFilter: updateFilter,
+        updateCategory: AppString.genre,
+      ),
+      ListHomeHorizontalGame(
+        queryParameters: {AppString.keyCategory: AppString.categoryFamilyValue},
+        title: AppString.categoryFamilyTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '가족',
+          AppString.keyCategory: AppString.categoryDeductionValue
         },
-        title: '가족 : 웃음과 전략을 함께!',
+        title: AppString.categoryMysteryTitle,
+        updateFilter: updateFilter,
+        updateCategory: AppString.genre,
+      ),
+      ListHomeHorizontalGame(
+        queryParameters: {AppString.keyCategory: AppString.categoryWarValue},
+        title: AppString.categoryWarTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'category': '추리',
+          AppString.keyCategory: AppString.categoryAbstractStrategyValue
         },
-        title: '추리 : 단서로 배신자를 밝혀라!',
-        updateFilter: updateFilter,
-        updateCategory: AppString.genre,
-      ),
-      ListHomeHorizontalGame(
-        queryParameters: {
-          'category': '전쟁',
-        },
-        title: '전쟁 : 긴장 속 최후의 승자!',
-        updateFilter: updateFilter,
-        updateCategory: AppString.genre,
-      ),
-      ListHomeHorizontalGame(
-        queryParameters: {
-          'category': '추상 전략',
-        },
-        title: '추상전략 : 냉철한 전략으로 승부!',
+        title: AppString.categoryAbstractStrategyTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.genre,
       ),
@@ -125,33 +122,34 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'minPlayers': 1,
+          AppString.keyMinPlayers: AppData.minPlayersMap[AppString.playersSolo],
         },
-        title: 'Solo Mission : 1명',
+        title: AppString.numOfPersonSoloTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.numOfPerson,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'minPlayers': 2,
+          AppString.keyMinPlayers: AppData.minPlayersMap[AppString.playersDuo],
         },
-        title: 'Duo Mission : 2명',
+        title: AppString.numOfPersonDuoTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.numOfPerson,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'minPlayers': 3,
+          AppString.keyMinPlayers: AppData.minPlayersMap[AppString.playersTeam],
         },
-        title: 'Team Mission : 3 ~ 4명',
+        title: AppString.numOfPersonTeamTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.numOfPerson,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'minPlayers': 5,
+          AppString.keyMinPlayers:
+              AppData.minPlayersMap[AppString.playersAssemble],
         },
-        title: 'Assemble Mission : 5인 이상',
+        title: AppString.numOfPersonAssembleTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.numOfPerson,
       ),
@@ -163,25 +161,28 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'difficulty': 0,
+          AppString.keyDifficulty:
+              AppData.difficultyMap[AppString.difficultyBeginner],
         },
-        title: '임무 난이도 : 초급',
+        title: AppString.missionLevelBeginnerTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.level,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'difficulty': 1,
+          AppString.keyDifficulty:
+              AppData.difficultyMap[AppString.difficultyIntermediate],
         },
-        title: '임무 난이도 : 중급',
+        title: AppString.missionLevelIntermediateTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.level,
       ),
       ListHomeHorizontalGame(
         queryParameters: {
-          'difficulty': 2,
+          AppString.keyDifficulty:
+              AppData.difficultyMap[AppString.difficultyAdvanced],
         },
-        title: '임무 난이도 : 고급',
+        title: AppString.missionLevelAdvancedTitle,
         updateFilter: updateFilter,
         updateCategory: AppString.level,
       ),
