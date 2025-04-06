@@ -14,6 +14,7 @@ import 'package:jamesboard/widget/image/ImageCommonGameCard.dart';
 import 'package:jamesboard/widget/item/ItemCommonRecentSearch.dart';
 import 'package:jamesboard/widget/searchbar/SearchBarCommonTitle.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../viewmodel/CategoryGameViewModel.dart';
 
@@ -93,9 +94,29 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                     value: boardGameViewModel,
                     child: Consumer<BoardGameViewModel>(
                       builder: (context, viewModel, _) {
+                        // 스켈레톤 처리.
                         if (viewModel.isLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 3 / 4,
+                            ),
+                            itemCount: 30,
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[700]!,
+                                highlightColor: Colors.grey[500]!,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: mainWhite,
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              );
+                            },
+                          );
                         }
 
                         final hasSearchResults = viewModel.games.isNotEmpty;
