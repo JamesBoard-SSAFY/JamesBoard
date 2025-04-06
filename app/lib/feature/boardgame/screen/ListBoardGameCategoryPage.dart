@@ -102,13 +102,14 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     setState(() {});
   }
 
-  void _showFilterBottomSheet(String filterType) async {
+  void _showFilterBottomSheet(String filterType, String filterValue) async {
     final result = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => BottomSheetCommonFilter(
         items: AppDummyData.filterOptions[filterType]!.toList(),
+        initialValue: filterValue,
       ),
     );
 
@@ -166,9 +167,10 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                                 .filterDisplayMap[queryParameters[filter]] ??
                             AppDummyData.filterButtonMap[filter]!,
                         onTap: () {
-                          logger.d("key : onTap : ${queryParameters[filter]}");
-
-                          _showFilterBottomSheet(filter);
+                          _showFilterBottomSheet(
+                            filter,
+                            queryParameters[filter] ?? "",
+                          );
                         },
                         isSelected: queryParameters.containsKey(filter),
                       ),
