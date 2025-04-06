@@ -34,11 +34,14 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
         itemCount: 15,
         // 더미 개수
         itemBuilder: (context, index) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[700]!,
-            highlightColor: Colors.grey[500]!,
-            child: Container(
-              color: mainWhite,
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[700]!,
+              highlightColor: Colors.grey[500]!,
+              child: Container(
+                color: mainWhite,
+              ),
             ),
           );
         },
