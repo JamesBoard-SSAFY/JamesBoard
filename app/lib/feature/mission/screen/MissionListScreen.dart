@@ -64,8 +64,8 @@ class _MissionListScreenState extends State<MissionListScreen> with RouteAware {
               itemCount: 30, // 로딩 중일 때는 더미 아이템 수
               itemBuilder: (context, index) {
                 return Shimmer.fromColors(
-                  baseColor: Colors.grey[700]!,
-                  highlightColor: Colors.grey[500]!,
+                  baseColor: shimmerBaseColor,
+                  highlightColor: shimmerHighlightColor,
                   child: Container(
                     color: mainWhite,
                   ),

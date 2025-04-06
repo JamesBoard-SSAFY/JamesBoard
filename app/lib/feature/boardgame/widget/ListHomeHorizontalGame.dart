@@ -76,8 +76,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Shimmer.fromColors(
-                              baseColor: Colors.grey[700]!,
-                              highlightColor: Colors.grey[500]!,
+                              baseColor: shimmerBaseColor,
+                              highlightColor: shimmerHighlightColor,
                               child: Container(
                                 width: widget.title.length * 14.0,
                                 height: 28,
@@ -134,8 +134,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                                   },
                             child: isLoading
                                 ? Shimmer.fromColors(
-                                    baseColor: Colors.grey[700]!,
-                                    highlightColor: Colors.grey[500]!,
+                                    baseColor: shimmerBaseColor,
+                                    highlightColor: shimmerHighlightColor,
                                     child: Container(
                                       width: 120,
                                       height: 160,

@@ -59,8 +59,8 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[700]!,
-              highlightColor: Colors.grey[500]!,
+              baseColor: shimmerBaseColor,
+              highlightColor: shimmerHighlightColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -56,8 +56,8 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return Shimmer.fromColors(
-                      baseColor: Colors.grey[700]!,
-                      highlightColor: Colors.grey[500]!,
+                      baseColor: shimmerBaseColor,
+                      highlightColor: shimmerHighlightColor,
                       child: Container(
                         width: width * 1.33,
                         margin: const EdgeInsets.symmetric(horizontal: 20),

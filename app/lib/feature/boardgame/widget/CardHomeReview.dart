@@ -54,8 +54,8 @@ class _CardHomeReviewState extends State<CardHomeReview> {
               height: height * 3,
               child: isLoading
                   ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
+                      baseColor: shimmerBaseColor,
+                      highlightColor: shimmerHighlightColor,
                       child: GridView.builder(
                         scrollDirection: Axis.horizontal,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

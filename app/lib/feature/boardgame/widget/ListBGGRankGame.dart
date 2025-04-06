@@ -54,8 +54,8 @@ class _ListBGGRankGameState extends State<ListBGGRankGame> {
               children: [
                 isLoading
                     ? Shimmer.fromColors(
-                        baseColor: Colors.grey[700]!,
-                        highlightColor: Colors.grey[500]!,
+                        baseColor: shimmerBaseColor,
+                        highlightColor: shimmerHighlightColor,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

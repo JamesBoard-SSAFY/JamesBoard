@@ -14,13 +14,13 @@ class BoardGameDetailSkeleton extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Shimmer.fromColors(
-          baseColor: Colors.grey[800]!,
-          highlightColor: Colors.grey[600]!,
+          baseColor: shimmerBaseColor,
+          highlightColor: shimmerHighlightColor,
           child: Container(
             height: MediaQuery.of(context).size.height * 0.35,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.grey[800],
+              color: shimmerBaseColor,
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -37,13 +37,13 @@ class BoardGameDetailSkeleton extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.only(right: 8),
                     child: Shimmer.fromColors(
-                      baseColor: Colors.grey[800]!,
-                      highlightColor: Colors.grey[600]!,
+                      baseColor: shimmerBaseColor,
+                      highlightColor: shimmerHighlightColor,
                       child: Container(
                         height: 30,
                         width: 60,
                         decoration: BoxDecoration(
-                          color: Colors.grey[800],
+                          color: shimmerBaseColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
@@ -53,34 +53,34 @@ class BoardGameDetailSkeleton extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Container(
                   height: 20,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: Colors.grey[800],
+                    color: shimmerBaseColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
               SizedBox(height: 24),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Container(
                   height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: Colors.grey[800],
+                    color: shimmerBaseColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
               SizedBox(height: 24),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Container(
                   height: 100,
                   width: MediaQuery.of(context).size.width,
@@ -92,8 +92,8 @@ class BoardGameDetailSkeleton extends StatelessWidget {
               ),
               SizedBox(height: 24),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Container(
                   height: 20,
                   width: MediaQuery.of(context).size.width,
@@ -105,8 +105,8 @@ class BoardGameDetailSkeleton extends StatelessWidget {
               ),
               SizedBox(height: 24),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Divider(
                   color: mainGrey,
                   thickness: 1, // 두께 설정
@@ -114,8 +114,8 @@ class BoardGameDetailSkeleton extends StatelessWidget {
               ),
               SizedBox(height: 24),
               Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[600]!,
+                baseColor: shimmerBaseColor,
+                highlightColor: shimmerHighlightColor,
                 child: Container(
                   height: 20,
                   width: MediaQuery.of(context).size.width,

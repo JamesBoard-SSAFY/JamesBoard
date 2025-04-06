@@ -110,8 +110,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                             itemCount: 30,
                             itemBuilder: (context, index) {
                               return Shimmer.fromColors(
-                                baseColor: Colors.grey[700]!,
-                                highlightColor: Colors.grey[500]!,
+                                baseColor: shimmerBaseColor,
+                                highlightColor: shimmerHighlightColor,
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: mainWhite,

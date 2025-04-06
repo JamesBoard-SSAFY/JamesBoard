@@ -64,8 +64,8 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
                   itemCount: 9, // 로딩 상태일 때 9개의 스켈레톤을 보여줌
                   itemBuilder: (context, index) {
                     return Shimmer.fromColors(
-                      baseColor: Colors.grey[800]!,
-                      highlightColor: Colors.grey[600]!,
+                      baseColor: shimmerBaseColor,
+                      highlightColor: shimmerHighlightColor,
                       child: Container(
                         width: 120,
                         height: 160,

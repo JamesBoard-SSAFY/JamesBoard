@@ -37,8 +37,8 @@ class ImageCommonMyPageGameCard extends StatelessWidget {
           return ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[700]!,
-              highlightColor: Colors.grey[500]!,
+              baseColor: shimmerBaseColor,
+              highlightColor: shimmerHighlightColor,
               child: Container(
                 color: mainWhite,
               ),

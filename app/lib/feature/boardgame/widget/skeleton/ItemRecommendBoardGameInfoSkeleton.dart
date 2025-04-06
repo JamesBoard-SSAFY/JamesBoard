@@ -8,8 +8,8 @@ class ItemRecommendBoardGameInfoSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[800]!,
-      highlightColor: Colors.grey[600]!,
+      baseColor: shimmerBaseColor,
+      highlightColor: shimmerHighlightColor,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
@@ -60,7 +60,7 @@ class ItemRecommendBoardGameInfoSkeleton extends StatelessWidget {
                       children: List.generate(
                         4,
                         (index) => Container(
-                          width: 80,
+                          width: 65,
                           height: 28,
                           decoration: BoxDecoration(
                             color: Colors.grey[800],

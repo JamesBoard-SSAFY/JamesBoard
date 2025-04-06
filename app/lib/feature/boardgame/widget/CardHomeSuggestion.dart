@@ -77,8 +77,8 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                       ? Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
                           child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
+                            baseColor: shimmerBaseColor,
+                            highlightColor: shimmerHighlightColor,
                             child: Container(
                               width: width,
                               height: height,

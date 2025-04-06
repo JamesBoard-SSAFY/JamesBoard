@@ -191,8 +191,8 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                       itemBuilder: (context, index) {
                         return isLoading
                             ? Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
+                                baseColor: shimmerBaseColor,
+                                highlightColor: shimmerHighlightColor,
                                 child: Container(
                                   width: 120,
                                   height: 160,
