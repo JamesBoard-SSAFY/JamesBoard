@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
-import '../../../repository/MyPageRepository.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
 import '../viewmodel/MyPageViewModel.dart';
@@ -164,19 +162,16 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 임무 보고
   Widget _buildTabContentMissionReport() {
     final viewModel = Provider.of<MyPageViewModel>(context);
-
-    void handleImageTap(String id) {
-      print('클릭한 이미지 ID: $id');
-      // 여기에 원하는 동작 추가
-    }
+    final isLoading = viewModel.isLoadingMissionRecord;
 
     return SingleChildScrollView(
       child: ImageCommonMyPageGameCard(
         images: viewModel.playedGames ?? [],
-        onTap: handleImageTap,
+        isLoading: isLoading,
       ),
     );
   }
+
 
   // 임무 통계
   Widget _buildTabContentMissionStatistics() {

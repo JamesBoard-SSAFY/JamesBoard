@@ -24,6 +24,7 @@ class MyPageViewModel extends ChangeNotifier {
   MyPageGameStatsResponse? gameStats;
   String? presignedUrl;
   bool isLoading = false;
+  bool isLoadingMissionRecord = false;
 
   MyPageViewModel(
     this._myPageRepository,
@@ -32,6 +33,7 @@ class MyPageViewModel extends ChangeNotifier {
     this._storage,
   );
 
+  // 사용자 프로필 이미지 S3 등록
   Future<String?> issuePresignedUrl(String fileName) async {
     try {
       isLoading = true;
@@ -56,6 +58,7 @@ class MyPageViewModel extends ChangeNotifier {
     return null;
   }
 
+  // 사용자 아이디 조회
   Future<void> loadUserId() async {
     try {
       String? storedUserId = await _storage.read(key: "userId");
@@ -69,6 +72,7 @@ class MyPageViewModel extends ChangeNotifier {
     }
   }
 
+  // 사용자 프로필 조회
   Future<void> getUserInfo() async {
     if (userId == null) return;
     try {
@@ -91,6 +95,7 @@ class MyPageViewModel extends ChangeNotifier {
     }
   }
 
+  // 사용자 프로필 수정
   Future<void> editUserInfo(MyPageUserInfoRequest request) async {
     if (userId == null) return;
 
@@ -114,10 +119,12 @@ class MyPageViewModel extends ChangeNotifier {
     }
   }
 
+  // 개별 아카이브 등록 게임 정보 조회
   Future<void> getMissionRecord(int gameId) async {
     if (userId == null) return;
+    isLoading = true;
+
     try {
-      isLoading = true;
       logger.d('Mission Record - $userId - $gameId');
       notifyListeners();
       missionRecord = await _myPageRepository.getMissionRecord(userId!, gameId);
@@ -139,10 +146,11 @@ class MyPageViewModel extends ChangeNotifier {
     }
   }
 
+  // 아카이브 등록 게임 목록 조회
   Future<void> getAllPlayedGames() async {
     if (userId == null) return;
+    isLoadingMissionRecord = true;
     try {
-      isLoading = true;
       Future.delayed(Duration.zero, () => notifyListeners()); // 빌드 이후 UI 업데이트
 
       playedGames = await _myPageRepository.getAllPlayedGames(userId!);
@@ -157,11 +165,12 @@ class MyPageViewModel extends ChangeNotifier {
     } catch (e) {
       logger.e("flutter - getAllPlayedGames: $e");
     } finally {
-      isLoading = false;
+      isLoadingMissionRecord = false;
       Future.delayed(Duration.zero, () => notifyListeners());
     }
   }
 
+  // 사용자 게임 통계 및 순위 조회
   Future<void> getTopPlayedGame() async {
     if (userId == null) return;
     try {
@@ -185,6 +194,7 @@ class MyPageViewModel extends ChangeNotifier {
     }
   }
 
+  // 유저 선호게임 여부 조회
   Future<void> getPreferGame() async {
     if (userId == null) return;
     try {
