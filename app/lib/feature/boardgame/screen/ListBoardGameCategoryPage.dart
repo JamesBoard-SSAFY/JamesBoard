@@ -4,6 +4,7 @@ import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../main.dart';
 import '../../../widget/button/ButtonCommonFilter.dart';
 import '../../../widget/bottomsheet/BottomSheetCommonFilter.dart';
@@ -93,7 +94,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
   void updateQueryParameters(String filterType, dynamic selectedValue) {
     if (selectedValue == AppString.noCare ||
-        selectedValue == "본부, 어느 단계든 상관없습니다.") {
+        selectedValue == AppString.difficultyAny) {
       queryParameters.remove(filterType);
     } else {
       queryParameters[filterType] = selectedValue;
@@ -143,12 +144,6 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     viewModel.getBoardGames(widget.queryParameters);
 
     queryParameters = buildFilterQueryParameters(widget.queryParameters);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.queryParameters.clear();
   }
 
   @override
@@ -206,15 +201,10 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
           value: viewModel,
           child: Consumer<BoardGameViewModel>(
             builder: (context, viewModel, child) {
-              if (viewModel.isLoading) {
-                return Center(
-                  child: CircularProgressIndicator(color: mainGold),
-                );
-              }
-
+              final isLoading = viewModel.isLoading;
               final games = viewModel.games;
 
-              if (games.isEmpty) {
+              if (!isLoading && games.isEmpty) {
                 return Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -246,24 +236,38 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                         mainAxisSpacing: 12,
                         childAspectRatio: 3 / 4,
                       ),
-                      itemCount: games.length, // ViewModel에서 데이터 사용
+                      itemCount: isLoading ? 15 : games.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BoardGameDetailScreen(
-                                  gameId: games[index].gameId,
+                        return isLoading
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 120,
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ImageCommonGameCard(
-                            imageUrl:
-                                games[index].gameImage, // ViewModel 데이터 적용
-                          ),
-                        );
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BoardGameDetailScreen(
+                                        gameId: games[index].gameId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: ImageCommonGameCard(
+                                  imageUrl: games[index]
+                                      .gameImage, // ViewModel 데이터 적용
+                                ),
+                              );
                       },
                     ),
                   ),

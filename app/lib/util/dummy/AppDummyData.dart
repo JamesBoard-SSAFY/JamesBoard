@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:jamesboard/constants/AppString.dart';
+
 import '../../feature/chatbot/screen/ChatBotScreen.dart';
 import '../../feature/user/widget/chart/ChartUserGenrePercent.dart';
 import '../CommonUtils.dart';
@@ -53,63 +55,6 @@ class AppDummyData {
           'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg'
     },
   ];
-
-  static final List<String> genreTitles = [
-    "파티 : 요원들의 은밀한 모임!",
-    "전략 : 첩보 전략의 결정판!",
-    "경제 : 부의 흐름을 추적하라!",
-    "모험 : 위험과 비밀의 세계!",
-    "롤플레잉 : 위장하고 기만하라!",
-    "가족 : 웃음과 전략을 함께!",
-    "추리 : 단서로 배신자를 밝혀라!",
-    "전쟁 : 긴장 속 최후의 승자!",
-    "추상전략 : 냉철한 전략으로 승부!"
-  ];
-
-  static Map<String, String> titleCategoryMap = {
-    '파티 : 요원들의 은밀한 모임!': '파티',
-    '전략 : 첩보 전략의 결정판!': '전략',
-    "경제 : 부의 흐름을 추적하라!": "경제",
-    "모험 : 위험과 비밀의 세계!": "모험",
-    "롤플레잉 : 위장하고 기만하라!": "롤플레잉",
-    "가족 : 웃음과 전략을 함께!": "가족",
-    "추리 : 단서로 배신자를 밝혀라!": "추리",
-    "전쟁 : 긴장 속 최후의 승자!": "전쟁",
-    "추상전략 : 냉철한 전략으로 승부!": "추상 전략"
-  };
-
-  static final List<String> numOfPersonTitles = [
-    "Solo Mission : 1명",
-    "Duo Mission : 2명",
-    "Team Mission : 3 ~ 4명",
-    "Assemble Mission : 5인 이상",
-  ];
-
-  static final Map<String, int> gamePersonMap = {
-    'Solo Mission : 1명': 1,
-    'Duo Mission : 2명': 2,
-    'Team Mission : 3 ~ 4명': 3,
-    'Assemble Mission : 5인 이상': 5,
-  };
-
-  static final List<String> missionLevelTitles = [
-    "임무 난이도 : 초급",
-    "임무 난이도 : 중급",
-    "임무 난이도 : 고급",
-  ];
-
-  static final Map<String, int> missionLevelMap = {
-    "임무 난이도 : 초급": 0,
-    "임무 난이도 : 중급": 1,
-    "임무 난이도 : 고급": 2,
-  };
-
-  static Map<String, String> selectedFilters = {
-    '장르': '장르',
-    '인원': '인원',
-    '난이도': '난이도',
-    '평균 게임 시간': '평균 게임 시간'
-  };
 
   //mission
   static final List<String> imageAssets = [
@@ -177,28 +122,6 @@ class AppDummyData {
     'https://cf.geekdo-images.com/7SrPNGBKg9IIsP4UQpOi8g__original/img/GKueTbkCk2Ramf6ai8mDj-BP6cI=/0x0/filters:format(jpeg)/pic4325841.jpg',
     'https://cf.geekdo-images.com/5CFwjd8zTcGYVUnkXh04hw__original/img/N8btACZrnEYK1amBNk26VBdcGwc=/0x0/filters:format(jpeg)/pic1176894.jpg',
   ];
-
-  static final Map<String, String> filterTitleMap = {
-    // 인원 변환
-    '파티 : 요원들의 은밀한 모임!': '파티',
-    "전략 : 첩보 전략의 결정판!": '전략',
-    "경제 : 부의 흐름을 추적하라!": '경제',
-    "모험 : 위험과 비밀의 세계!": '모험',
-    "롤플레잉 : 위장하고 기만하라!": '롤플레잉',
-    "가족 : 웃음과 전략을 함께!": '가족',
-    "추리 : 단서로 배신자를 밝혀라!": '추리',
-    "전쟁 : 긴장 속 최후의 승자!": '전쟁',
-    "추상전략 : 냉철한 전략으로 승부!": '추상전략',
-
-    "Solo Mission : 1명": '1인',
-    "Duo Mission : 2명": '2인',
-    "Team Mission : 3 ~ 4명": '3~4인',
-    "Assemble Mission : 5인 이상": '5인 이상',
-
-    "임무 난이도 : 초급": '초급',
-    "임무 난이도 : 중급": '중급',
-    "임무 난이도 : 고급": '고급',
-  };
 
   // Mypage
   static final List<Map<String, String>> missionReportimages = [
@@ -561,130 +484,138 @@ class AppDummyData {
     },
   ];
 
-  static List<String> filters = [
-    "category",
-    "minPlayers",
-    "difficulty",
-    "playTime",
+  static final List<String> filters = [
+    AppString.keyCategory,
+    AppString.keyMinPlayers,
+    AppString.keyDifficulty,
+    AppString.keyPlayTime
   ];
 
-  static Map<String, String> filterButtonMap = {
-    "category": "장르",
-    "minPlayers": "인원",
-    "difficulty": "난이도",
-    "playTime": "평균 게임 시간"
+  static final Map<String, String> filterButtonMap = {
+    AppString.keyCategory: AppString.filterGenre,
+    AppString.keyMinPlayers: AppString.filterNumOfPersons,
+    AppString.keyDifficulty: AppString.filterDifficulty,
+    AppString.keyPlayTime: AppString.filterAvgGameTime
   };
 
-  static Map<String, dynamic> filterQueryKeyMap = {
-    "장르": "category",
-    "인원": "minPlayers",
-    "난이도": "difficulty",
-    "평균 게임 시간": "playTime"
+  static final Map<String, String> filterQueryKeyMap = {
+    AppString.filterGenre: AppString.keyCategory,
+    AppString.filterNumOfPersons: AppString.keyMinPlayers,
+    AppString.filterDifficulty: AppString.keyDifficulty,
+    AppString.filterAvgGameTime: AppString.keyPlayTime
   };
 
   static final Map<String, List<String>> filterOptions = {
-    'category': [
-      '파티',
-      '전략',
-      '경제',
-      '모험',
-      '롤플레잉',
-      '가족',
-      '추리',
-      '전쟁',
-      '추상전략',
-      '상관없음',
+    AppString.keyCategory: [
+      AppString.categoryParty,
+      AppString.categoryStrategy,
+      AppString.categoryEconomy,
+      AppString.categoryAdventure,
+      AppString.categoryRolePlaying,
+      AppString.categoryFamily,
+      AppString.categoryDeduction,
+      AppString.categoryWar,
+      AppString.categoryAbstractStrategy,
+      AppString.categoryAny,
     ],
-    "minPlayers": [
-      "Solo: 1인",
-      "Duo: 2인",
-      "Team: 3~4인",
-      "Assemble: 5인 이상",
-      '상관없음',
+    AppString.keyMinPlayers: [
+      AppString.playersSolo,
+      AppString.playersDuo,
+      AppString.playersTeam,
+      AppString.playersAssemble,
+      AppString.playersAny,
     ],
-    "difficulty": [
-      "본부, 초급 단계 요청합니다.",
-      "본부, 중급 단계 요청합니다.",
-      "본부, 고급 단계 요청합니다.",
-      "본부, 어느 단계든 상관없습니다.",
+    AppString.keyDifficulty: [
+      AppString.difficultyBeginner,
+      AppString.difficultyIntermediate,
+      AppString.difficultyAdvanced,
+      AppString.difficultyAny,
     ],
-    "playTime": [
-      "초신속 임무 (0 ~ 30분)",
-      "정밀 작전 (60 ~ 120분)",
-      "장기 작전 (120 ~ 240분)",
-      "마스터 작전 (240분 이상)",
-      "상관없음"
+    AppString.keyPlayTime: [
+      AppString.playtimeUltraShort,
+      AppString.playtimeShort,
+      AppString.playtimeMedium,
+      AppString.playtimeLong,
+      AppString.playtimeAny,
     ],
   };
 
+  // 필터 매핑
   static final Map<String, String> filterDisplayMap = {
-    'Solo: 1인': '1인',
-    'Duo: 2인': '2인',
-    'Team: 3~4인': '3~4인',
-    'Assemble: 5인 이상': '5인 이상',
-    '초신속 임무 (0 ~ 30분)': '0 ~ 30분',
-    '정밀 작전 (60 ~ 120분)': '60 ~ 120분',
-    '장기 작전 (120 ~ 240분)': '120 ~ 240분',
-    '마스터 작전 (240분 이상)': '240분 이상',
-    '본부, 초급 단계 요청합니다.': '초급',
-    '본부, 중급 단계 요청합니다.': '중급',
-    '본부, 고급 단계 요청합니다.': '고급',
-    '본부, 어느 단계든 상관없습니다.': '상관없음',
-    '파티': '파티',
-    '전략': '전략',
-    '경제': '경제',
-    '모험': '모험',
-    '롤플레잉': '롤플레잉',
-    '가족': '가족',
-    '추리': '추리',
-    '전쟁': '전쟁',
-    '추상전략': '추상전략',
-    '상관없음': '상관없음',
+    AppString.playersSolo: AppString.playersSoloValue,
+    AppString.playersDuo: AppString.playersDuoValue,
+    AppString.playersTeam: AppString.playersTeamValue,
+    AppString.playersAssemble: AppString.playersAssembleValue,
+    AppString.playtimeUltraShort: AppString.playtimeUltraShortValue,
+    AppString.playtimeShort: AppString.playtimeShortValue,
+    AppString.playtimeMedium: AppString.playtimeMediumValue,
+    AppString.playtimeLong: AppString.playtimeLongValue,
+    AppString.difficultyBeginner: AppString.difficultyBeginnerValue,
+    AppString.difficultyIntermediate: AppString.difficultyIntermediateValue,
+    AppString.difficultyAdvanced: AppString.difficultyAdvancedValue,
+    AppString.difficultyAny: AppString.difficultyAnyValue,
+    AppString.categoryParty: AppString.categoryPartyValue,
+    AppString.categoryStrategy: AppString.categoryStrategyValue,
+    AppString.categoryEconomy: AppString.categoryEconomyValue,
+    AppString.categoryAdventure: AppString.categoryAdventureValue,
+    AppString.categoryRolePlaying: AppString.categoryRolePlayingValue,
+    AppString.categoryFamily: AppString.categoryFamilyValue,
+    AppString.categoryDeduction: AppString.categoryDeductionValue,
+    AppString.categoryWar: AppString.categoryWarValue,
+    AppString.categoryAbstractStrategy: AppString.categoryAbstractStrategyValue,
+    AppString.categoryAny: AppString.categoryAnyValue,
   };
 
   static const Map<String, String> categoryMap = {
-    '파티': '파티',
-    '전략': '전략',
-    '경제': '경제',
-    '모험': '모험',
-    '롤플레잉': '롤플레잉',
-    '가족': '가족',
-    '추리': '추리',
-    '전쟁': '전쟁',
-    '추상전략': '추상전략',
-    '상관없음': '상관없음',
+    AppString.categoryParty: AppString.categoryParty,
+    AppString.categoryStrategy: AppString.categoryStrategy,
+    AppString.categoryEconomy: AppString.categoryEconomy,
+    AppString.categoryAdventure: AppString.categoryAdventure,
+    AppString.categoryRolePlayingValue: AppString.categoryRolePlayingValue,
+    AppString.categoryFamily: AppString.categoryFamily,
+    AppString.categoryDeduction: AppString.categoryDeductionValue,
+    AppString.categoryWar: AppString.categoryWar,
+    AppString.categoryAbstractStrategy: AppString.categoryAbstractStrategyValue,
+    AppString.categoryAny: AppString.categoryAny,
   };
 
   static const Map<String, int> difficultyMap = {
-    "본부, 초급 단계 요청합니다.": 0,
-    "본부, 중급 단계 요청합니다.": 1,
-    "본부, 고급 단계 요청합니다.": 2,
+    AppString.difficultyBeginner: 0,
+    AppString.difficultyIntermediate: 1,
+    AppString.difficultyAdvanced: 2,
   };
 
   static const Map<int, String> difficultyStrMap = {
-    0: "본부, 초급 단계 요청합니다.",
-    1: "본부, 중급 단계 요청합니다.",
-    2: "본부, 고급 단계 요청합니다.",
+    0: AppString.difficultyBeginner,
+    1: AppString.difficultyIntermediate,
+    2: AppString.difficultyAdvanced,
   };
 
   static const Map<String, int> minPlayersMap = {
-    "Solo: 1인": 1,
-    "Duo: 2인": 2,
-    "Team: 3~4인": 3,
-    "Assemble: 5인 이상": 5,
+    AppString.playersSolo: 1,
+    AppString.playersDuo: 2,
+    AppString.playersTeam: 3,
+    AppString.playersAssemble: 5,
   };
 
   static const Map<int, String> minPlayerStrMap = {
-    1: "Solo: 1인",
-    2: "Duo: 2인",
-    3: "Team: 3~4인",
-    5: "Assemble: 5인 이상",
+    1: AppString.playersSolo,
+    2: AppString.playersDuo,
+    3: AppString.playersTeam,
+    5: AppString.playersAssemble,
   };
 
   static const Map<String, List<int>> playTimeMap = {
-    "초신속 임무 (0 ~ 30분)": [0, 30],
-    "정밀 작전 (60 ~ 120분)": [60, 120],
-    "장기 작전 (120 ~ 240분)": [120, 240],
-    "마스터 작전 (240분 이상)": [240, 9999],
+    AppString.playtimeUltraShort: [0, 30],
+    AppString.playtimeShort: [60, 120],
+    AppString.playtimeMedium: [120, 240],
+    AppString.playtimeLong: [240, 9999],
+  };
+
+  static Map<String, String> selectedFilters = {
+    AppString.filterGenre: AppString.filterGenre,
+    AppString.filterNumOfPersons: AppString.filterNumOfPersons,
+    AppString.filterDifficulty: AppString.filterDifficulty,
+    AppString.filterAvgGameTime: AppString.filterAvgGameTime
   };
 }
