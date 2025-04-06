@@ -20,3 +20,6 @@ const Color mainWar = Color(0xFFAD83F3);
 const Color mainAbstractStrategy = Color(0xFF96A2B0);
 
 const Color shadowBlack = Color(0x990C0F14);
+
+Color shimmerBaseColor = Colors.grey[800]!;
+Color shimmerHighlightColor = Colors.grey[600]!;
