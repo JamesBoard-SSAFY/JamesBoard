@@ -64,6 +64,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
     boardGameViewModel = categoryViewModel.getCategoryViewModel(
         'boardGameName', RecentSearchRepository(AppDatabase()));
     boardGameViewModel.clearSearchResults();
+
+    boardGameViewModel.getRecentSearches();
   }
 
   @override
