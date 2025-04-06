@@ -106,6 +106,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     final result = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) => BottomSheetCommonFilter(
         items: AppDummyData.filterOptions[filterType]!.toList(),
       ),
