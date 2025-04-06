@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
+import 'package:jamesboard/feature/boardgame/screen/BoardGameImageScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/widget/button/ButtonBoardRatingGame.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -24,6 +25,7 @@ class BoardGameDetailScreen extends StatefulWidget {
   final int gameId;
 
   const BoardGameDetailScreen({super.key, required this.gameId});
+
   @override
   State<BoardGameDetailScreen> createState() => _BoardGameDetailScreenState();
 }
@@ -76,12 +78,24 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                     Stack(
                       children: [
                         ClipRRect(
-                          child: Image.network(
-                            boardGameDetail
-                                .gameImage, // Image URL from view model
-                            height: MediaQuery.of(context).size.height * 0.35,
-                            width: MediaQuery.of(context).size.width,
-                            fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BoardGameImageScreen(
+                                    imageUrl: boardGameDetail.gameImage,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Image.network(
+                              boardGameDetail
+                                  .gameImage, // Image URL from view model
+                              height: MediaQuery.of(context).size.height * 0.35,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Positioned(
