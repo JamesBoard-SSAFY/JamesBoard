@@ -33,12 +33,18 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   late BoardGameViewModel boardGameViewModel;
 
+  bool _hasSearched = false;
+
   void _searchBoardGames() async {
     final keyword = _searchController.text.trim();
 
     if (keyword.isEmpty) return;
 
     FocusScope.of(context).unfocus();
+
+    setState(() {
+      _hasSearched = true;
+    });
 
     if (widget.purpose == BoardGameSearchPurpose.fromHome) {
       await boardGameViewModel.saveRecentSearch(keyword);
@@ -150,56 +156,71 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         }
 
                         // 검색 결과가 없고 최근 검색어가 있으면 → 최근 검색어 리스트
-                        if (hasRecentSearches &&
-                            widget.purpose == BoardGameSearchPurpose.fromHome) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '최근 검색',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontFamily: FontString.pretendardSemiBold,
+                        if (!_hasSearched) {
+                          if (hasRecentSearches &&
+                              widget.purpose ==
+                                  BoardGameSearchPurpose.fromHome) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '최근 검색',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontFamily: FontString.pretendardSemiBold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: viewModel.recentSearches.length,
-                                  itemBuilder: (context, index) {
-                                    final recent =
-                                        viewModel.recentSearches[index];
+                                const SizedBox(height: 12),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: viewModel.recentSearches.length,
+                                    itemBuilder: (context, index) {
+                                      final recent =
+                                          viewModel.recentSearches[index];
 
-                                    return ItemCommonRecentSearch(
-                                      title: recent.keyword,
-                                      onTap: () {
-                                        _searchController.text = recent.keyword;
-                                        _searchBoardGames();
-                                      },
-                                      onDelete: () {
-                                        viewModel.deleteRecentSearch(recent.id);
-                                      },
-                                      iconPath: IconPath.close,
-                                    );
-                                  },
+                                      return ItemCommonRecentSearch(
+                                        title: recent.keyword,
+                                        onTap: () {
+                                          _searchController.text =
+                                              recent.keyword;
+                                          _searchBoardGames();
+                                        },
+                                        onDelete: () {
+                                          viewModel
+                                              .deleteRecentSearch(recent.id);
+                                        },
+                                        iconPath: IconPath.close,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                '검색어를 입력해보세요!',
+                                style: TextStyle(
+                                  color: mainWhite,
+                                  fontFamily: FontString.pretendardSemiBold,
+                                  fontSize: 20,
                                 ),
                               ),
-                            ],
+                            );
+                          }
+                        } else {
+                          return Center(
+                            child: Text(
+                              '검색 결과가 없습니다.',
+                              style: TextStyle(
+                                color: mainWhite,
+                                fontFamily: FontString.pretendardSemiBold,
+                                fontSize: 20,
+                              ),
+                            ),
                           );
                         }
-
-                        // ✅ 3. 아무것도 없으면 빈 화면
-                        return Center(
-                          child: Text(
-                            '검색어를 입력해보세요!',
-                            style: TextStyle(
-                              color: mainWhite,
-                              fontFamily: FontString.pretendardSemiBold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        );
                       },
                     ),
                   ),
