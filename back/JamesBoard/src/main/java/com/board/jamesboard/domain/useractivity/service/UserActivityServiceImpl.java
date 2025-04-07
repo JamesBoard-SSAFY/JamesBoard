@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -135,19 +136,35 @@ public class UserActivityServiceImpl implements UserActivityService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
 
-        UserActivity activity = userActivityRepository.findAllByUserAndGame(user, game)
+        // 유저-게임 활동 조회
+        Optional<UserActivity> optionalActivity = userActivityRepository
+                .findAllByUserAndGame(user, game)
                 .stream()
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("해당 유저의 평점 정보가 없습니다."));
+                .findFirst();
 
+        // 활동이 존재할 경우: 평점 반환
+        if (optionalActivity.isPresent()) {
+            UserActivity activity = optionalActivity.get();
+            return new RatingResponseDto(
+                    activity.getUserActivityId(),
+                    activity.getCreatedAt(),
+                    activity.getModifiedAt(),
+                    activity.getUserActivityRating(),
+                    activity.getUserActivityTime(),
+                    activity.getGame().getGameId(),
+                    activity.getUser().getUserId()
+            );
+        }
+
+        // 활동이 없을 경우: 평점 0으로 리턴
         return new RatingResponseDto(
-                activity.getUserActivityId(),
-                activity.getCreatedAt(),
-                activity.getModifiedAt(),
-                activity.getUserActivityRating(),
-                activity.getUserActivityTime(),
-                activity.getGame().getGameId(),
-                activity.getUser().getUserId()
+                null,
+                null,
+                null,
+                0.0f,
+                0,
+                game.getGameId(),
+                user.getUserId()
         );
     }
 }
