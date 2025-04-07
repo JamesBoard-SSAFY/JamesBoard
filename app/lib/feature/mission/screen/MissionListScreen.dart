@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/AppString.dart';
+import '../../../widget/physics/CustomScrollPhysics.dart';
 import '../viewmodel/MissionViewModel.dart';
 import '../widget/ImageItemMissionList.dart';
 
@@ -73,6 +74,7 @@ class _MissionListScreenState extends State<MissionListScreen> with RouteAware {
               },
             )
           : GridView.builder(
+              physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 2.0,

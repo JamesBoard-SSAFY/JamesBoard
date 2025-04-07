@@ -19,8 +19,8 @@ class BottomSheetUtil {
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.5,
-          minChildSize: 0.3, // 최소 높이 (40% 화면)
-          maxChildSize: 0.7, // 최대 높이 (90% 화면)
+          minChildSize: 0.3, // 최소 높이
+          maxChildSize: 0.9, // 최대 높이
           expand: false,
           builder: (context, scrollController) {
             return BottomSheetBoardGameDetail(
