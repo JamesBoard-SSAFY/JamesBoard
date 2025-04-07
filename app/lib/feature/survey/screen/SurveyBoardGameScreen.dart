@@ -143,7 +143,7 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MyHomePage(title: AppString.myHomePageTitle),
+                            MyHome(title: AppString.myHomePageTitle),
                       ),
                       (route) => false,
                     );

@@ -187,7 +187,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                 onDeleteSuccess: () {
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (_) => const MyHomePage(
+                      builder: (_) => const MyHome(
                         title: 'Flutter Demo Home Page',
                         selectedIndex: 3,
                       ),
