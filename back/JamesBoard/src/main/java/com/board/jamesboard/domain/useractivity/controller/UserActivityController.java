@@ -2,6 +2,7 @@ package com.board.jamesboard.domain.useractivity.controller;
 
 import com.board.jamesboard.domain.useractivity.dto.RatingPatchRequestDto;
 import com.board.jamesboard.domain.useractivity.dto.RatingPostRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingResponseDto;
 import com.board.jamesboard.domain.useractivity.dto.UserActivityResponseDto;
 import com.board.jamesboard.domain.useractivity.service.UserActivityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,12 @@ public class UserActivityController {
     @Operation(summary = "게임ID와 유저ID 조합에 해당하는 유저 활동 조회")
     public ResponseEntity<List<UserActivityResponseDto>> getUserActivity(@RequestParam Long userId, @RequestParam Long gameId) {
         return ResponseEntity.ok(userActivityService.getUserActivity(userId, gameId));
+    }
+
+    @GetMapping("/detail")
+    @Operation(summary = "게임ID와 유저ID 조합에 해당하는 유저 활동 상세 조회")
+    public ResponseEntity<RatingResponseDto> getUserActivityDetailById(@RequestParam Long userId, @RequestParam Long gameId) {
+        return ResponseEntity.ok(userActivityService.getUserActivityRating(userId, gameId));
     }
 
     @PostMapping("")
