@@ -116,6 +116,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(validationResult)),
       );
+      setState(() {
+        _isSubmitting = false;
+      });
       return;
     }
 

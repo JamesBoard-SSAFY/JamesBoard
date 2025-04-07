@@ -174,6 +174,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 프로필 영역
             Padding(
