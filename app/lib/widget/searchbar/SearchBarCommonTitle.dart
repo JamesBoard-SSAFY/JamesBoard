@@ -22,6 +22,7 @@ class SearchBarCommonTitle extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              maxLength: 50,
               controller: controller,
               onSubmitted: onSubmitted,
               style: TextStyle(
@@ -37,6 +38,7 @@ class SearchBarCommonTitle extends StatelessWidget {
                     color: mainGrey,
                     fontSize: 16,
                   ),
+                  counterText: '',
                   filled: true,
                   fillColor: secondaryBlack,
                   border: OutlineInputBorder(
