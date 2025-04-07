@@ -108,53 +108,55 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 32,
-        ),
-        child: ButtonCommonPrimaryBottom(
-          text: AppString.register,
-          disableWithOpacity: true,
-          onPressed: selectedGameId != null
-              ? () async {
-                  final userId = await storage.read(key: AppString.keyUserId);
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 32,
+          ),
+          child: ButtonCommonPrimaryBottom(
+            text: AppString.register,
+            disableWithOpacity: true,
+            onPressed: selectedGameId != null
+                ? () async {
+                    final userId = await storage.read(key: AppString.keyUserId);
 
-                  if (userId == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(AppString.loginRequired)),
+                    if (userId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(AppString.loginRequired)),
+                      );
+                      return;
+                    }
+
+                    final request = SurveyBoardGameRequest(
+                      gameId: selectedGameId!,
                     );
-                    return;
+
+                    final result =
+                        await viewModel.insertUserPreferBoardGameSurvey(
+                      int.parse(userId),
+                      request,
+                    );
+
+                    if (result == int.parse(userId)) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MyHome(title: AppString.myHomePageTitle),
+                        ),
+                        (route) => false,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(AppString.registrationFailed)),
+                      );
+                    }
                   }
-
-                  final request = SurveyBoardGameRequest(
-                    gameId: selectedGameId!,
-                  );
-
-                  final result =
-                      await viewModel.insertUserPreferBoardGameSurvey(
-                    int.parse(userId),
-                    request,
-                  );
-
-                  if (result == int.parse(userId)) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyHome(title: AppString.myHomePageTitle),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(AppString.registrationFailed)),
-                    );
-                  }
-                }
-              : null,
+                : null,
+          ),
         ),
       ),
     );
