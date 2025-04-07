@@ -98,13 +98,6 @@ class _BottomSheetBoardGameEvaluationState
               onPressed: () async {
                 if (_rating == 0.0) {
                   logger.d("rating $_rating");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        AppString.selectRating,
-                      ),
-                    ),
-                  );
                   return;
                 }
 
