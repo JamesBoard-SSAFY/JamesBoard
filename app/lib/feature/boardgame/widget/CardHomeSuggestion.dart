@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -58,7 +59,8 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BoardGameViewModel(BoardGameRepository.create())
+      create: (_) => BoardGameViewModel(
+          BoardGameRepository.create(), LoginRepository.create())
         ..getRecommendedGames(limit: 10),
       child: Consumer<BoardGameViewModel>(
         builder: (context, viewModel, child) {

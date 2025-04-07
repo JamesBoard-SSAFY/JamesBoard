@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jamesboard/datasource/model/local/AppDatabase.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameRecommendResponse.dart';
@@ -7,6 +8,7 @@ import 'package:jamesboard/datasource/model/response/BoardGameRecommendResponse.
 import 'package:jamesboard/datasource/model/response/BoardGameResponse.dart';
 import 'package:jamesboard/datasource/model/response/BoardGameTopResponse.dart';
 import 'package:jamesboard/main.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/RecentSearchRepository.dart';
 
 import '../../../datasource/model/response/BoardGameDetailResponse.dart';
@@ -15,6 +17,7 @@ import '../../../repository/BoardGameRepository.dart';
 class BoardGameViewModel extends ChangeNotifier {
   final BoardGameRepository _repository;
   final RecentSearchRepository? _recentSearchRepository;
+  final LoginRepository _loginRepository;
 
   List<RecentSearche> _recentSearches = [];
   List<RecentSearche> get recentSearches => _recentSearches;
@@ -40,7 +43,8 @@ class BoardGameViewModel extends ChangeNotifier {
   int? _selectedGameId;
   int? get selectedGameId => _selectedGameId;
 
-  BoardGameViewModel(this._repository, [this._recentSearchRepository]);
+  BoardGameViewModel(this._repository, this._loginRepository,
+      [this._recentSearchRepository]);
 
   Future<void> getRecommendedGames({int limit = 10}) async {
     _isLoading = true;
@@ -50,6 +54,11 @@ class BoardGameViewModel extends ChangeNotifier {
     try {
       _recommendedGames = await _repository.getRecommendedGames(limit: limit);
       _recommendedGames = _recommendedGames.sublist(0, 9);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        logger.e('401 에러 발생. 로그아웃 처리.');
+        await _loginRepository.logout();
+      }
     } catch (e) {
       _errorMessage = 'Failed to load recommended games: $e';
     } finally {
@@ -65,6 +74,11 @@ class BoardGameViewModel extends ChangeNotifier {
     try {
       _games = await _repository.getBoardGames(queryParameters);
       logger.d('boardGameviewmoel : games : $_games');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        logger.e('401 에러 발생. 로그아웃 처리.');
+        await _loginRepository.logout();
+      }
     } catch (e) {
       _errorMessage = 'Failed to load board games: $e';
     } finally {
@@ -82,6 +96,11 @@ class BoardGameViewModel extends ChangeNotifier {
       _topGames = await _repository.getTopGames(queryParameters);
 
       logger.d("viewModel topGames : ${topGames}");
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        logger.e('401 에러 발생. 로그아웃 처리.');
+        await _loginRepository.logout();
+      }
     } catch (e) {
       _errorMessage = 'Failed to load board games: $e';
     } finally {
@@ -104,6 +123,11 @@ class BoardGameViewModel extends ChangeNotifier {
       _boardGameDetail = await _repository.getBoardGameDetail(gameId);
 
       logger.d("logger viewmodel: ${boardGameDetail.toString()}");
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        logger.e('401 에러 발생. 로그아웃 처리.');
+        await _loginRepository.logout();
+      }
     } catch (e) {
       _errorMessage = 'Failed to load board game detail: $e';
     } finally {
