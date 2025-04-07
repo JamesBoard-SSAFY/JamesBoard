@@ -10,6 +10,7 @@ import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
+import '../../../main.dart';
 import '../../../widget/image/ImageCommonMyPageGameCard.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
 import '../viewmodel/MyPageViewModel.dart';
@@ -24,7 +25,7 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   late TabController _tabController;
 
   @override
@@ -40,8 +41,26 @@ class _MyPageScreenState extends State<MyPageScreen>
   }
 
   @override
+  void didPopNext() {
+    // 다른 화면에서 pop하고 돌아왔을 때 호출됨
+    Future.microtask(() async {
+      final viewModel = context.read<MyPageViewModel>();
+      await viewModel.loadUserId();
+      await viewModel.getAllPlayedGames();
+      await viewModel.getTopPlayedGame();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
   void dispose() {
-    _tabController.dispose(); // 메모리 누수 방지
+    routeObserver.unsubscribe(this);
+    _tabController.dispose();
     super.dispose();
   }
 
