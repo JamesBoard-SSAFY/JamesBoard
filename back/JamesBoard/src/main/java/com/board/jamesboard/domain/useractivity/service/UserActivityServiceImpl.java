@@ -8,7 +8,9 @@ import com.board.jamesboard.db.repository.UserActivityRepository;
 import com.board.jamesboard.db.repository.UserRepository;
 import com.board.jamesboard.domain.useractivity.dto.RatingPatchRequestDto;
 import com.board.jamesboard.domain.useractivity.dto.RatingPostRequestDto;
+import com.board.jamesboard.domain.useractivity.dto.RatingResponseDto;
 import com.board.jamesboard.domain.useractivity.dto.UserActivityResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,5 +124,30 @@ public class UserActivityServiceImpl implements UserActivityService {
         gameRepository.save(game);
 
         return savedUserActivity.getUserActivityId();
+    }
+
+    @Override
+    public RatingResponseDto getUserActivityRating(Long userId, Long gameId) {
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("해당 게임이 존재하지 않습니다."));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
+
+        UserActivity activity = userActivityRepository.findAllByUserAndGame(user, game)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("해당 유저의 평점 정보가 없습니다."));
+
+        return new RatingResponseDto(
+                activity.getUserActivityId(),
+                activity.getCreatedAt(),
+                activity.getModifiedAt(),
+                activity.getUserActivityRating(),
+                activity.getUserActivityTime(),
+                activity.getGame().getGameId(),
+                activity.getUser().getUserId()
+        );
     }
 }
