@@ -47,6 +47,7 @@ class BoardGameViewModel extends ChangeNotifier {
       [this._recentSearchRepository]);
 
   Future<void> getRecommendedGames({int limit = 10}) async {
+    if (_isLoading) return;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -68,6 +69,7 @@ class BoardGameViewModel extends ChangeNotifier {
   }
 
   Future<void> getBoardGames(Map<String, dynamic> queryParameters) async {
+    if (_isLoading) return;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
