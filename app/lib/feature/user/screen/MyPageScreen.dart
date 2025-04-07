@@ -6,6 +6,7 @@ import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/user/screen/MyPageUserEditScreen.dart';
 import 'package:jamesboard/feature/user/widget/item/ItemUserGenrePercentInfo.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../datasource/model/response/MyPage/MyPageGameStatsResponse.dart';
@@ -167,6 +168,7 @@ class _MyPageScreenState extends State<MyPageScreen>
     final isLoading = viewModel.isLoadingMissionRecord;
 
     return SingleChildScrollView(
+      physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
       child: ImageCommonMyPageGameCard(
         images: viewModel.playedGames ?? [],
         isLoading: isLoading,
@@ -179,6 +181,7 @@ class _MyPageScreenState extends State<MyPageScreen>
     final viewModel = Provider.of<MyPageViewModel>(context);
 
     return SingleChildScrollView(
+      physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
