@@ -12,8 +12,10 @@ import '../viewmodel/CategoryGameViewModel.dart';
 
 class BoardGameDetailGameList extends StatefulWidget {
   final String category;
+  final int gameId;
   const BoardGameDetailGameList({
     super.key,
+    required this.gameId,
     required this.category,
   });
 
@@ -32,7 +34,8 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
     final categoryViewModel =
         Provider.of<CategoryGameViewModel>(context, listen: false);
 
-    viewModel = categoryViewModel.getCategoryViewModel(AppString.gameDetailKey);
+    viewModel = categoryViewModel
+        .getCategoryViewModel("${AppString.gameDetailKey}${widget.gameId}");
     viewModel.getBoardGames({AppString.keyCategory: widget.category});
   }
 

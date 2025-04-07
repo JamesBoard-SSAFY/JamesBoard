@@ -7,6 +7,7 @@ import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameImageScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/widget/button/ButtonBoardRatingGame.dart';
+import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
@@ -343,6 +344,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                       ),
                     ),
                     BoardGameDetailGameList(
+                      gameId: widget.gameId,
                       category: boardGameDetail.gameCategories[Random()
                           .nextInt(boardGameDetail.gameCategories.length)],
                     ),
