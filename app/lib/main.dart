@@ -6,6 +6,7 @@ import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
+import 'package:jamesboard/feature/login/viewmodel/LoginViewModel.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -107,6 +108,12 @@ void main() async {
         ChangeNotifierProvider<UserActivityViewModel>(
           create: (context) => UserActivityViewModel(
             UserActivityRepository.create(),
+          ),
+        ),
+        ChangeNotifierProvider<LoginViewModel>(
+          create: (context) => LoginViewModel(
+            LoginRepository.create(),
+            SurveyRepository.create(),
           ),
         ),
       ],
