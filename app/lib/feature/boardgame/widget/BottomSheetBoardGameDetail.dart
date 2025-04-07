@@ -154,61 +154,74 @@ class _BottomSheetBoardGameDetailState
                 Expanded(
                   child: SingleChildScrollView(
                     controller: widget.scrollController,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 게임 이름
-                          Text(
-                            widget.gameTitle,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontFamily: FontString.pretendardBold,
-                              color: mainWhite,
-                            ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 3,
+                          margin: const EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[600],
+                            borderRadius: BorderRadius.circular(3),
                           ),
-                          const SizedBox(height: 24),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 게임 이름
+                              Text(
+                                widget.gameTitle,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontFamily: FontString.pretendardBold,
+                                  color: mainWhite,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
 
-                          // 기본 정보 섹션
-                          _buildSectionTitle(AppString.basicInfo),
-                          const SizedBox(height: 4),
-                          ...gameDefaultInfo.map((info) => Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: _buildSectionInfo(
-                                    info['title'], info['value'], maxKeyWidth),
-                              )),
+                              // 기본 정보 섹션
+                              _buildSectionTitle(AppString.basicInfo),
+                              const SizedBox(height: 4),
+                              ...gameDefaultInfo.map((info) => Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: _buildSectionInfo(info['title'],
+                                        info['value'], maxKeyWidth),
+                                  )),
 
-                          const Dividerbottomsheetboardgamedetail(
-                              height: 24, color: mainGrey),
+                              const Dividerbottomsheetboardgamedetail(
+                                  height: 24, color: mainGrey),
 
-                          // 설명 섹션
-                          _buildSectionTitle(AppString.explanation),
-                          const SizedBox(height: 24),
-                          Text(
-                            widget.gameDescription,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardMedium,
-                              color: mainGrey,
-                            ),
+                              // 설명 섹션
+                              _buildSectionTitle(AppString.explanation),
+                              const SizedBox(height: 24),
+                              Text(
+                                widget.gameDescription,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: FontString.pretendardMedium,
+                                  color: mainGrey,
+                                ),
+                              ),
+
+                              const Dividerbottomsheetboardgamedetail(
+                                  height: 24, color: mainGrey),
+
+                              // 제작사/제작자 섹션
+                              _buildSectionTitle(AppString.producer),
+                              const SizedBox(height: 4),
+                              ...gameMakerInfo.map((info) => Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: _buildSectionInfo(info['title'],
+                                        info['value'], maxKeyWidth),
+                                  )),
+
+                              const SizedBox(height: 24),
+                            ],
                           ),
-
-                          const Dividerbottomsheetboardgamedetail(
-                              height: 24, color: mainGrey),
-
-                          // 제작사/제작자 섹션
-                          _buildSectionTitle(AppString.producer),
-                          const SizedBox(height: 4),
-                          ...gameMakerInfo.map((info) => Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: _buildSectionInfo(
-                                    info['title'], info['value'], maxKeyWidth),
-                              )),
-
-                          const SizedBox(height: 24),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
