@@ -45,7 +45,9 @@ class _BoardGameDetailGameListState extends State<BoardGameDetailGameList> {
       value: viewModel,
       child: Consumer<BoardGameViewModel>(builder: (context, viewModel, child) {
         final isLoading = viewModel.isLoading;
-        final games = viewModel.games;
+        final games = viewModel.games
+            .where((game) => game.gameId != widget.gameId)
+            .toList();
 
         return Container(
           margin: EdgeInsets.only(
