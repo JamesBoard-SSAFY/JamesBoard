@@ -74,7 +74,10 @@ class BoardGameViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      _games = await _repository.getBoardGames(queryParameters);
+      if (_games.isEmpty) {
+        _games = await _repository.getBoardGames(queryParameters);
+      }
+
       logger.d('boardGameviewmoel : games : $_games');
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {

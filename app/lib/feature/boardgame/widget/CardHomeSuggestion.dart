@@ -58,10 +58,8 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BoardGameViewModel(
-          BoardGameRepository.create(), LoginRepository.create())
-        ..getRecommendedGames(limit: 10),
+    return ChangeNotifierProvider.value(
+      value: boardGameViewModel,
       child: Consumer<BoardGameViewModel>(
         builder: (context, viewModel, child) {
           final isLoading = viewModel.isLoading;

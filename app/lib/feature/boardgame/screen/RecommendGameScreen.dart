@@ -9,15 +9,27 @@ import '../viewmodel/BoardGameViewModel.dart';
 import '../widget/ItemRecommendBoardGameInfo.dart';
 import 'BoardGameDetailScreen.dart';
 
-class RecommendGameScreen extends StatelessWidget {
+class RecommendGameScreen extends StatefulWidget {
   const RecommendGameScreen({super.key});
 
   @override
+  State<RecommendGameScreen> createState() => _RecommendGameScreenState();
+}
+
+class _RecommendGameScreenState extends State<RecommendGameScreen> {
+  late BoardGameViewModel boardGameViewModel;
+
+  void initState() {
+    super.initState();
+    boardGameViewModel =
+        Provider.of<BoardGameViewModel>(context, listen: false);
+    boardGameViewModel.getRecommendedGames();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BoardGameViewModel(
-          BoardGameRepository.create(), LoginRepository.create())
-        ..getRecommendedGames(),
+    return ChangeNotifierProvider.value(
+      value: boardGameViewModel,
       child: Consumer<BoardGameViewModel>(
         builder: (context, viewModel, child) {
           final isLoading = viewModel.isLoading;
