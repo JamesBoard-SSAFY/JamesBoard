@@ -48,7 +48,7 @@ class BoardGameViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   DateTime? _lastFetchTime;
-  final Duration _cacheDuration = Duration(seconds: 30);
+  final Duration _cacheDuration = Duration(minutes: 1);
 
   int? _selectedGameId;
 
@@ -59,13 +59,17 @@ class BoardGameViewModel extends ChangeNotifier {
 
   Future<void> getRecommendedGames({int limit = 10}) async {
     final now = DateTime.now();
-    final startTime = DateTime.now(); // ✅ 시작 시각
+    final startTime = DateTime.now();
 
     if (_lastFetchTime != null &&
         now.difference(_lastFetchTime!) < _cacheDuration &&
         _recommendedGames.isNotEmpty) {
       final duration = DateTime.now().difference(startTime);
-      logger.i('재사용 로딩 시간: ${duration.inMilliseconds} ms'); // ✅ 로딩 시간 로그
+      logger.i('재사용 로딩 시간: ${duration.inMilliseconds} ms');
+      return;
+    }
+
+    if (_isLoading) {
       return;
     }
 
@@ -79,7 +83,7 @@ class BoardGameViewModel extends ChangeNotifier {
       _lastFetchTime = DateTime.now(); // 마지막 호출 시간 갱신
 
       final duration = DateTime.now().difference(startTime);
-      logger.i('서버 요청 로딩 시간: ${duration.inMilliseconds} ms'); // ✅ 로딩 시간 로그
+      logger.i('서버 요청 로딩 시간: ${duration.inMilliseconds} ms'); 
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         logger.e('401 에러 발생. 로그아웃 처리.');
