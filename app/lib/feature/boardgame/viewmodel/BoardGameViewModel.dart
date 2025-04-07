@@ -83,7 +83,7 @@ class BoardGameViewModel extends ChangeNotifier {
       _lastFetchTime = DateTime.now(); // 마지막 호출 시간 갱신
 
       final duration = DateTime.now().difference(startTime);
-      logger.i('서버 요청 로딩 시간: ${duration.inMilliseconds} ms'); 
+      logger.i('서버 요청 로딩 시간: ${duration.inMilliseconds} ms');
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         logger.e('401 에러 발생. 로그아웃 처리.');
@@ -97,15 +97,19 @@ class BoardGameViewModel extends ChangeNotifier {
     }
   }
 
-
-  Future<void> getBoardGames(Map<String, dynamic> queryParameters) async {
+  Future<void> getBoardGames(
+      Map<String, dynamic> queryParameters, bool isDuplicated) async {
     if (_isLoading) return;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
     try {
-      if (_games.isEmpty) {
+      if (isDuplicated) {
         _games = await _repository.getBoardGames(queryParameters);
+      } else {
+        if (_games.isEmpty) {
+          _games = await _repository.getBoardGames(queryParameters);
+        }
       }
 
       logger.d('boardGameviewmoel : games : $_games');

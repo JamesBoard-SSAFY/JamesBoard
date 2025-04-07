@@ -53,7 +53,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
       await boardGameViewModel.saveRecentSearch(keyword);
     }
 
-    boardGameViewModel.getBoardGames({'boardGameName': keyword});
+    boardGameViewModel.getBoardGames({'boardGameName': keyword}, true);
   }
 
   @override

@@ -77,7 +77,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
         logger.d("queryParameters : key : ${key} value : $value");
       });
 
-      viewModel.getBoardGames(requestParameters);
+      viewModel.getBoardGames(requestParameters, true);
       setState(() {});
     }
   }
@@ -89,7 +89,7 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
     final categoryViewModel =
         Provider.of<CategoryGameViewModel>(context, listen: false);
     viewModel = categoryViewModel.getCategoryViewModel(AppString.keyFilter);
-    viewModel.getBoardGames(widget.queryParameters);
+    viewModel.getBoardGames(widget.queryParameters, true);
 
     queryParameters =
         FilterUtil.buildFilterQueryParameters(widget.queryParameters);
@@ -128,8 +128,8 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
                   onTap: () {
                     queryParameters.clear();
                     viewModel.getBoardGames(
-                        FilterUtil.buildRequestQueryParameters(
-                            queryParameters));
+                        FilterUtil.buildRequestQueryParameters(queryParameters),
+                        true);
                     setState(() {});
                   },
                   child: Text(
