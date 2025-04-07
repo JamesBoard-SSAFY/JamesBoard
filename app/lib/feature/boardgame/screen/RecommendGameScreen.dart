@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/boardgame/widget/skeleton/ItemRecommendBoardGameInfoSkeleton.dart';
+import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ class RecommendGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BoardGameViewModel(BoardGameRepository.create())
+      create: (_) => BoardGameViewModel(
+          BoardGameRepository.create(), LoginRepository.create())
         ..getRecommendedGames(),
       child: Consumer<BoardGameViewModel>(
         builder: (context, viewModel, child) {

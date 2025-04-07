@@ -80,11 +80,13 @@ void main() async {
         ChangeNotifierProvider<CategoryGameViewModel>(
           create: (context) => CategoryGameViewModel(
             BoardGameRepository.create(),
+            LoginRepository.create(),
           ),
         ),
         ChangeNotifierProvider<BoardGameViewModel>(
           create: (context) => BoardGameViewModel(
             BoardGameRepository.create(),
+            LoginRepository.create(),
           ),
         ),
         ChangeNotifierProvider<MissionViewModel>(
