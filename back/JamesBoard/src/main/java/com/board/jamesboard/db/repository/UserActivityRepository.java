@@ -23,4 +23,5 @@ UserActivityRepository extends JpaRepository<UserActivity, Long> {
 
     // 해당 유저가 작성한 리뷰개수
     Long countByUserUserIdAndUserActivityRatingIsNotNull(Long userId);
+
 }
