@@ -5,6 +5,7 @@ import 'package:jamesboard/feature/boardgame/widget/ListHomeHorizontalGame.dart'
 import 'package:jamesboard/feature/boardgame/widget/ListTopTenGame.dart';
 import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
+import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import '../../../constants/AppData.dart';
 import '../widget/CardHomeSuggestion.dart';
 import 'BoardGameDetailScreen.dart';
@@ -190,6 +191,7 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
     ];
 
     return ListView.builder(
+      physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
       padding: EdgeInsets.zero,
       itemCount: items.length,
       itemBuilder: (context, index) {
