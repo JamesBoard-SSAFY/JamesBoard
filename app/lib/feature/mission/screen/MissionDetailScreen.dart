@@ -174,6 +174,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 프로필 영역
             Padding(
@@ -187,7 +188,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                 onDeleteSuccess: () {
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (_) => const MyHomePage(
+                      builder: (_) => const MyHome(
                         title: 'Flutter Demo Home Page',
                         selectedIndex: 3,
                       ),
@@ -252,13 +253,12 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                   const SizedBox(height: 12),
 
                   // 해시태그
-                  Row(
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
                       HashTagMissionDetail(
                           info: archiveDetailResponse.gameTitle),
-                      const SizedBox(
-                        width: 8,
-                      ),
                       HashTagMissionDetail(
                           info:
                               '${archiveDetailResponse.archiveGamePlayCount}판')

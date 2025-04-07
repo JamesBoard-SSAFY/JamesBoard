@@ -81,7 +81,7 @@ class LoginViewModel extends ChangeNotifier {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const MyHomePage(title: '홈'),
+            builder: (_) => const MyHome(title: '홈'),
           ),
         );
       }
