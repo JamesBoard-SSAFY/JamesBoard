@@ -38,6 +38,9 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
         maxRating: 5,
         allowHalfRating: true,
         itemSize: 48,
+        itemPadding: const EdgeInsets.symmetric(
+          horizontal: 2,
+        ),
         ratingWidget: RatingWidget(
           full: SvgPicture.asset(
             IconPath.starSelected,
@@ -45,7 +48,6 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
           ),
           half: SvgPicture.asset(
             IconPath.starHalfFilled,
-            color: mainGold,
           ),
           empty: SvgPicture.asset(
             IconPath.starSelected,
@@ -53,9 +55,7 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
           ),
         ),
         onRatingUpdate: (rating) {
-          if (onRatingUpdate != null) {
-            onRatingUpdate!(rating); // 상태 변경 콜백 호출
-          }
+          onRatingUpdate(rating); // 상태 변경 콜백 호출
         },
       ),
     );

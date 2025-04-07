@@ -113,7 +113,7 @@ class _ProfileMissionDetailState extends State<ProfileMissionDetail> {
                       }
                     } else {
                       ScaffoldMessenger.of(parentContext).showSnackBar(
-                        const SnackBar(content: Text('삭제에 실패했습니다.')),
+                        const SnackBar(content: Text(AppString.deleteFailed)),
                       );
                     }
                   }

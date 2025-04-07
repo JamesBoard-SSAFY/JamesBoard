@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/widget/button/ButtonCommonGameTag.dart';
@@ -103,7 +104,7 @@ class ItemUserArchiveCard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => MissionDetailScreen(
-                                    title: "임무 상세",
+                                    title: AppString.missionDetailTitle,
                                     archiveId: missionData.archiveId,
                                   ),
                                 ));

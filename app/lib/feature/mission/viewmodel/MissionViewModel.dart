@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/datasource/model/response/ArchiveListResponse.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/ArchiveRepository.dart';
@@ -119,13 +120,16 @@ class MissionViewModel extends ChangeNotifier {
 
   // 로그인한 userId 조회
   Future<void> loadLoginUserId() async {
-    final userIdStr = await storage.read(key: 'userId');
+    final userIdStr = await storage.read(key: AppString.keyUserId);
     loginUserId = int.tryParse(userIdStr ?? '');
     notifyListeners();
   }
 
   // 아카이브 전체 조회
   Future<void> getAllArchives() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       _archives = await _archiveRepository.getAllArchives();
       notifyListeners();
@@ -137,6 +141,9 @@ class MissionViewModel extends ChangeNotifier {
     } catch (e) {
       logger.e('아카이브 전체 조회 실패 : $e');
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 
   // 아카이브 상세 조회

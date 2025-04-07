@@ -67,7 +67,7 @@ class _BottomSheetBoardGameEvaluationState
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Text(
-              "클루",
+              AppString.rating,
               style: TextStyle(
                 color: mainWhite,
                 fontSize: 20,
@@ -98,9 +98,6 @@ class _BottomSheetBoardGameEvaluationState
               onPressed: () async {
                 if (_rating == 0.0) {
                   logger.d("rating $_rating");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("평점을 선택해주세요.")),
-                  );
                   return;
                 }
 
@@ -128,7 +125,11 @@ class _BottomSheetBoardGameEvaluationState
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("활동 수정에 실패했습니다. 다시 시도해주세요.")),
+                      SnackBar(
+                        content: Text(
+                          AppString.notPatchRating,
+                        ),
+                      ),
                     );
                   }
                 } else {
@@ -147,20 +148,24 @@ class _BottomSheetBoardGameEvaluationState
                     Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("활동 추가에 실패했습니다. 다시 시도해주세요.")),
+                      SnackBar(
+                        content: Text(
+                          AppString.notPostRating,
+                        ),
+                      ),
                     );
                   }
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
-                padding: const EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
               child: Text(
                 AppString.apply,
                 style: TextStyle(
                   color: mainWhite,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontFamily: FontString.pretendardBold,
                 ),
               ),

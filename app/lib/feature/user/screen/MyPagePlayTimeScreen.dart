@@ -4,6 +4,7 @@ import 'package:jamesboard/theme/Colors.dart';
 
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 import '../../../widget/item/ItemCommonGameRank.dart';
+import '../../../widget/physics/CustomScrollPhysics.dart';
 
 class MyPagePlayTimeScreen extends StatefulWidget {
   final String title;
@@ -28,6 +29,7 @@ class _MyPagePlayTimeScreenState extends State<MyPagePlayTimeScreen> {
         title: widget.title,
       ),
       body: SingleChildScrollView(
+        physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 20,

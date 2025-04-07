@@ -75,6 +75,15 @@ dependencies:
   # 텍스트 흐르게하기
   marquee: ^2.2.3
 
+  #스캘래톤 효과
+  shimmer: ^3.0.0
+
+  #이미지 로딩 캐시
+  cached_network_image: ^3.4.1
+
+  #lottie:
+  lottie: ^3.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

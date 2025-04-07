@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamesboard/constants/AppString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/FontString.dart';
@@ -48,13 +50,13 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
     viewModel = Provider.of<MyPageViewModel>(context, listen: false);
 
     // 선택된 연도 및 월 초기화
-    selectedYear = '전체'; // 기본값을 '전체'로 설정
-    selectedText = '전체'; // 기본값을 '전체'로 설정
+    selectedYear = AppString.total; // 기본값을 '전체'로 설정
+    selectedText = AppString.total; // 기본값을 '전체'로 설정
     selectedIndex = 0; // 기본값을 0으로 설정
 
     // 초기화 가능한 연도 목록과 월 목록을 가져오기
     availableYears = [];
-    availableMonths = ['전체'];
+    availableMonths = [AppString.total];
 
     // 필터링된 리스트를 비어있는 리스트로 초기화
     filteredArchiveList = [];
@@ -82,7 +84,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
     setState(() {
       selectedYear = newYear;
       selectedIndex = 0;
-      selectedText = '전체';
+      selectedText = AppString.total;
       availableMonths = CommonUtils.extractAvailableMonths(
           missionRecord.archiveList, selectedYear);
       filteredArchiveList = CommonUtils.filterArchiveList(
@@ -93,7 +95,8 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
   void updateMonth(int index) {
     setState(() {
       selectedIndex = index;
-      selectedText = index == 0 ? '전체' : "${index}월"; // 0은 '전체', 나머지는 1~12월
+      selectedText =
+          index == 0 ? AppString.total : "${index}월"; // 0은 '전체', 나머지는 1~12월
       filteredArchiveList = CommonUtils.filterArchiveList(
           missionRecord.archiveList, selectedYear, selectedText);
     });
@@ -170,7 +173,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                               color: mainWhite,
                               fontFamily: FontString.pretendardSemiBold)),
                       SizedBox(width: 4),
-                      SvgPicture.asset('assets/image/icon_arrow_down.svg'),
+                      SvgPicture.asset(IconPath.arrowDown),
                     ],
                   ),
                 ),
@@ -185,7 +188,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                   child: Row(
                     children: List.generate(13, (index) {
                       // 0번째는 '전체', 1~12번째는 1월~12월
-                      String text = index == 0 ? "전체" : "$index월";
+                      String text = index == 0 ? AppString.total : "$index월";
                       bool isSelected = selectedIndex == index;
 
                       return Padding(
@@ -235,7 +238,7 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '등록된 임무 보고가 없습니다.',
+                            AppString.noMissionReport,
                             style: TextStyle(
                               fontSize: 18,
                               color: mainWhite,

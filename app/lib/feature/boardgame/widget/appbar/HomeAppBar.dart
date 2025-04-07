@@ -19,12 +19,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: mainBlack,
       elevation: 0,
-      title: Text(
-        title,
-        style: TextStyle(
-            fontSize: 22,
-            color: mainWhite,
-            fontFamily: FontString.pretendardSemiBold),
+      title: Image.asset(
+        IconPath.jamesBoardLogoText,
+        height: 32,
       ),
       actions: [
         // IconButton(

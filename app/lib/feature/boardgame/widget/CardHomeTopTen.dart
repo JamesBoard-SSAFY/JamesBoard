@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/FontString.dart';
 import '../viewmodel/BoardGameViewModel.dart';
@@ -44,8 +45,32 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
       value: viewModel,
       child: Consumer<BoardGameViewModel>(builder: (context, viewModel, child) {
         if (viewModel.isLoading) {
-          return Center(
-            child: CircularProgressIndicator(color: mainGold),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              double width = 160;
+              double height = width * (4 / 3); // 3:4 비율 적용
+              return SizedBox(
+                height: height,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return Shimmer.fromColors(
+                      baseColor: shimmerBaseColor,
+                      highlightColor: shimmerHighlightColor,
+                      child: Container(
+                        width: width * 1.33,
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
           );
         }
 
@@ -71,8 +96,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                     onTap: () => widget.onImageTap(id),
                     child: Container(
                       width: width * 1.33, // 숫자 공간 추가
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20), // 아이템 간격 추가
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
                           Container(
@@ -88,8 +112,8 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                                     fontFamily: FontString.pretendardBold,
                                     foreground: Paint()
                                       ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 5 // Stroke 두께 조절
-                                      ..color = mainGold, // Stroke 색상
+                                      ..strokeWidth = 5
+                                      ..color = mainGold,
                                   ),
                                 ),
                                 // 내부 색상
@@ -98,7 +122,7 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                                   style: TextStyle(
                                     fontSize: height * 9 / 10,
                                     fontFamily: FontString.pretendardBold,
-                                    color: mainRed, // 내부 색상
+                                    color: mainRed,
                                   ),
                                 ),
                               ],
@@ -107,7 +131,6 @@ class _CardHomeTopTenState extends State<CardHomeTopTen> {
                           // 이미지
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            // 모서리 둥글게
                             child: Image.network(
                               imageUrl,
                               width: width,

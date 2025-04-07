@@ -19,6 +19,7 @@ import 'package:jamesboard/repository/MyPageRepository.dart';
 import 'package:jamesboard/repository/S3Repository.dart';
 import 'package:jamesboard/repository/UserActivityRepository.dart';
 import 'package:jamesboard/util/AppBarUtil.dart';
+import 'package:jamesboard/widget/splashscreen/SplashScreen.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_svg/svg.dart';
@@ -59,8 +60,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  final prefs = await SharedPreferences.getInstance();
-  final accessToken = prefs.getString('accessToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
   final isLoggedIn = accessToken != null && accessToken.isNotEmpty;
 
@@ -81,11 +81,13 @@ void main() async {
         ChangeNotifierProvider<CategoryGameViewModel>(
           create: (context) => CategoryGameViewModel(
             BoardGameRepository.create(),
+            LoginRepository.create(),
           ),
         ),
         ChangeNotifierProvider<BoardGameViewModel>(
           create: (context) => BoardGameViewModel(
             BoardGameRepository.create(),
+            LoginRepository.create(),
           ),
         ),
         ChangeNotifierProvider<MissionViewModel>(
@@ -108,7 +110,7 @@ void main() async {
           ),
         ),
       ],
-      child: MyApp(isLoggedIn: false),
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
@@ -124,37 +126,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorObservers: [routeObserver],
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: child!,
-        );
-      },
-      debugShowCheckedModeBanner: false,
-      title: 'JamesBoard',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        splashColor: Colors.transparent, // 클릭 시 원형 퍼지는 효과 제거
-      ),
-      home: isLoggedIn
-          ? const MyHomePage(title: 'Flutter Demo Home Page')
-          : const LoginScreen(),
-    );
+        navigatorObservers: [routeObserver],
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!,
+          );
+        },
+        debugShowCheckedModeBanner: false,
+        title: 'JamesBoard',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          splashColor: Colors.transparent, // 클릭 시 원형 퍼지는 효과 제거
+        ),
+        home: SplashScreen(isLoggedIn: isLoggedIn));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyHome extends StatefulWidget {
+  const MyHome({super.key, required this.title, this.selectedIndex = 0});
 
   final String title;
+  final int selectedIndex;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHome> createState() => _MyHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomeState extends State<MyHome> {
   final List<String> items = List.generate(20, (index) => 'Item $index');
   final List<Widget> _pages = [
     BoardGameHomeScreen(),
@@ -165,6 +165,12 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {

@@ -44,6 +44,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   List<File> _imageFiles = [];
+  DateTime? _lastSnackBarTime;
+  bool _isSubmitting = false;
 
   static Future<(String, File)?> _cropCompressAndUploadImage(
       ImageSource source, MyPageViewModel viewModel) async {
@@ -56,7 +58,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: '이미지 자르기',
+            toolbarTitle: AppString.imageIncision,
             toolbarColor: Colors.black,
             toolbarWidgetColor: Colors.white,
             hideBottomControls: true,
@@ -92,6 +94,11 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   }
 
   void _onSubmit(MissionViewModel viewModel) async {
+    if (_isSubmitting) return;
+    setState(() {
+      _isSubmitting = true;
+    });
+
     final count = int.tryParse(_countController.text);
     if (count != null) {
       viewModel.setArchivePlayCount(count);
@@ -109,6 +116,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(validationResult)),
       );
+      setState(() {
+        _isSubmitting = false;
+      });
       return;
     }
 
@@ -139,21 +149,22 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     if (result != -1) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(widget.archiveId == null ? '아카이브 등록 성공!' : '아카이브 수정 성공!'),
+          content: Text(widget.archiveId == null
+              ? AppString.archiveRegisterSuccess
+              : AppString.archiveUpdateSuccess),
         ),
       );
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              MissionDetailScreen(title: '임무 상세', archiveId: result),
+          builder: (_) => MissionDetailScreen(
+              title: AppString.missionDetailTitle, archiveId: result),
         ),
         (route) => route.isFirst,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('처리 중 오류가 발생했습니다.')),
+        const SnackBar(content: Text(AppString.errorOccurred)),
       );
     }
   }
@@ -165,6 +176,10 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
     missionViewModel.clearAll();
     _imageFiles.clear();
+
+    _descriptionController.addListener(() {
+      setState(() {});
+    });
 
     if (widget.archiveId != null) {
       // 수정 모드
@@ -190,205 +205,257 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     final viewModel = context.watch<MissionViewModel>();
     final myPageViewModel = context.watch<MyPageViewModel>();
 
-    return Scaffold(
-      backgroundColor: mainBlack,
-      appBar: DefaultCommonAppBar(
-          title: widget.archiveId == null ? '아카이브 등록' : '아카이브 수정'),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 보드게임 선택 영역
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BoardGameSearchScreen(
-                    purpose: BoardGameSearchPurpose.fromMission,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: mainBlack,
+        appBar: DefaultCommonAppBar(
+            title: widget.archiveId == null
+                ? AppString.register
+                : AppString.archiveUpdate),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 보드게임 선택 영역
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BoardGameSearchScreen(
+                      purpose: BoardGameSearchPurpose.fromMission,
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppString.missionChoice,
+                          style: TextStyle(
+                              color: mainWhite,
+                              fontSize: 20,
+                              fontFamily: FontString.pretendardSemiBold)),
+                      const SizedBox(height: 12),
+                      SelectBoxRegisterMissionBoardGame(
+                        selectedGameTitle: viewModel.selectedGameTitle,
+                      ),
+                    ],
                   ),
                 ),
               ),
-              child: Padding(
+              // 진행한 임무 수 영역
+              Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppString.missionChoice,
+                    Text(AppString.missionCompletedCount,
                         style: TextStyle(
                             color: mainWhite,
                             fontSize: 20,
                             fontFamily: FontString.pretendardSemiBold)),
                     const SizedBox(height: 12),
-                    SelectBoxRegisterMissionBoardGame(
-                      selectedGameTitle: viewModel.selectedGameTitle,
+                    EditBoxRegisterMissionBoardGameCount(
+                      controller: _countController,
                     ),
                   ],
                 ),
               ),
-            ),
-            // 진행한 임무 수 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(AppString.missionCompletedCount,
-                      style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: FontString.pretendardSemiBold)),
-                  const SizedBox(height: 12),
-                  EditBoxRegisterMissionBoardGameCount(
-                    controller: _countController,
-                  ),
-                ],
-              ),
-            ),
-            // 임무 사진 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(AppString.missionPhotoTitle,
-                      style: TextStyle(
-                          color: mainWhite,
-                          fontSize: 20,
-                          fontFamily: FontString.pretendardSemiBold)),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: ButtonRegisterArchivePicture(
-                            icon: IconPath.addPicture,
-                            onTap: () async {
-                              final result = await _cropCompressAndUploadImage(
-                                  ImageSource.gallery, myPageViewModel);
-                              if (result != null) {
-                                final (imageUrl, file) = result;
-                                setState(() {
-                                  _imageFiles.add(file);
-                                });
-                                viewModel.addImageUrl(imageUrl);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: ButtonRegisterArchivePicture(
-                            icon: IconPath.camera,
-                            onTap: () async {
-                              final result = await _cropCompressAndUploadImage(
-                                  ImageSource.camera, myPageViewModel);
-                              if (result != null) {
-                                final (imageUrl, file) = result;
-                                setState(() {
-                                  _imageFiles.add(file);
-                                });
-                                viewModel.addImageUrl(imageUrl);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  if (_imageFiles.isNotEmpty)
-                    SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _imageFiles.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ImageItemRegisterMission(
-                            imageFile: _imageFiles[index],
-                            onRemove: () {
-                              setState(() {
-                                _imageFiles.removeAt(index);
-                              });
-                              viewModel.removeImageUrl(index);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (viewModel.imageUrls.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 1,
-                              color: mainGrey,
-                              margin: const EdgeInsets.only(right: 8),
+              // 임무 사진 영역
+              Padding(
+                padding: const EdgeInsets.only(left: 20, top: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppString.missionPhotoTitle,
+                        style: TextStyle(
+                            color: mainWhite,
+                            fontSize: 20,
+                            fontFamily: FontString.pretendardSemiBold)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ButtonRegisterArchivePicture(
+                              icon: IconPath.addPicture,
+                              onTap: () async {
+                                if (_imageFiles.length >= 9) {
+                                  final now = DateTime.now();
+
+                                  if (_lastSnackBarTime == null ||
+                                      now
+                                              .difference(_lastSnackBarTime!)
+                                              .inSeconds >=
+                                          2) {
+                                    _lastSnackBarTime = now;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text(AppString.maxImageUploadLimit),
+                                      ),
+                                    );
+                                  }
+
+                                  return;
+                                }
+
+                                final result =
+                                    await _cropCompressAndUploadImage(
+                                        ImageSource.gallery, myPageViewModel);
+                                if (result != null) {
+                                  final (imageUrl, file) = result;
+                                  setState(() {
+                                    _imageFiles.add(file);
+                                  });
+                                  viewModel.addImageUrl(imageUrl);
+                                }
+                              },
                             ),
                           ),
-                          Text(
-                            '(${viewModel.imageUrls.length} / 9)',
+                        ),
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ButtonRegisterArchivePicture(
+                              icon: IconPath.camera,
+                              onTap: () async {
+                                if (_imageFiles.length >= 9) {
+                                  final now = DateTime.now();
+
+                                  if (_lastSnackBarTime == null ||
+                                      now
+                                              .difference(_lastSnackBarTime!)
+                                              .inSeconds >=
+                                          2) {
+                                    _lastSnackBarTime = now;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text(AppString.maxImageUploadLimit),
+                                      ),
+                                    );
+                                  }
+
+                                  return;
+                                }
+
+                                final result =
+                                    await _cropCompressAndUploadImage(
+                                        ImageSource.camera, myPageViewModel);
+                                if (result != null) {
+                                  final (imageUrl, file) = result;
+                                  setState(() {
+                                    _imageFiles.add(file);
+                                  });
+                                  viewModel.addImageUrl(imageUrl);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (_imageFiles.isNotEmpty)
+                      SizedBox(
+                        height: 150,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _imageFiles.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ImageItemRegisterMission(
+                              imageFile: _imageFiles[index],
+                              onRemove: () {
+                                setState(() {
+                                  _imageFiles.removeAt(index);
+                                });
+                                viewModel.removeImageUrl(index);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (viewModel.imageUrls.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: mainGrey,
+                                margin: const EdgeInsets.only(right: 8),
+                              ),
+                            ),
+                            Text(
+                              '(${viewModel.imageUrls.length} / 9)',
+                              style: TextStyle(
+                                color: mainGrey,
+                                fontSize: 16,
+                                fontFamily: FontString.pretendardSemiBold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // 임무 결과 영역
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 24, bottom: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(AppString.missionResultTitle,
                             style: TextStyle(
-                              color: mainGrey,
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardSemiBold,
-                            ),
-                          )
-                        ],
-                      ),
+                                color: mainWhite,
+                                fontSize: 20,
+                                fontFamily: FontString.pretendardSemiBold)),
+                        Text('(${_descriptionController.text.length} / 255)',
+                            style: TextStyle(
+                                color: mainGrey,
+                                fontSize: 14,
+                                fontFamily: FontString.pretendardSemiBold)),
+                      ],
                     ),
-                ],
+                    const SizedBox(height: 12),
+                    EditBoxRegisterMissionArchiveContent(
+                      controller: _descriptionController,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // 임무 결과 영역
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 24, bottom: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(AppString.missionResultTitle,
-                          style: TextStyle(
-                              color: mainWhite,
-                              fontSize: 20,
-                              fontFamily: FontString.pretendardSemiBold)),
-                      Text(AppString.missionResultLimit,
-                          style: TextStyle(
-                              color: mainGrey,
-                              fontSize: 14,
-                              fontFamily: FontString.pretendardSemiBold)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  EditBoxRegisterMissionArchiveContent(
-                    controller: _descriptionController,
-                  ),
-                ],
+              // 등록 버튼 영역
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
+                child: ButtonCommonPrimaryBottom(
+                  text: widget.archiveId == null
+                      ? AppString.register
+                      : AppString.modify,
+                  onPressed: () => _onSubmit(viewModel),
+                  disableWithOpacity: false,
+                ),
               ),
-            ),
-            // 등록 버튼 영역
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24),
-              child: ButtonCommonPrimaryBottom(
-                text: widget.archiveId == null
-                    ? AppString.register
-                    : AppString.modify,
-                onPressed: () => _onSubmit(viewModel),
-                disableWithOpacity: false,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

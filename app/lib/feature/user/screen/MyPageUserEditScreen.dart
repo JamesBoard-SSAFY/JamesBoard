@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/user/widget/image/ImageUserProfile.dart';
 import 'package:jamesboard/feature/user/widget/textfield/TextFieldUserNickname.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/AppString.dart';
 import '../../../datasource/model/request/MyPage/MyPageUserInfoRequest.dart';
 import '../../../widget/appbar/DefaultCommonAppBar.dart';
 import '../../../widget/button/ButtonCommonPrimaryBottom.dart';
@@ -73,7 +73,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
         title: widget.title,
       ),
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
@@ -111,7 +111,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "닉네임 2자 이상부터 16자까지 입력이 가능해요.",
+                      AppString.nicknameLengthConstraint,
                       style: TextStyle(
                           color: mainGrey,
                           fontSize: 12,
@@ -125,16 +125,20 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ButtonCommonPrimaryBottom(
-                    text: '변경',
+                    text: AppString.changeUserName,
                     disableWithOpacity: true,
-                    onPressed: (_isNicknameValid || _userImage != widget.userImg)
+                    onPressed: (_isNicknameValid ||
+                            _userImage != widget.userImg)
                         ? () async {
-                            viewModel.editUserInfo(MyPageUserInfoRequest(
-                                userName: _nickname, userProfile: _userImage));
-                            Navigator.pop(context);
+                            await viewModel.editUserInfo(MyPageUserInfoRequest(
+                              userName: _nickname,
+                              userProfile: _userImage,
+                            ));
+                            if (context.mounted) {
+                              Navigator.pop(context, true);
+                            }
                           }
-                        : null, // 유효하지 않으면 버튼 비활성화
-                    // 유효하지 않으면 버튼 비활성화
+                        : null,
                   ),
                 ),
               ],

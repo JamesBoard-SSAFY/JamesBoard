@@ -11,11 +11,14 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: mainBlack,
       elevation: 0,
-      title: Text(title,
-          style: TextStyle(
-              fontSize: 22,
-              color: mainWhite,
-              fontFamily: FontString.pretendardSemiBold)),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 22,
+          color: mainWhite,
+          fontFamily: FontString.pretendardSemiBold,
+        ),
+      ),
     );
   }
 

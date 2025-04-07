@@ -24,12 +24,16 @@ class SelectBoxRegisterMissionBoardGame extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            selectedGameTitle ?? AppString.selectBoardGame,
-            style: TextStyle(
-              color: selectedGameTitle != null ? mainWhite : mainGrey,
-              fontSize: 16,
-              fontFamily: FontString.pretendardMedium,
+          Expanded(
+            child: Text(
+              selectedGameTitle ?? AppString.selectBoardGame,
+              style: TextStyle(
+                color: selectedGameTitle != null ? mainWhite : mainGrey,
+                fontSize: 16,
+                fontFamily: FontString.pretendardMedium,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
           SvgPicture.asset(
