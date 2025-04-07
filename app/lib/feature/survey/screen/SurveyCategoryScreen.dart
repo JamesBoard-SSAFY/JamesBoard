@@ -103,34 +103,36 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 32,
-        ),
-        child: ButtonCommonPrimaryBottom(
-          text: '선택',
-          disableWithOpacity: true,
-          onPressed: selectedId != null
-              ? () async {
-                  logger.d('selectedId : $selectedId');
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 32,
+          ),
+          child: ButtonCommonPrimaryBottom(
+            text: '선택',
+            disableWithOpacity: true,
+            onPressed: selectedId != null
+                ? () async {
+                    logger.d('selectedId : $selectedId');
 
-                  final category = categoryMap[selectedId] ?? 'etc';
+                    final category = categoryMap[selectedId] ?? 'etc';
 
-                  final viewModel = context.read<SurveyViewModel>();
-                  await viewModel.getTop30BoardGameByGenre(category);
+                    final viewModel = context.read<SurveyViewModel>();
+                    await viewModel.getTop30BoardGameByGenre(category);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SurveyBoardGameScreen(
-                        selectedCategory: category,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SurveyBoardGameScreen(
+                          selectedCategory: category,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              : null,
+                    );
+                  }
+                : null,
+          ),
         ),
       ),
     );
