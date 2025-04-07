@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 
 class ImageCommonGameCard extends StatelessWidget {
   final String imageUrl;
@@ -19,6 +20,14 @@ class ImageCommonGameCard extends StatelessWidget {
             width: width,
             height: height,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                IconPath.error007Image,
+                width: width,
+                height: height,
+                fit: BoxFit.cover,
+              );
+            },
           ),
         );
       },

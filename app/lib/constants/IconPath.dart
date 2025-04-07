@@ -83,4 +83,6 @@ class IconPath {
       "assets/image/login_pageview_card.png";
   static const String loginPageViewHourglass =
       "assets/image/login_pageview_hourglass.png";
+
+  static const String error007Image = "assets/image/007.png";
 }
