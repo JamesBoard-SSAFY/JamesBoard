@@ -13,6 +13,7 @@ import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/BoardGameSearchPurpose.dart';
 import 'package:jamesboard/widget/image/ImageCommonGameCard.dart';
 import 'package:jamesboard/widget/item/ItemCommonRecentSearch.dart';
+import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import 'package:jamesboard/widget/searchbar/SearchBarCommonTitle.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -129,6 +130,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         // 검색 결과가 있다면 → 그리드뷰
                         if (hasSearchResults) {
                           return GridView.builder(
+                            physics:
+                                CustomScrollPhysics(scrollSpeedFactor: 0.4),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
