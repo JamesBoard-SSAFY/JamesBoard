@@ -146,14 +146,8 @@ class _BottomSheetBoardGameDetailState
               mainAxisSize: MainAxisSize.min,
               children: [
                 // 크기 조절 핸들 추가
-                Container(
-                  width: 40,
-                  height: 6,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[600],
-                    borderRadius: BorderRadius.circular(3),
-                  ),
+                SizedBox(
+                  height: 20,
                 ),
 
                 // 스크롤 가능 영역
