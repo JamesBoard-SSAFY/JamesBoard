@@ -49,6 +49,11 @@ class _BottomSheetBoardGameEvaluationState
         Provider.of<CategoryGameViewModel>(context, listen: false);
     ratingBoardGameViewModel =
         categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
+
+    viewModel.getUserActivityDetail(
+      userId: widget.userId,
+      gameId: widget.gameId,
+    );
   }
 
   @override
@@ -76,11 +81,21 @@ class _BottomSheetBoardGameEvaluationState
             ),
           ),
           const SizedBox(height: 20),
-          RatingBarBoardGameDetailReview(
-            initialRating: _rating,
-            onRatingUpdate: (rating) {
-              _updateRating(rating);
-            },
+          ChangeNotifierProvider.value(
+            value: viewModel,
+            child: Consumer<UserActivityViewModel>(
+              builder: (context, viewModel, child) {
+                final rating =
+                    viewModel.userActivityDetail?.userActivityRating ?? 0.0;
+
+                return RatingBarBoardGameDetailReview(
+                  initialRating: _rating,
+                  onRatingUpdate: (rating) {
+                    _updateRating(rating);
+                  },
+                );
+              },
+            ),
           ),
           const SizedBox(height: 20),
           // 닫기 버튼

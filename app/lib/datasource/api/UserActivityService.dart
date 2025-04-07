@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:jamesboard/datasource/model/response/user/UserActivityDetailResponse.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../main.dart';
@@ -25,5 +26,11 @@ abstract class UserActivityService {
   Future<int> updateUserActivityRating(
     @Path("userActivityId") int userActivityId,
     @Body() UserActivityPatchRequest request,
+  );
+
+  @GET("api/user-activity/detail")
+  Future<UserActivityDetailResponse> getUserActivityDetail(
+    @Query("userId") int userId,
+    @Query("gameId") int gameId,
   );
 }

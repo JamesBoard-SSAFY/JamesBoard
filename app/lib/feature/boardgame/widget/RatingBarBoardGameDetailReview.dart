@@ -8,7 +8,9 @@ import 'package:jamesboard/constants/IconPath.dart';
 
 import 'package:jamesboard/theme/Colors.dart';
 
-class RatingBarBoardGameDetailReview extends StatelessWidget {
+import '../../../main.dart';
+
+class RatingBarBoardGameDetailReview extends StatefulWidget {
   final double initialRating;
   final int itemCount;
   final bool allowHalfRating;
@@ -23,6 +25,20 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
   });
 
   @override
+  State<RatingBarBoardGameDetailReview> createState() =>
+      _RatingBarBoardGameDetailReviewState();
+}
+
+class _RatingBarBoardGameDetailReviewState
+    extends State<RatingBarBoardGameDetailReview> {
+  @override
+  void initState() {
+    super.initState();
+
+    logger.d("widget.initialRating : ${widget.initialRating}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
@@ -33,7 +49,7 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: RatingBar(
-        initialRating: 0,
+        initialRating: widget.initialRating,
         minRating: 0,
         maxRating: 5,
         allowHalfRating: true,
@@ -55,7 +71,7 @@ class RatingBarBoardGameDetailReview extends StatelessWidget {
           ),
         ),
         onRatingUpdate: (rating) {
-          onRatingUpdate(rating); // 상태 변경 콜백 호출
+          widget.onRatingUpdate(rating);
         },
       ),
     );
