@@ -54,6 +54,8 @@ class _BottomSheetBoardGameEvaluationState
       userId: widget.userId,
       gameId: widget.gameId,
     );
+
+    _rating = viewModel.userActivityDetail?.userActivityRating ?? 0.0;
   }
 
   @override
@@ -87,6 +89,14 @@ class _BottomSheetBoardGameEvaluationState
               builder: (context, viewModel, child) {
                 final rating =
                     viewModel.userActivityDetail?.userActivityRating ?? 0.0;
+
+                if (_rating == 0.0 && rating > 0.0) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      _rating = rating;
+                    });
+                  });
+                }
 
                 return RatingBarBoardGameDetailReview(
                   initialRating: _rating,
