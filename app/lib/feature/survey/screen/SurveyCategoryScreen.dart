@@ -23,6 +23,7 @@ class SurveyCategoryScreen extends StatefulWidget {
 
 class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
   String? selectedId;
+  bool _isSubmitted = false;
 
   final Map<String, String> categoryMap = {
     '1': AppString.categoryParty,
@@ -113,23 +114,33 @@ class _SurveyCategoryScreenState extends State<SurveyCategoryScreen> {
           child: ButtonCommonPrimaryBottom(
             text: '선택',
             disableWithOpacity: true,
-            onPressed: selectedId != null
+            onPressed: selectedId != null && !_isSubmitted
                 ? () async {
-                    logger.d('selectedId : $selectedId');
+                    setState(() {
+                      _isSubmitted = true;
+                    });
 
-                    final category = categoryMap[selectedId] ?? 'etc';
+                    try {
+                      logger.d('selectedId : $selectedId');
 
-                    final viewModel = context.read<SurveyViewModel>();
-                    await viewModel.getTop30BoardGameByGenre(category);
+                      final category = categoryMap[selectedId] ?? 'etc';
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SurveyBoardGameScreen(
-                          selectedCategory: category,
+                      final viewModel = context.read<SurveyViewModel>();
+                      await viewModel.getTop30BoardGameByGenre(category);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SurveyBoardGameScreen(
+                            selectedCategory: category,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } finally {
+                      setState(() {
+                        _isSubmitted = false;
+                      });
+                    }
                   }
                 : null,
           ),

@@ -23,6 +23,7 @@ class SurveyBoardGameScreen extends StatefulWidget {
 
 class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
   int? selectedGameId;
+  bool _isSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +119,20 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
           child: ButtonCommonPrimaryBottom(
             text: AppString.register,
             disableWithOpacity: true,
-            onPressed: selectedGameId != null
+            onPressed: selectedGameId != null && !_isSubmitted
                 ? () async {
+                    setState(() {
+                      _isSubmitted = true;
+                    });
                     final userId = await storage.read(key: AppString.keyUserId);
 
                     if (userId == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text(AppString.loginRequired)),
                       );
+                      setState(() {
+                        _isSubmitted = false;
+                      });
                       return;
                     }
 
@@ -133,26 +140,39 @@ class _SurveyBoardGameScreenState extends State<SurveyBoardGameScreen> {
                       gameId: selectedGameId!,
                     );
 
-                    final result =
-                        await viewModel.insertUserPreferBoardGameSurvey(
-                      int.parse(userId),
-                      request,
-                    );
+                    try {
+                      final result =
+                          await viewModel.insertUserPreferBoardGameSurvey(
+                        int.parse(userId),
+                        request,
+                      );
 
-                    if (result == int.parse(userId)) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MyHome(title: AppString.myHomePageTitle),
-                        ),
-                        (route) => false,
-                      );
-                    } else {
+                      if (result == int.parse(userId)) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MyHome(title: AppString.myHomePageTitle),
+                          ),
+                          (route) => false,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(AppString.registrationFailed)),
+                        );
+                        setState(() {
+                          _isSubmitted = false;
+                        });
+                      }
+                    } catch (e) {
+                      logger.e('Error during survey submission: $e');
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(AppString.registrationFailed)),
+                        const SnackBar(content: Text('에러가 발생했습니다. 다시 시도해주세요.')),
                       );
+                      setState(() {
+                        _isSubmitted = false; // ✅ 에러 시 복구
+                      });
                     }
                   }
                 : null,
