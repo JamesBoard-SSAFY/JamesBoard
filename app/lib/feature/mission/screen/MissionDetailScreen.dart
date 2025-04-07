@@ -252,13 +252,12 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                   const SizedBox(height: 12),
 
                   // 해시태그
-                  Row(
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
                       HashTagMissionDetail(
                           info: archiveDetailResponse.gameTitle),
-                      const SizedBox(
-                        width: 8,
-                      ),
                       HashTagMissionDetail(
                           info:
                               '${archiveDetailResponse.archiveGamePlayCount}판')

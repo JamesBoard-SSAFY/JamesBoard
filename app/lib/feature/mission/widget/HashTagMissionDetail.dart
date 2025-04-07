@@ -9,16 +9,15 @@ class HashTagMissionDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          '#$info',
-          style: TextStyle(
-              color: mainGold,
-              fontFamily: FontString.pretendardMedium,
-              fontSize: 16),
-        )
-      ],
+    return Text(
+      '#$info',
+      style: TextStyle(
+          color: mainGold,
+          fontFamily: FontString.pretendardMedium,
+          fontSize: 16),
+      overflow: TextOverflow.visible,
+      softWrap: true,
+      maxLines: null,
     );
   }
 }
