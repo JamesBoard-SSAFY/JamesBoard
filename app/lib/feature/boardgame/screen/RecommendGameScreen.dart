@@ -3,6 +3,7 @@ import 'package:jamesboard/feature/boardgame/widget/skeleton/ItemRecommendBoardG
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/view/KeepAliveView.dart';
+import 'package:jamesboard/widget/physics/CustomScrollPhysics.dart';
 import 'package:provider/provider.dart';
 import '../../../repository/BoardGameRepository.dart';
 import '../viewmodel/BoardGameViewModel.dart';
@@ -45,6 +46,7 @@ class _RecommendGameScreenState extends State<RecommendGameScreen> {
                   ),
                 )
               : ListView.builder(
+                  physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
                   itemCount: viewModel.recommendedGames.length,
                   itemBuilder: (context, index) {
                     final game = viewModel.recommendedGames[index];
