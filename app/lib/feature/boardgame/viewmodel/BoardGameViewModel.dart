@@ -13,6 +13,7 @@ import 'package:jamesboard/repository/RecentSearchRepository.dart';
 
 import '../../../datasource/model/response/BoardGameDetailResponse.dart';
 import '../../../repository/BoardGameRepository.dart';
+import 'dart:async';
 
 class BoardGameViewModel extends ChangeNotifier {
   final BoardGameRepository _repository;
@@ -20,41 +21,65 @@ class BoardGameViewModel extends ChangeNotifier {
   final LoginRepository _loginRepository;
 
   List<RecentSearche> _recentSearches = [];
+
   List<RecentSearche> get recentSearches => _recentSearches;
 
   List<BoardGameRecommendResponse> _recommendedGames = [];
+
   List<BoardGameRecommendResponse> get recommendedGames => _recommendedGames;
 
   List<BoardGameResponse> _games = [];
+
   List<BoardGameResponse> get games => _games;
 
   List<BoardGameTopResponse> _topGames = [];
+
   List<BoardGameTopResponse> get topGames => _topGames;
 
   BoardGameDetailResponse? _boardGameDetail;
+
   BoardGameDetailResponse? get boardGameDetail => _boardGameDetail;
 
   bool _isLoading = false;
   String? _errorMessage;
 
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
 
+  DateTime? _lastFetchTime;
+  final Duration _cacheDuration = Duration(seconds: 30);
+
   int? _selectedGameId;
+
   int? get selectedGameId => _selectedGameId;
 
   BoardGameViewModel(this._repository, this._loginRepository,
       [this._recentSearchRepository]);
 
   Future<void> getRecommendedGames({int limit = 10}) async {
-    if (_isLoading) return;
+    final now = DateTime.now();
+    final startTime = DateTime.now(); // ✅ 시작 시각
+
+    if (_lastFetchTime != null &&
+        now.difference(_lastFetchTime!) < _cacheDuration &&
+        _recommendedGames.isNotEmpty) {
+      final duration = DateTime.now().difference(startTime);
+      logger.i('재사용 로딩 시간: ${duration.inMilliseconds} ms'); // ✅ 로딩 시간 로그
+      return;
+    }
+
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _recommendedGames = await _repository.getRecommendedGames(limit: limit);
-      _recommendedGames = _recommendedGames.sublist(0, 9);
+      final games = await _repository.getRecommendedGames(limit: limit);
+      _recommendedGames = games.sublist(0, 9);
+      _lastFetchTime = DateTime.now(); // 마지막 호출 시간 갱신
+
+      final duration = DateTime.now().difference(startTime);
+      logger.i('서버 요청 로딩 시간: ${duration.inMilliseconds} ms'); // ✅ 로딩 시간 로그
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         logger.e('401 에러 발생. 로그아웃 처리.');
@@ -67,6 +92,7 @@ class BoardGameViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 
   Future<void> getBoardGames(Map<String, dynamic> queryParameters) async {
     if (_isLoading) return;
