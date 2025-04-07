@@ -41,7 +41,7 @@ class BoardGameDetailSkeleton extends StatelessWidget {
                       highlightColor: shimmerHighlightColor,
                       child: Container(
                         height: 30,
-                        width: 60,
+                        width: 40,
                         decoration: BoxDecoration(
                           color: shimmerBaseColor,
                           borderRadius: BorderRadius.circular(8),
