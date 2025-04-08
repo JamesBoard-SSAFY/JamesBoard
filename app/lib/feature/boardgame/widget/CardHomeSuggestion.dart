@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
@@ -140,8 +141,8 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(4.0),
-                                        child: Image.network(
-                                          imageUrl,
+                                        child: CachedNetworkImage(
+                                          imageUrl: imageUrl,
                                           width: width,
                                           height: height,
                                           fit: BoxFit.cover,
