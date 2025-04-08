@@ -132,10 +132,13 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     );
 
     logger.d('gameId : ${viewModel.selectedGameId}');
+    logger.d('gameTitle : ${viewModel.selectedGameTitle}');
     logger.d('archiveGamePlayCount : ${viewModel.archivePlayCount}');
     logger.d('archiveImageList : ${viewModel.imageUrls}');
     logger.d('archiveContent : ${viewModel.archiveContent}');
     logger.d('archiveGamePlayTime : ${viewModel.archivePlayTime}');
+    logger.d(
+        'archiveContent 길이 : ${viewModel.archiveContent?.length.toString()}');
 
     int result;
 
