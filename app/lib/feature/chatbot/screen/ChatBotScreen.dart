@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:jamesboard/feature/chatbot/widget/ChatBubbleChatBot.dart';
 import 'package:jamesboard/feature/chatbot/widget/TextFieldChatBotMessage.dart';
 import 'package:jamesboard/theme/Colors.dart';
-import 'package:jamesboard/util/dummy/AppDummyData.dart';
 import 'package:jamesboard/widget/appbar/DefaultCommonAppBar.dart';
+import 'package:jamesboard/feature/chatbot/viewmodel/ChatbotViewModel.dart';
 
 class ChatBotScreen extends StatefulWidget {
   final String title;
@@ -16,91 +16,56 @@ class ChatBotScreen extends StatefulWidget {
 }
 
 class _ChatBotScreenState extends State<ChatBotScreen> {
-  final TextEditingController _chatController = TextEditingController();
+  late ChatbotViewModel chatbotViewModel;
 
-  // 임시 메시지 보내기.
-  void _sendMessage() {
-    final text = _chatController.text.trim();
+  @override
+  void initState() {
+    super.initState();
 
-    if (text.isEmpty) return;
-
-    setState(() {
-      AppDummyData.messages.add(ChatMessage(
-        message: text,
-        isMe: true,
-        time: _getCurrentTime(),
-      ));
-      _chatController.clear();
-    });
-  }
-
-  // 시간 구하기.
-  String _getCurrentTime() {
-    final now = DateTime.now();
-    final hour = now.hour;
-    final minute = now.minute.toString().padLeft(2, '0');
-    final period = hour < 12 ? '오전' : '오후';
-    final formattedHour = hour > 12 ? hour - 12 : hour;
-    return '$period $formattedHour:$minute';
+    chatbotViewModel = Provider.of<ChatbotViewModel>(context, listen: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainBlack,
-      appBar: DefaultCommonAppBar(
-        title: widget.title,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
-        child: Column(
-          children: [
-            // 채팅 영역
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 32),
-                reverse: false,
-                itemCount: AppDummyData.messages.length,
-                itemBuilder: (context, index) {
-                  final msg = AppDummyData.messages[index];
-                  return ChatBubbleChatBot(
-                    message: msg.message,
-                    isMe: msg.isMe,
-                    time: msg.time,
-                  );
-                },
+    return ChangeNotifierProvider.value(
+      value: chatbotViewModel,
+      child: Consumer<ChatbotViewModel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
+            backgroundColor: mainBlack,
+            appBar: DefaultCommonAppBar(title: widget.title),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+              child: Column(
+                children: [
+                  // 채팅 목록
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 32),
+                      itemCount: viewModel.messages.length,
+                      itemBuilder: (context, index) {
+                        final msg = viewModel.messages[index];
+                        return ChatBubbleChatBot(
+                          message: msg.message,
+                          isMe: msg.isMe,
+                          time: msg.time,
+                        );
+                      },
+                    ),
+                  ),
+
+                  // 입력 필드
+                  TextFieldChatBotMessage(
+                    onSend: (message) {
+                      viewModel.writeChat(message);
+                    },
+                  ),
+                ],
               ),
             ),
-
-            // 입력 바
-            TextFieldChatBotMessage(
-              onSend: (message) {
-                setState(() {
-                  AppDummyData.messages.add(
-                    ChatMessage(
-                      message: message,
-                      isMe: true,
-                      time: _getCurrentTime(),
-                    ),
-                  );
-                });
-              },
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
-}
-
-class ChatMessage {
-  final String message;
-  final bool isMe;
-  final String time;
-
-  ChatMessage({
-    required this.message,
-    required this.isMe,
-    required this.time,
-  });
 }
