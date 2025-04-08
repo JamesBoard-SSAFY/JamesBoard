@@ -62,7 +62,7 @@ logging:
 jwt:
   secret: ${JWT_SECRET}
   expiration:
-    access: 3600000 #1시간
+    access: 60000 #1시간
     refresh: 604800000
 
 #oauth2:
