@@ -19,8 +19,10 @@ class BottomSheetUtil {
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.5,
-          minChildSize: 0.3, // 최소 높이
-          maxChildSize: 0.9, // 최대 높이
+          minChildSize: 0.3,
+          // 최소 높이
+          maxChildSize: 0.9,
+          // 최대 높이
           expand: false,
           builder: (context, scrollController) {
             return BottomSheetBoardGameDetail(
@@ -46,15 +48,16 @@ class BottomSheetUtil {
     );
   }
 
-  static void showRatingBottomSheet(
+  // showRatingBottomSheet 내부에서 변경
+  static Future<double?> showRatingBottomSheet(
     BuildContext context, {
     required int gameId,
+    required double myRating,
   }) async {
     String userIdStr = await storage.read(key: 'userId') ?? '';
-
     int userId = int.parse(userIdStr);
 
-    showModalBottomSheet(
+    final updatedRating = await showModalBottomSheet<double>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -62,8 +65,11 @@ class BottomSheetUtil {
         return BottomSheetBoardGameEvaluation(
           gameId: gameId,
           userId: userId,
+          myRating: myRating,
         );
       },
     );
+
+    return updatedRating;
   }
 }
