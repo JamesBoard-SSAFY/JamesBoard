@@ -143,6 +143,8 @@ class ItemUserArchiveCard extends StatelessWidget {
                                       children: [
                                         Text(
                                           missionData.archiveContent,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: mainWhite,
