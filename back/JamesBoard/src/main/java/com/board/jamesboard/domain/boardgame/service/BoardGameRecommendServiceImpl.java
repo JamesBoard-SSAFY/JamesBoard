@@ -40,31 +40,34 @@ public class BoardGameRecommendServiceImpl implements BoardGameRecommendService 
 
         Long totalReviewCount = userActivityRepository.countByUserUserIdAndUserActivityRatingIsNotNull(userId);
 
-        if (totalReviewCount < 5) {
-            // 콘텐츠 기반 추천
-            List<RecommendContent> recommendContents = recommendContentRepository
-                    .findTopNByGameOrderByRecommendContentRankAsc(preferGame, limit);
-
-            List<Long> recommendGameIds = extractGameIdsFromRecommendContent(recommendContents);
-            List<Game> gamesWithThemes = gameRepository.findByGameIdInWithThemes(recommendGameIds);
-            Map<Long, List<String>> themeMap = mapThemesByGameId(gamesWithThemes);
-
-            return recommendContents.stream()
-                    .map(rc -> toRecommendDto(rc.getRecommendGame(), themeMap))
-                    .collect(Collectors.toList());
-        } else {
-            // 하이브리드 추천
+        if (totalReviewCount >= 10) {
+            // 하이브리드 추천 먼저 시도
             List<Recommend> recommends = recommendRepository
                     .findTopNByUserOrderByRecommendRankAsc(user, limit);
 
-            List<Long> recommendGameIds = extractGameIdsFromRecommend(recommends);
-            List<Game> gamesWithThemes = gameRepository.findByGameIdInWithThemes(recommendGameIds);
-            Map<Long, List<String>> themeMap = mapThemesByGameId(gamesWithThemes);
+            if (!recommends.isEmpty()) {
+                List<Long> recommendGameIds = extractGameIdsFromRecommend(recommends);
+                List<Game> gamesWithThemes = gameRepository.findByGameIdInWithThemes(recommendGameIds);
+                Map<Long, List<String>> themeMap = mapThemesByGameId(gamesWithThemes);
 
-            return recommends.stream()
-                    .map(r -> toRecommendDto(r.getGame(), themeMap))
-                    .collect(Collectors.toList());
+                return recommends.stream()
+                        .map(r -> toRecommendDto(r.getGame(), themeMap))
+                        .collect(Collectors.toList());
+            }
+            // fallback to 콘텐츠 기반 추천
         }
+
+        // 콘텐츠 기반 추천
+        List<RecommendContent> recommendContents = recommendContentRepository
+                .findTopNByGameOrderByRecommendContentRankAsc(preferGame, limit);
+
+        List<Long> recommendGameIds = extractGameIdsFromRecommendContent(recommendContents);
+        List<Game> gamesWithThemes = gameRepository.findByGameIdInWithThemes(recommendGameIds);
+        Map<Long, List<String>> themeMap = mapThemesByGameId(gamesWithThemes);
+
+        return recommendContents.stream()
+                .map(rc -> toRecommendDto(rc.getRecommendGame(), themeMap))
+                .collect(Collectors.toList());
     }
 
     private List<Long> extractGameIdsFromRecommendContent(List<RecommendContent> contents) {
