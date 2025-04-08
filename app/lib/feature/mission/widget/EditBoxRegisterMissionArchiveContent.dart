@@ -40,7 +40,7 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionArchiveContent> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
-        maxLength: 255,
+        maxLength: 100,
         controller: widget.controller,
         keyboardType: TextInputType.multiline,
         minLines: 3,
