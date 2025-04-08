@@ -162,4 +162,8 @@ class LoginViewModel extends ChangeNotifier {
       );
     }
   }
+
+  Future<int> checkUserPreferBoardGame(int userId) async {
+    return await _surveyRepository.checkUserPreferBoardGame(userId);
+  }
 }

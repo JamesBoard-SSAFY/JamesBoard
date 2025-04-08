@@ -35,7 +35,12 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
 
     boardGameViewModel =
         Provider.of<BoardGameViewModel>(context, listen: false);
-    boardGameViewModel.getRecommendedGames();
+    // boardGameViewModel.getRecommendedGames();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   //   context.read<BoardGameViewModel>().getRecommendedGames();
+      boardGameViewModel.getRecommendedGames();
+    });
   }
 
   void _startAutoScroll() {
@@ -101,46 +106,50 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                                 });
                               },
                               itemBuilder: (context, index) {
-                                final game = viewModel.recommendedGames[
-                                    index % viewModel.recommendedGames.length];
-                                final imageUrl = game.gameImage;
-                                final id = game.gameId;
+                                if (viewModel.recommendedGames.isNotEmpty) {
+                                  final game = viewModel.recommendedGames[
+                                      index %
+                                          viewModel.recommendedGames.length];
+                                  final imageUrl = game.gameImage;
+                                  final id = game.gameId;
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    _timer?.cancel();
-                                    widget.onImageTap(id);
-                                    _startAutoScroll();
-                                  },
-                                  onTapDown: (_) {
-                                    _timer?.cancel();
-                                  },
-                                  onTapUp: (_) {
-                                    _startAutoScroll();
-                                  },
-                                  onTapCancel: () {
-                                    _startAutoScroll();
-                                  },
-                                  onLongPress: () {
-                                    _timer?.cancel();
-                                  },
-                                  onLongPressUp: () {
-                                    _startAutoScroll();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 32),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(4.0),
-                                      child: Image.network(
-                                        imageUrl,
-                                        width: width,
-                                        height: height,
-                                        fit: BoxFit.cover,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      _timer?.cancel();
+                                      widget.onImageTap(id);
+                                      _startAutoScroll();
+                                    },
+                                    onTapDown: (_) {
+                                      _timer?.cancel();
+                                    },
+                                    onTapUp: (_) {
+                                      _startAutoScroll();
+                                    },
+                                    onTapCancel: () {
+                                      _startAutoScroll();
+                                    },
+                                    onLongPress: () {
+                                      _timer?.cancel();
+                                    },
+                                    onLongPressUp: () {
+                                      _startAutoScroll();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 32),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(4.0),
+                                        child: Image.network(
+                                          imageUrl,
+                                          width: width,
+                                          height: height,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               },
                             ),
                             Positioned(
