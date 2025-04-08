@@ -443,11 +443,6 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                 color: mainWhite,
                                 fontSize: 20,
                                 fontFamily: FontString.pretendardSemiBold)),
-                        Text('(${_descriptionController.text.length} / 255)',
-                            style: TextStyle(
-                                color: mainGrey,
-                                fontSize: 14,
-                                fontFamily: FontString.pretendardSemiBold)),
                       ],
                     ),
                     const SizedBox(height: 12),
