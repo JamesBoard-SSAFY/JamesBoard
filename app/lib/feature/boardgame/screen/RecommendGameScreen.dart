@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/feature/boardgame/widget/skeleton/ItemRecommendBoardGameInfoSkeleton.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/theme/Colors.dart';
@@ -71,7 +72,8 @@ class _RecommendGameScreenState extends State<RecommendGameScreen> {
                     ),
                   )
                 : ListView.builder(
-                    physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                    physics: CustomScrollPhysics(
+                        scrollSpeedFactor: AppData.scrollSpeed),
                     itemCount: viewModel.recommendedGames.length,
                     itemBuilder: (context, index) {
                       final game = viewModel.recommendedGames[index];

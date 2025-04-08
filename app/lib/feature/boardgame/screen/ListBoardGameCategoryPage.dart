@@ -175,7 +175,8 @@ class _ListBoardGameCategoryPageState extends State<ListBoardGameCategoryPage> {
 
               return Expanded(
                 child: SingleChildScrollView(
-                  physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                  physics: CustomScrollPhysics(
+                      scrollSpeedFactor: AppData.scrollSpeed),
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: GridView.builder(

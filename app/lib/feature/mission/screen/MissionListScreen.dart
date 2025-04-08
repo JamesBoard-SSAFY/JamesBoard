@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/mission/screen/MissionDetailScreen.dart';
 import 'package:jamesboard/main.dart';
@@ -125,7 +126,7 @@ class _MissionListScreenState extends State<MissionListScreen> with RouteAware {
       child: Padding(
         padding: const EdgeInsets.only(top: 4.0),
         child: GridView.builder(
-          physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+          physics: CustomScrollPhysics(scrollSpeedFactor: AppData.scrollSpeed),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 2.0,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
@@ -213,7 +214,7 @@ class _MyPageScreenState extends State<MyPageScreen>
     final isLoading = viewModel.isLoadingMissionRecord;
 
     return SingleChildScrollView(
-      physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
+      physics: CustomScrollPhysics(scrollSpeedFactor: AppData.scrollSpeed),
       child: ImageCommonMyPageGameCard(
         images: viewModel.playedGames ?? [],
         isLoading: isLoading,
@@ -226,7 +227,7 @@ class _MyPageScreenState extends State<MyPageScreen>
     final viewModel = Provider.of<MyPageViewModel>(context);
 
     return SingleChildScrollView(
-      physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
+      physics: CustomScrollPhysics(scrollSpeedFactor: AppData.scrollSpeed),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

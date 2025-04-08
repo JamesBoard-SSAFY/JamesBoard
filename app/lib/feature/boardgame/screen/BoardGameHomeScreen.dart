@@ -217,7 +217,9 @@ class _BoardGameHomeScreenState extends State<BoardGameHomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: ListView.builder(
-        physics: CustomScrollPhysics(scrollSpeedFactor: 0.4),
+        physics: CustomScrollPhysics(
+          scrollSpeedFactor: AppData.scrollSpeed,
+        ),
         padding: EdgeInsets.zero,
         itemCount: items.length,
         itemBuilder: (context, index) {

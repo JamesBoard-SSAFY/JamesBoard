@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
@@ -137,8 +138,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         // 검색 결과가 있다면 → 그리드뷰
                         if (hasSearchResults) {
                           return GridView.builder(
-                            physics:
-                                CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                            physics: CustomScrollPhysics(
+                                scrollSpeedFactor: AppData.scrollSpeed),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
