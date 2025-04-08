@@ -1,6 +1,6 @@
 <div align="center">
   <br/>
-  <img src="./readme_assets/jamesboard_logo" alt="jamesboard" width="200px" height="200px" />
+  <img src="./readme_asserts/jamesboard_logo" alt="jamesboard" width="200px" height="200px" />
   <h1> James Board</h1>
   <br/>
 </div>
@@ -46,22 +46,22 @@
 <table>
   <tr>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_kdy" alt="김두영 프로필" />  
+      <img src="./readme_asserts/d205_kdy" alt="김두영 프로필" />  
     </td>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_kdh" alt="김동현 프로필" />
+      <img src="./readme_asserts/d205_kdh" alt="김동현 프로필" />
     </td>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_kms" alt="강민석 프로필" />  
+      <img src="./readme_asserts/d205_kms" alt="강민석 프로필" />  
     </td>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_ksh" alt="김성현 프로필" />  
+      <img src="./readme_asserts/d205_ksh" alt="김성현 프로필" />  
     </td>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_pjh" alt="박장훈 프로필" />  
+      <img src="./readme_asserts/d205_pjh" alt="박장훈 프로필" />  
     </td>
     <td align="center" width="150px">
-      <img src="./readme_assets/d205_chw" alt="차현우 프로필" />  
+      <img src="./readme_asserts/d205_chw" alt="차현우 프로필" />  
     </td>
   </tr>
   <tr>
