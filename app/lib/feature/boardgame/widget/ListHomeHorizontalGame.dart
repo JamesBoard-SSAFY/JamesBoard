@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameDetailScreen.dart';
 import 'package:jamesboard/feature/boardgame/screen/ListBoardGameCategory.dart';
@@ -107,7 +108,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                 SizedBox(
                   height: 160,
                   child: ListView.builder(
-                    physics: CustomScrollPhysics(scrollSpeedFactor: 0.5),
+                    physics: CustomScrollPhysics(
+                        scrollSpeedFactor: AppData.scrollSpeed),
                     addAutomaticKeepAlives: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: isLoading ? 5 : games.length,

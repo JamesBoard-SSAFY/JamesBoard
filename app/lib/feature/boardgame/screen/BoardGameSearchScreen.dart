@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
@@ -38,6 +39,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
 
   bool _hasSearched = false;
 
+  final FocusNode _searchFocusNode = FocusNode();
+
   void _searchBoardGames() async {
     final keyword = _searchController.text.trim();
 
@@ -68,6 +71,10 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
     boardGameViewModel.clearSearchResults();
 
     boardGameViewModel.getRecentSearches();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
   }
 
   @override
@@ -88,6 +95,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                 // 검색 바 영역
                 SearchBarCommonTitle(
                   controller: _searchController,
+                  focusNode: _searchFocusNode,
                   onSubmitted: (_) => _searchBoardGames(),
                 ),
                 const SizedBox(height: 20),
@@ -130,8 +138,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                         // 검색 결과가 있다면 → 그리드뷰
                         if (hasSearchResults) {
                           return GridView.builder(
-                            physics:
-                                CustomScrollPhysics(scrollSpeedFactor: 0.4),
+                            physics: CustomScrollPhysics(
+                                scrollSpeedFactor: AppData.scrollSpeed),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,

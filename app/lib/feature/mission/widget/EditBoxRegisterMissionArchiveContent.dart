@@ -40,29 +40,44 @@ class _CustomInputBoxState extends State<EditBoxRegisterMissionArchiveContent> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
+        maxLength: 100,
         controller: widget.controller,
         keyboardType: TextInputType.multiline,
         minLines: 3,
         maxLines: null,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(255),
-        ],
         style: TextStyle(
           color: _hasInput ? mainWhite : mainGrey,
           fontSize: 16,
           fontFamily: FontString.pretendardMedium,
         ),
         decoration: InputDecoration(
-            hintText: AppString.missionContentInput,
-            hintStyle: TextStyle(
-                color: mainGrey,
-                fontSize: 16,
-                fontFamily: FontString.pretendardMedium),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            isDense: true,
-            contentPadding: EdgeInsets.zero),
+          hintText: AppString.missionContentInput,
+          hintStyle: TextStyle(
+            color: mainGrey,
+            fontSize: 16,
+            fontFamily: FontString.pretendardMedium,
+          ),
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+        ),
+        buildCounter: (
+          BuildContext context, {
+          required int currentLength,
+          required int? maxLength,
+          required bool isFocused,
+        }) {
+          return Text(
+            '$currentLength / $maxLength',
+            style: TextStyle(
+              color: mainGrey,
+              fontSize: 14,
+              fontFamily: FontString.pretendardMedium,
+            ),
+          );
+        },
       ),
     );
   }
