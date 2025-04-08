@@ -245,6 +245,12 @@ class _MissionRecordScreenState extends State<MissionRecordScreen> {
                               fontFamily: FontString.pretendardSemiBold,
                             ),
                           ),
+                          SizedBox(height: 8),
+                          Image.asset(
+                            'assets/image/edit.png',
+                            width: 200,
+                            height: 200,
+                          )
                         ],
                       )
                     : Column(
