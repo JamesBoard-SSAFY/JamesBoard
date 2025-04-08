@@ -49,7 +49,7 @@ class DioProviderUtil {
 
   static final Dio chatDio = Dio(
     BaseOptions(
-      baseUrl: 'https://j12d205.p.ssafy.io:9098/',
+      baseUrl: 'http://j12d205.p.ssafy.io:9098/',
       headers: {'Content-Type': 'application/json'},
     ),
   )..interceptors.add(
