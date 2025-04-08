@@ -2,6 +2,7 @@ import 'package:jamesboard/datasource/api/UserActivityService.dart';
 
 import '../datasource/model/request/user/UserActivityPatchRequest.dart';
 import '../datasource/model/request/user/UserActivityRequest.dart';
+import '../datasource/model/response/user/UserActivityDetailResponse.dart';
 import '../datasource/model/response/user/UserActivityResponse.dart';
 import '../util/DioProviderUtil.dart';
 
@@ -28,4 +29,8 @@ class UserActivityRepository {
     UserActivityPatchRequest request,
   ) =>
       _service.updateUserActivityRating(userActivityId, request);
+
+  Future<UserActivityDetailResponse> getUserActivityDetail(
+          int userId, int gameId) =>
+      _service.getUserActivityDetail(userId, gameId);
 }
