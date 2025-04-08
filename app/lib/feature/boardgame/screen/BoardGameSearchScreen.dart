@@ -38,6 +38,8 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
 
   bool _hasSearched = false;
 
+  final FocusNode _searchFocusNode = FocusNode();
+
   void _searchBoardGames() async {
     final keyword = _searchController.text.trim();
 
@@ -68,6 +70,10 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
     boardGameViewModel.clearSearchResults();
 
     boardGameViewModel.getRecentSearches();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
   }
 
   @override
@@ -88,6 +94,7 @@ class _BoardGameSearchScreenState extends State<BoardGameSearchScreen> {
                 // 검색 바 영역
                 SearchBarCommonTitle(
                   controller: _searchController,
+                  focusNode: _searchFocusNode,
                   onSubmitted: (_) => _searchBoardGames(),
                 ),
                 const SizedBox(height: 20),

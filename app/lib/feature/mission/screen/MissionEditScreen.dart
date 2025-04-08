@@ -47,6 +47,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   DateTime? _lastSnackBarTime;
   bool _isSubmitting = false;
 
+  final Map<String, DateTime> _snackBarLastShownTime = {};
+  final Set<String> _shownSnackBarMessages = {};
+
   static Future<(String, File)?> _cropCompressAndUploadImage(
       ImageSource source, MyPageViewModel viewModel) async {
     final ImagePicker _picker = ImagePicker();
@@ -113,9 +116,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     logger.d('archivePlayCount: ${viewModel.archivePlayCount}');
 
     if (validationResult != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(validationResult)),
-      );
+      _showSnackBarOnce(validationResult);
       setState(() {
         _isSubmitting = false;
       });
@@ -167,6 +168,29 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         const SnackBar(content: Text(AppString.errorOccurred)),
       );
     }
+  }
+
+  void _showSnackBarOnce(String message) {
+    final now = DateTime.now();
+    final lastShownTime = _snackBarLastShownTime[message];
+
+    if (lastShownTime != null && now.difference(lastShownTime).inSeconds < 2) {
+      return;
+    }
+
+    _snackBarLastShownTime[message] = now;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shownSnackBarMessages.clear();
+    super.dispose();
   }
 
   @override
@@ -286,23 +310,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               icon: IconPath.addPicture,
                               onTap: () async {
                                 if (_imageFiles.length >= 9) {
-                                  final now = DateTime.now();
-
-                                  if (_lastSnackBarTime == null ||
-                                      now
-                                              .difference(_lastSnackBarTime!)
-                                              .inSeconds >=
-                                          2) {
-                                    _lastSnackBarTime = now;
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(AppString.maxImageUploadLimit),
-                                      ),
-                                    );
-                                  }
-
+                                  _showSnackBarOnce(
+                                      AppString.maxImageUploadLimit);
                                   return;
                                 }
 
@@ -317,11 +326,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                           existingFile.path == file.path);
 
                                   if (isDuplicate) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('이미 추가된 이미지입니다.'),
-                                      ),
-                                    );
+                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
                                     return;
                                   }
 
@@ -342,23 +347,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               icon: IconPath.camera,
                               onTap: () async {
                                 if (_imageFiles.length >= 9) {
-                                  final now = DateTime.now();
-
-                                  if (_lastSnackBarTime == null ||
-                                      now
-                                              .difference(_lastSnackBarTime!)
-                                              .inSeconds >=
-                                          2) {
-                                    _lastSnackBarTime = now;
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(AppString.maxImageUploadLimit),
-                                      ),
-                                    );
-                                  }
-
+                                  _showSnackBarOnce(
+                                      AppString.maxImageUploadLimit);
                                   return;
                                 }
 
@@ -373,11 +363,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                           existingFile.path == file.path);
 
                                   if (isDuplicate) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('이미 추가된 이미지입니다.'),
-                                      ),
-                                    );
+                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
                                     return;
                                   }
 
