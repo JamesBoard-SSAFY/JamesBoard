@@ -6,11 +6,13 @@ import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/feature/boardgame/screen/BoardGameHomeScreen.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/CategoryGameViewModel.dart';
+import 'package:jamesboard/feature/chatbot/viewmodel/ChatbotViewModel.dart';
 import 'package:jamesboard/feature/mission/screen/MissionEditScreen.dart';
 import 'package:jamesboard/feature/mission/screen/MissionListScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jamesboard/feature/login/screen/LoginScreen.dart';
 import 'package:jamesboard/repository/ArchiveRepository.dart';
+import 'package:jamesboard/repository/ChatbotRepository.dart';
 import 'package:jamesboard/repository/LoginRepository.dart';
 import 'package:jamesboard/repository/SurveyRepository.dart';
 import 'package:jamesboard/repository/BoardGameRepository.dart';
@@ -109,6 +111,12 @@ void main() async {
             UserActivityRepository.create(),
           ),
         ),
+        ChangeNotifierProvider<ChatbotViewModel>(
+          create: (context) => ChatbotViewModel(
+            ChatbotRepository.create(),
+            LoginRepository.create(),
+          ),
+        )
       ],
       child: MyApp(isLoggedIn: isLoggedIn),
     ),
