@@ -19,6 +19,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../constants/AppString.dart';
 import '../../../util/BottomSheetUtil.dart';
 import '../viewmodel/BoardGameViewModel.dart';
+import '../viewmodel/UserActivityViewModel.dart';
 import '../widget/BoardGameDetailGameList.dart';
 import '../widget/skeleton/BoardGameDetailSkeleton.dart';
 
@@ -33,17 +34,48 @@ class BoardGameDetailScreen extends StatefulWidget {
 
 class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
   late BoardGameViewModel viewModel;
+  late UserActivityViewModel userActivityViewModel;
+  late double myRating;
 
   @override
   void initState() {
     super.initState();
-
-    final categoryViewModel =
-        Provider.of<CategoryGameViewModel>(context, listen: false);
-
+    final categoryViewModel = Provider.of<CategoryGameViewModel>(context, listen: false);
     viewModel =
         categoryViewModel.getCategoryViewModel(widget.gameId.toString());
     viewModel.getBoardGameDetail(widget.gameId);
+
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    String userIdStr = await storage.read(key: 'userId') ?? '';
+    int userId = int.parse(userIdStr);
+
+    userActivityViewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+    await userActivityViewModel.getUserActivityDetail(
+      userId: userId,
+      gameId: widget.gameId,
+    );
+
+    setState(() {
+      myRating = userActivityViewModel.userActivityDetail?.userActivityRating ?? 0.0;
+    });
+  }
+
+  Future<void> _showRatingBottomSheet() async {
+    final updatedRating = await BottomSheetUtil.showRatingBottomSheet(
+      context,
+      gameId: widget.gameId,
+      myRating: myRating,
+    );
+
+    // 바텀시트에서 별점이 수정된 경우만 업데이트
+    if (updatedRating != null && updatedRating != myRating) {
+      setState(() {
+        myRating = updatedRating;
+      });
+    }
   }
 
   @override
@@ -265,12 +297,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                       child: ButtonBoardRatingGame(
                         gameId: widget.gameId,
                         rating: boardGameDetail.gameRating,
-                        onPressed: () {
-                          BottomSheetUtil.showRatingBottomSheet(
-                            context,
-                            gameId: boardGameDetail.gameId,
-                          );
-                        },
+                        onPressed: _showRatingBottomSheet,
                         disableWithOpacity: false,
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/datasource/model/response/user/UserActivityDetailResponse.dart';
 import 'package:jamesboard/main.dart';
 import 'package:jamesboard/repository/UserActivityRepository.dart';
 
@@ -10,11 +11,13 @@ class UserActivityViewModel extends ChangeNotifier {
   final UserActivityRepository _repository;
   bool _isLoading = false;
   String? _errorMessage;
+  UserActivityDetailResponse? _userActivityDetail;
 
   UserActivityViewModel(this._repository);
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  UserActivityDetailResponse? get userActivityDetail => _userActivityDetail;
 
   Future<bool> addUserActivity(UserActivityRequest request) async {
     _isLoading = true;
@@ -91,6 +94,27 @@ class UserActivityViewModel extends ChangeNotifier {
     } catch (e) {
       _errorMessage = 'Failed to fetch updateUserActivityRating: $e';
       return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getUserActivityDetail({
+    required int userId,
+    required int gameId,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _userActivityDetail =
+          await _repository.getUserActivityDetail(userId, gameId);
+      logger.d(
+          "getUserActivityDetail rating : ${_userActivityDetail!.userActivityRating}");
+    } catch (e) {
+      _errorMessage = 'Failed to fetch updateUserActivityRating: $e';
     } finally {
       _isLoading = false;
       notifyListeners();
