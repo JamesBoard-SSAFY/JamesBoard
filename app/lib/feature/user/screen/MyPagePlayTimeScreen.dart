@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jamesboard/constants/AppData.dart';
 import 'package:jamesboard/datasource/model/response/MyPage/TopPlayedGame.dart';
 import 'package:jamesboard/theme/Colors.dart';
 
@@ -29,7 +30,7 @@ class _MyPagePlayTimeScreenState extends State<MyPagePlayTimeScreen> {
         title: widget.title,
       ),
       body: SingleChildScrollView(
-        physics: CustomScrollPhysics(scrollSpeedFactor: 0.7),
+        physics: CustomScrollPhysics(scrollSpeedFactor: AppData.scrollSpeed),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 20,
