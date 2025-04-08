@@ -311,6 +311,20 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                         ImageSource.gallery, myPageViewModel);
                                 if (result != null) {
                                   final (imageUrl, file) = result;
+
+                                  bool isDuplicate = _imageFiles.any(
+                                      (existingFile) =>
+                                          existingFile.path == file.path);
+
+                                  if (isDuplicate) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('이미 추가된 이미지입니다.'),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
                                   setState(() {
                                     _imageFiles.add(file);
                                   });
@@ -353,6 +367,20 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                         ImageSource.camera, myPageViewModel);
                                 if (result != null) {
                                   final (imageUrl, file) = result;
+
+                                  bool isDuplicate = _imageFiles.any(
+                                      (existingFile) =>
+                                          existingFile.path == file.path);
+
+                                  if (isDuplicate) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('이미 추가된 이미지입니다.'),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
                                   setState(() {
                                     _imageFiles.add(file);
                                   });
