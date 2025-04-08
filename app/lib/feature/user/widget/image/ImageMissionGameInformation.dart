@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:marquee/marquee.dart';
 import '../../../../datasource/model/response/MyPage/MyPageMissionRecordResponse.dart';
 import '../../../../widget/button/ButtonCommonGameTag.dart';
@@ -133,7 +134,8 @@ class ImageMissionGameInformation extends StatelessWidget {
               ButtonCommonGameTag(
                   text: _getDifficultyText(gameData.difficulty)),
               ButtonCommonGameTag(
-                  text: '${gameData.minPlayer} ~ ${gameData.maxPlayer}명'),
+                  text: CommonUtils.getAgeInfo(
+                      gameData.minPlayer, gameData.maxPlayer)),
               ButtonCommonGameTag(text: '${gameData.playTime}분'),
             ],
           ),
