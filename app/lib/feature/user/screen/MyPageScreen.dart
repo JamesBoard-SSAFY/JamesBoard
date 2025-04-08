@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
 import 'package:jamesboard/constants/IconPath.dart';
@@ -27,6 +29,27 @@ class MyPageScreen extends StatefulWidget {
 class _MyPageScreenState extends State<MyPageScreen>
     with SingleTickerProviderStateMixin, RouteAware {
   late TabController _tabController;
+  DateTime? currentBackPressTime;
+
+  Future<bool> onWillPop() async {
+    DateTime currentTime = DateTime.now();
+    //Statement 1 Or statement2
+    if (currentBackPressTime == null ||
+        currentTime.difference(currentBackPressTime!) >
+            const Duration(seconds: 2)) {
+      currentBackPressTime = currentTime;
+      Fluttertoast.showToast(
+          msg: "'뒤로' 버튼을 한번 더 누르시면 종료됩니다.",
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color(0xff6E6E6E),
+          fontSize: 14,
+          toastLength: Toast.LENGTH_SHORT);
+      return false;
+    }
+    return true;
+
+    SystemNavigator.pop();
+  }
 
   @override
   void initState() {
@@ -70,113 +93,116 @@ class _MyPageScreenState extends State<MyPageScreen>
 
     return Scaffold(
       backgroundColor: mainBlack,
-      body: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              CircleAvatar(
-                radius: 35,
-                backgroundImage: viewModel.userInfo?.userProfile != null
-                    ? NetworkImage(viewModel.userInfo!.userProfile!)
-                    : AssetImage(IconPath.defaultImage) as ImageProvider,
-                backgroundColor: mainBlack,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    viewModel.userInfo?.userNickname ?? "",
-                    style: TextStyle(
-                      color: mainWhite,
-                      fontSize: 20,
-                      fontFamily: FontString.pretendardBold,
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: Column(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                CircleAvatar(
+                  radius: 35,
+                  backgroundImage: viewModel.userInfo?.userProfile != null
+                      ? NetworkImage(viewModel.userInfo!.userProfile!)
+                      : AssetImage(IconPath.defaultImage) as ImageProvider,
+                  backgroundColor: mainBlack,
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      viewModel.userInfo?.userNickname ?? "",
+                      style: TextStyle(
+                        color: mainWhite,
+                        fontSize: 20,
+                        fontFamily: FontString.pretendardBold,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyPageUserEditScreen(
-                            title: AppString.myPageUserEditTitle,
-                            userName: viewModel.userInfo?.userNickname ?? "",
-                            userImg: viewModel.userInfo!.userProfile,
+                    SizedBox(
+                      width: 4,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyPageUserEditScreen(
+                              title: AppString.myPageUserEditTitle,
+                              userName: viewModel.userInfo?.userNickname ?? "",
+                              userImg: viewModel.userInfo!.userProfile,
+                            ),
+                          ),
+                        ).then((result) {
+                          if (result == true) {
+                            viewModel.loadUserId();
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: secondaryBlack,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(6),
+                          child: SvgPicture.asset(
+                            IconPath.pen,
+                            width: 24,
+                            height: 24,
                           ),
                         ),
-                      ).then((result) {
-                        if (result == true) {
-                          viewModel.loadUserId();
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: secondaryBlack,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: SvgPicture.asset(
-                          IconPath.pen,
-                          width: 24,
-                          height: 24,
-                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-            ],
-          ),
-          TabBar(
-            controller: _tabController,
-            labelColor: mainGold,
-            // 선택된 탭 텍스트 색
-            unselectedLabelColor: mainGrey,
-            // 선택되지 않은 탭 텍스트 색
-            indicatorColor: mainGold,
-            // 인디케이터 색
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: Colors.transparent,
-            labelStyle: TextStyle(
-              // 선택된 탭 텍스트 스타일
-              fontSize: 16,
-              color: mainGold,
-              fontFamily: FontString.pretendardBold,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontSize: 16,
-              color: mainGrey,
-              fontFamily: 'Pretendard',
-            ),
-            tabs: [
-              Tab(text: AppString.missionReport),
-              Tab(text: AppString.missionStatistics),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildTabContentMissionReport(),
-                _buildTabContentMissionStatistics(),
+                  ],
+                ),
+                SizedBox(height: 20),
               ],
             ),
-          ),
-        ],
+            TabBar(
+              controller: _tabController,
+              labelColor: mainGold,
+              // 선택된 탭 텍스트 색
+              unselectedLabelColor: mainGrey,
+              // 선택되지 않은 탭 텍스트 색
+              indicatorColor: mainGold,
+              // 인디케이터 색
+              indicatorSize: TabBarIndicatorSize.tab,
+              dividerColor: Colors.transparent,
+              labelStyle: TextStyle(
+                // 선택된 탭 텍스트 스타일
+                fontSize: 16,
+                color: mainGold,
+                fontFamily: FontString.pretendardBold,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 16,
+                color: mainGrey,
+                fontFamily: 'Pretendard',
+              ),
+              tabs: [
+                Tab(text: AppString.missionReport),
+                Tab(text: AppString.missionStatistics),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildTabContentMissionReport(),
+                  _buildTabContentMissionStatistics(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
