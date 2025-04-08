@@ -40,7 +40,7 @@ public class BoardGameRecommendServiceImpl implements BoardGameRecommendService 
 
         Long totalReviewCount = userActivityRepository.countByUserUserIdAndUserActivityRatingIsNotNull(userId);
 
-        if (totalReviewCount < 30) {
+        if (totalReviewCount < 5) {
             // 콘텐츠 기반 추천
             List<RecommendContent> recommendContents = recommendContentRepository
                     .findTopNByGameOrderByRecommendContentRankAsc(preferGame, limit);
