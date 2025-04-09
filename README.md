@@ -83,36 +83,48 @@
 
 ## 🏅 개발 팀 소개
 
-<table>
+<table align="center">
   <tr>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_kdy.png" alt="김두영 프로필" />  
+      <a href="https://github.com/dunblx05" target="_blank">
+        <img src="./readme_asserts/d205_kdy.png" alt="김두영 프로필" />  
+      </a>
     </td>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_kdh.png" alt="김동현 프로필" />
+      <a href="https://github.com/kdh4718" target="_blank">
+        <img src="./readme_asserts/d205_kdh.png" alt="김동현 프로필" />
+      </a>
     </td>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_kms.png" alt="강민석 프로필" />  
+      <a href="https://github.com/KR-ImPlant" target="_blank">
+        <img src="./readme_asserts/d205_kms.png" alt="강민석 프로필" />
+      </a>
     </td>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_ksh.png" alt="김성현 프로필" />  
+      <a href="https://github.com/hyuun" target="_blank">
+        <img src="./readme_asserts/d205_ksh.png" alt="김성현 프로필" />
+      </a>
     </td>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_pjh.png" alt="박장훈 프로필" />  
+      <a href="https://github.com/gretea5" target="_blank">
+        <img src="./readme_asserts/d205_pjh.png" alt="박장훈 프로필" />
+      </a>
     </td>
     <td align="center" width="150px">
-      <img src="./readme_asserts/d205_chw.png" alt="차현우 프로필" />  
+      <a href="https://github.com/SWisdom1108" target="_blank">
+        <img src="./readme_asserts/d205_chw.png" alt="차현우 프로필" />
+      </a>
     </td>
   </tr>
   <tr>
     <td align="center">
-        김두영<br />BackEnd & Infra
+        김두영<br />BE & DevOps
     </td>
     <td align="center">
         김동현<br />AOS & Data
     </td>
     <td align="center">
-        강민석<br />BackEnd & AI
+        강민석<br />BE & AI
     </td>
     <td align="center">
         김성현<br />AOS
@@ -121,7 +133,7 @@
         박장훈<br />AOS
     </td>
     <td align="center">
-        차현우<br />BackEnd & Data
+        차현우<br />BE & Data
     </td>
   </tr>
 </table>
