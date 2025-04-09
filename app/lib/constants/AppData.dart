@@ -82,7 +82,6 @@ class AppData {
     AppString.categoryDeduction: AppString.categoryDeductionValue,
     AppString.categoryWar: AppString.categoryWarValue,
     AppString.categoryAbstractStrategy: AppString.categoryAbstractStrategyValue,
-    AppString.categoryAny: AppString.categoryAnyValue,
   };
 
   static const Map<String, String> categoryMap = {
