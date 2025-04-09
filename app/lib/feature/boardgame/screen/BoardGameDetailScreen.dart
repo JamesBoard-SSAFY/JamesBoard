@@ -37,10 +37,13 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
   late UserActivityViewModel userActivityViewModel;
   late double myRating;
 
+  bool hasUserRated = false;
+
   @override
   void initState() {
     super.initState();
-    final categoryViewModel = Provider.of<CategoryGameViewModel>(context, listen: false);
+    final categoryViewModel =
+        Provider.of<CategoryGameViewModel>(context, listen: false);
     viewModel =
         categoryViewModel.getCategoryViewModel(widget.gameId.toString());
     viewModel.getBoardGameDetail(widget.gameId);
@@ -52,14 +55,17 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
     String userIdStr = await storage.read(key: 'userId') ?? '';
     int userId = int.parse(userIdStr);
 
-    userActivityViewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+    userActivityViewModel =
+        Provider.of<UserActivityViewModel>(context, listen: false);
     await userActivityViewModel.getUserActivityDetail(
       userId: userId,
       gameId: widget.gameId,
     );
 
     setState(() {
-      myRating = userActivityViewModel.userActivityDetail?.userActivityRating ?? 0.0;
+      myRating =
+          userActivityViewModel.userActivityDetail?.userActivityRating ?? 0.0;
+      hasUserRated = userActivityViewModel.hasUserRated;
     });
   }
 
@@ -74,6 +80,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
     if (updatedRating != null && updatedRating != myRating) {
       setState(() {
         myRating = updatedRating;
+        hasUserRated = updatedRating > 0;
       });
     }
   }
@@ -299,6 +306,7 @@ class _BoardGameDetailScreenState extends State<BoardGameDetailScreen> {
                         rating: boardGameDetail.gameRating,
                         onPressed: _showRatingBottomSheet,
                         disableWithOpacity: false,
+                        hasUserRated: hasUserRated,
                       ),
                     ),
                     Container(

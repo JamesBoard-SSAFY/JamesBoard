@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/constants/FontString.dart';
+import 'package:jamesboard/constants/IconPath.dart';
 import 'package:jamesboard/theme/Colors.dart';
 import 'package:jamesboard/util/CommonUtils.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ class ButtonBoardRatingGame extends StatefulWidget {
   final double rating;
   final VoidCallback? onPressed;
   final bool disableWithOpacity;
+  final bool hasUserRated;
 
   const ButtonBoardRatingGame({
     super.key,
@@ -20,6 +23,7 @@ class ButtonBoardRatingGame extends StatefulWidget {
     required this.rating,
     required this.onPressed,
     required this.disableWithOpacity,
+    required this.hasUserRated,
   });
 
   @override
@@ -88,6 +92,36 @@ class _ButtonBoardRatingGameState extends State<ButtonBoardRatingGame> {
                               fontFamily: FontString.pretendardBold,
                             ),
                           ),
+
+                          // 평가를 했다면
+                          if (widget.hasUserRated)
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: SvgPicture.asset(
+                                  IconPath.starSelected,
+                                  width: 14,
+                                  height: 14,
+                                ),
+                              ),
+                            )
+                          else
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: SvgPicture.asset(
+                                  IconPath.starSelected,
+                                  colorFilter: ColorFilter.mode(
+                                    mainGrey,
+                                    BlendMode.srcIn,
+                                  ),
+                                  width: 14,
+                                  height: 14,
+                                ),
+                              ),
+                            )
                         ],
                       ),
                     );
