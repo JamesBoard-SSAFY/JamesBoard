@@ -30,8 +30,7 @@ public class Archive {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @Size(max = 255)
-    @Column(name = "archive_content")
+    @Column(name = "archive_content", columnDefinition = "TEXT")
     private String archiveContent;
 
     @Column(name = "archive_game_play_time")
