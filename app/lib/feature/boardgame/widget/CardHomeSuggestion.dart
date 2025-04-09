@@ -33,7 +33,7 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: 90000);
     _currentPage = 0;
     boardGameViewModel = Provider.of<BoardGameViewModel>(context, listen: false);
 
