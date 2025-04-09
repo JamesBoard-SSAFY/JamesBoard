@@ -76,8 +76,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
       if (croppedFile != null) {
         String originalFileName = pickedFile.name;
+        int timeStamp = DateTime.now().microsecondsSinceEpoch;
         String newFileName =
-            '${path.basenameWithoutExtension(originalFileName)}.webp';
+            '${path.basenameWithoutExtension(originalFileName)}_$timeStamp.webp';
         File? compressedImage = await CommonUtils.compressAndConvertToWebP(
             File(croppedFile.path), newFileName);
 

@@ -199,13 +199,13 @@ class AppString {
   static const String categoryDeductionValue = '추리';
   static const String categoryWarValue = '전쟁';
   static const String categoryAbstractStrategyValue = '추상 전략';
-  static const String categoryAnyValue = '상관없음';
+  static const String categoryAnyValue = '필터 해제';
 
   static const String playersSolo = "Solo: 1인";
   static const String playersDuo = "Duo: 2인";
   static const String playersTeam = "Team: 3인 이상";
   static const String playersAssemble = "Assemble: 5인 이상";
-  static const String playersAny = "상관없음";
+  static const String playersAny = "필터 해제";
 
   static const String playersSoloValue = "1인";
   static const String playersDuoValue = "2인";
@@ -215,19 +215,19 @@ class AppString {
   static const String difficultyBeginner = "본부, 초급 단계 요청합니다.";
   static const String difficultyIntermediate = "본부, 중급 단계 요청합니다.";
   static const String difficultyAdvanced = "본부, 고급 단계 요청합니다.";
-  static const String difficultyAny = "본부, 어느 단계든 상관없습니다.";
+  static const String difficultyAny = "필터 해제";
 
   static const String difficultyBeginnerValue = "초급";
   static const String difficultyIntermediateValue = "중급";
   static const String difficultyAdvancedValue = "고급";
   static const String difficultyUnKnownValue = "알 수 없음";
-  static const String difficultyAnyValue = "상관없음";
+  static const String difficultyAnyValue = "필터 해제";
 
   static const String playtimeUltraShort = "초신속 임무 (0 ~ 30분)";
   static const String playtimeShort = "정밀 작전 (60 ~ 120분)";
   static const String playtimeMedium = "장기 작전 (120 ~ 240분)";
   static const String playtimeLong = "마스터 작전 (240분 이상)";
-  static const String playtimeAny = "상관없음";
+  static const String playtimeAny = "필터 해제";
 
   static const String playtimeUltraShortValue = "0 ~ 30분";
   static const String playtimeShortValue = "60 ~ 120분";
