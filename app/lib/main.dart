@@ -147,7 +147,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           splashColor: Colors.transparent, // 클릭 시 원형 퍼지는 효과 제거
         ),
-        home: SplashScreen(isLoggedIn: false));
+        home: SplashScreen(isLoggedIn: isLoggedIn));
   }
 }
 
