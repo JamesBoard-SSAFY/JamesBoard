@@ -118,7 +118,7 @@ class AppString {
 
   //BoardGameDetailScreen
   static const String evaluation = "평가";
-  static const String similarMission = "비슷한 임무";
+  static const String similarMission = "이런 임무 어떤가요?";
 
   static const String gameDetailKey = "게임 상세 조회";
   static const String noGames = "게임 정보가 없습니다.";
