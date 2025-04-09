@@ -32,19 +32,21 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final itemHeight = 84.2;
+    final itemHeight = 64;
     final minItemCount = 1;
-    final maxSheetHeight = screenHeight; // 화면 전체 사용
+    final headerHeight = 60.0;
+    final buttonHeight = 80.0;
+    final paddingHeight = 20.0;
 
+    final totalExtraHeight = headerHeight + buttonHeight + paddingHeight;
     final maxListHeight = widget.items.length * itemHeight;
-    final minListHeight = maxListHeight < (minItemCount * itemHeight)
-        ? maxListHeight
-        : (minItemCount * itemHeight);
+    final minListHeight = (minItemCount * itemHeight).clamp(0, maxListHeight);
 
-    final calculatedHeight = (maxListHeight + 50.0).clamp(0, maxSheetHeight);
-    final maxChildSize = (calculatedHeight / screenHeight).clamp(0.3, 0.7);
-    final minChildSize =
-        (minListHeight / screenHeight).clamp(0.3, maxChildSize);
+    final calculatedHeight =
+        (maxListHeight + totalExtraHeight).clamp(0, screenHeight);
+
+    final maxChildSize = (calculatedHeight / screenHeight).clamp(0.3, 0.8);
+    final minChildSize = (minListHeight + totalExtraHeight) / screenHeight;
 
     return DraggableScrollableSheet(
       initialChildSize: maxChildSize,
@@ -61,6 +63,7 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
@@ -107,6 +110,7 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
                       top: BorderSide(color: mainGrey, width: 1.0),
                     ),
                   ),
+                  margin: EdgeInsets.only(top: 20),
                   padding: EdgeInsets.symmetric(vertical: 20),
                   alignment: Alignment.center,
                   child: Text(
