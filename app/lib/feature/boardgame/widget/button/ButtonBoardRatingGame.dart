@@ -68,62 +68,43 @@ class _ButtonBoardRatingGameState extends State<ButtonBoardRatingGame> {
                   padding: EdgeInsets.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
+                // build 메서드 안의 Consumer 부분만 수정
                 child: Consumer<BoardGameViewModel>(
                   builder: (context, viewModel, child) {
-                    return Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${AppString.evaluation}\u00A0",
-                            style: TextStyle(
-                              color: mainWhite,
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardBold,
-                            ),
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppString.evaluation,
+                          style: TextStyle(
+                            color: mainWhite,
+                            fontSize: 16,
+                            fontFamily: FontString.pretendardBold,
                           ),
-                          TextSpan(
-                            text: "(${CommonUtils.roundToTwoDecimalPlaces(
-                              viewModel.boardGameDetail?.gameRating ??
-                                  widget.rating,
-                            )})",
-                            style: TextStyle(
-                              color: mainGold,
-                              fontSize: 16,
-                              fontFamily: FontString.pretendardBold,
-                            ),
+                        ),
+                        const SizedBox(width: 4), // 간격
+                        Text(
+                          "(${CommonUtils.roundToTwoDecimalPlaces(
+                            viewModel.boardGameDetail?.gameRating ??
+                                widget.rating,
+                          )})",
+                          style: TextStyle(
+                            color: mainGold,
+                            fontSize: 16,
+                            fontFamily: FontString.pretendardBold,
                           ),
-
-                          // 평가를 했다면
-                          if (widget.hasUserRated)
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.middle,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
-                                child: SvgPicture.asset(
-                                  IconPath.starSelected,
-                                  width: 14,
-                                  height: 14,
-                                ),
-                              ),
-                            )
-                          else
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.middle,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 6.0),
-                                child: SvgPicture.asset(
-                                  IconPath.starSelected,
-                                  colorFilter: ColorFilter.mode(
-                                    mainGrey,
-                                    BlendMode.srcIn,
-                                  ),
-                                  width: 14,
-                                  height: 14,
-                                ),
-                              ),
-                            )
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 6), // 텍스트와 아이콘 사이 간격
+                        SvgPicture.asset(
+                          IconPath.starSelected,
+                          width: 14,
+                          height: 14,
+                          colorFilter: ColorFilter.mode(
+                            widget.hasUserRated ? mainGold : mainGrey,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
