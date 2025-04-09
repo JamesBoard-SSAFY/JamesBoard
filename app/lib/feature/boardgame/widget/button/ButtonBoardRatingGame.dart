@@ -41,6 +41,8 @@ class _ButtonBoardRatingGameState extends State<ButtonBoardRatingGame> {
         Provider.of<CategoryGameViewModel>(context, listen: false);
     ratingViewModel =
         categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
+
+    ratingViewModel.getBoardGameDetail(widget.gameId);
   }
 
   @override
