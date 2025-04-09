@@ -32,8 +32,8 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final itemHeight = 90.0;
-    final minItemCount = 2;
+    final itemHeight = 84.2;
+    final minItemCount = 1;
     final maxSheetHeight = screenHeight; // 화면 전체 사용
 
     final maxListHeight = widget.items.length * itemHeight;
