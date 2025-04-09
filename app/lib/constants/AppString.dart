@@ -188,7 +188,7 @@ class AppString {
   static const String categoryDeduction = '추리';
   static const String categoryWar = '전쟁';
   static const String categoryAbstractStrategy = '추상 전략';
-  static const String categoryAny = '상관없음';
+  static const String categoryAny = '필터 해제';
 
   static const String categoryPartyValue = '파티';
   static const String categoryStrategyValue = '전략';
