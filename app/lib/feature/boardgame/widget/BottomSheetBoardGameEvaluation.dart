@@ -35,6 +35,7 @@ class _BottomSheetBoardGameEvaluationState
   late UserActivityViewModel viewModel;
 
   double _rating = 0.0;
+  bool isButtonDisabled = false;
 
   @override
   void initState() {
@@ -43,7 +44,7 @@ class _BottomSheetBoardGameEvaluationState
 
     viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
     final categoryViewModel =
-    Provider.of<CategoryGameViewModel>(context, listen: false);
+        Provider.of<CategoryGameViewModel>(context, listen: false);
     ratingBoardGameViewModel =
         categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
   }
@@ -93,46 +94,54 @@ class _BottomSheetBoardGameEvaluationState
               ),
             ),
             child: ElevatedButton(
-              onPressed: () async {
-                if (_rating == 0.0) {
-                  logger.d("rating $_rating");
-                  return;
-                }
+              onPressed: isButtonDisabled
+                  ? null
+                  : () async {
+                      if (_rating == 0.0) {
+                        logger.d("rating $_rating");
+                        return;
+                      }
 
-                final userActivityId = await viewModel.checkUserActivity(
-                  userId: widget.userId,
-                  gameId: widget.gameId,
-                );
+                      setState(() {
+                        isButtonDisabled = true; // 버튼 비활성화
+                      });
 
-                final isRatingExists = userActivityId > 0;
+                      final userActivityId = await viewModel.checkUserActivity(
+                        userId: widget.userId,
+                        gameId: widget.gameId,
+                      );
 
-                bool success = false;
-                if (isRatingExists) {
-                  final request = UserActivityPatchRequest(rating: _rating);
-                  success = await viewModel.updateUserActivityRating(
-                    userActivityId: userActivityId,
-                    request: request,
-                  );
-                } else {
-                  final request = UserActivityRequest(
-                    gameId: widget.gameId,
-                    userId: widget.userId,
-                    rating: _rating,
-                  );
-                  success = await viewModel.addUserActivity(request);
-                }
+                      final isRatingExists = userActivityId > 0;
 
-                if (success) {
-                  ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
-                  Navigator.of(context).pop(_rating); // 별점 반영해서 상위로 전달
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppString.notPatchRating),
-                    ),
-                  );
-                }
-              },
+                      bool success = false;
+                      if (isRatingExists) {
+                        final request =
+                            UserActivityPatchRequest(rating: _rating);
+                        success = await viewModel.updateUserActivityRating(
+                          userActivityId: userActivityId,
+                          request: request,
+                        );
+                      } else {
+                        final request = UserActivityRequest(
+                          gameId: widget.gameId,
+                          userId: widget.userId,
+                          rating: _rating,
+                        );
+                        success = await viewModel.addUserActivity(request);
+                      }
+
+                      if (success) {
+                        ratingBoardGameViewModel
+                            .getBoardGameDetail(widget.gameId);
+                        Navigator.of(context).pop(_rating); // 별점 반영해서 상위로 전달
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppString.notPatchRating),
+                          ),
+                        );
+                      }
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: secondaryBlack,
                 padding: const EdgeInsets.symmetric(vertical: 20),
