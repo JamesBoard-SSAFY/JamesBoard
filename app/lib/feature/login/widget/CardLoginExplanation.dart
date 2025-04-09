@@ -127,7 +127,8 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
             children: [
               PageView.builder(
                 controller: _pageController,
-                itemCount: images.length * 10000, // 무한 스크롤
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: images.length * 10000,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPage = index % images.length;
@@ -137,7 +138,7 @@ class _CardLoginExplanationState extends State<CardLoginExplanation> {
                   int actualIndex = index % images.length;
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 유지
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RichText(
                         text: TextSpan(children: text1List[actualIndex]),

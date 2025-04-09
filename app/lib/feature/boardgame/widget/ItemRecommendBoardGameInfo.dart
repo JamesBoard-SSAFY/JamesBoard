@@ -78,6 +78,12 @@ class ItemRecommendBoardGameInfo extends StatelessWidget {
               height: 180,
               width: double.infinity,
               fit: BoxFit.cover,
+              fadeInDuration: Duration(
+                microseconds: 500,
+              ),
+              fadeOutDuration: Duration(
+                milliseconds: 500,
+              ),
             ),
           ),
 
