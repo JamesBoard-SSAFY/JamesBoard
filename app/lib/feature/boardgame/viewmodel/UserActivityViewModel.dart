@@ -18,6 +18,8 @@ class UserActivityViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   UserActivityDetailResponse? get userActivityDetail => _userActivityDetail;
+  bool get hasUserRated =>
+      (_userActivityDetail?.userActivityRating ?? 0.0) > 0.0;
 
   Future<bool> addUserActivity(UserActivityRequest request) async {
     _isLoading = true;
