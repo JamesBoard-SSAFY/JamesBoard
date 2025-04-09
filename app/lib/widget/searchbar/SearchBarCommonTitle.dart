@@ -6,12 +6,14 @@ import 'package:jamesboard/theme/Colors.dart';
 
 class SearchBarCommonTitle extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
   final ValueChanged<String> onSubmitted;
 
   const SearchBarCommonTitle({
     super.key,
     required this.controller,
     required this.onSubmitted,
+    required this.focusNode,
   });
 
   @override
@@ -22,6 +24,8 @@ class SearchBarCommonTitle extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              focusNode: focusNode,
+              maxLength: 50,
               controller: controller,
               onSubmitted: onSubmitted,
               style: TextStyle(
@@ -37,6 +41,7 @@ class SearchBarCommonTitle extends StatelessWidget {
                     color: mainGrey,
                     fontSize: 16,
                   ),
+                  counterText: '',
                   filled: true,
                   fillColor: secondaryBlack,
                   border: OutlineInputBorder(

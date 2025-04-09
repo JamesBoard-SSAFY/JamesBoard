@@ -15,11 +15,13 @@ import 'RatingBarBoardGameDetailReview.dart';
 class BottomSheetBoardGameEvaluation extends StatefulWidget {
   final int gameId;
   final int userId;
+  final double myRating;
 
   const BottomSheetBoardGameEvaluation({
     super.key,
     required this.gameId,
     required this.userId,
+    required this.myRating,
   });
 
   @override
@@ -34,28 +36,22 @@ class _BottomSheetBoardGameEvaluationState
 
   double _rating = 0.0;
 
+  @override
+  void initState() {
+    super.initState();
+    _rating = widget.myRating;
+
+    viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
+    final categoryViewModel =
+    Provider.of<CategoryGameViewModel>(context, listen: false);
+    ratingBoardGameViewModel =
+        categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
+  }
+
   void _updateRating(double rating) {
     setState(() {
       _rating = rating;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    viewModel = Provider.of<UserActivityViewModel>(context, listen: false);
-    final categoryViewModel =
-        Provider.of<CategoryGameViewModel>(context, listen: false);
-    ratingBoardGameViewModel =
-        categoryViewModel.getCategoryViewModel("${widget.gameId}rating");
-
-    viewModel.getUserActivityDetail(
-      userId: widget.userId,
-      gameId: widget.gameId,
-    );
-
-    _rating = viewModel.userActivityDetail?.userActivityRating ?? 0.0;
   }
 
   @override
@@ -71,44 +67,21 @@ class _BottomSheetBoardGameEvaluationState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Text(
-              AppString.rating,
-              style: TextStyle(
-                color: mainWhite,
-                fontSize: 20,
-                fontFamily: FontString.pretendardBold,
-              ),
+          const SizedBox(height: 20),
+          Text(
+            AppString.rating,
+            style: TextStyle(
+              color: mainWhite,
+              fontSize: 20,
+              fontFamily: FontString.pretendardBold,
             ),
           ),
           const SizedBox(height: 20),
-          ChangeNotifierProvider.value(
-            value: viewModel,
-            child: Consumer<UserActivityViewModel>(
-              builder: (context, viewModel, child) {
-                final rating =
-                    viewModel.userActivityDetail?.userActivityRating ?? 0.0;
-
-                if (_rating == 0.0 && rating > 0.0) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    setState(() {
-                      _rating = rating;
-                    });
-                  });
-                }
-
-                return RatingBarBoardGameDetailReview(
-                  initialRating: _rating,
-                  onRatingUpdate: (rating) {
-                    _updateRating(rating);
-                  },
-                );
-              },
-            ),
+          RatingBarBoardGameDetailReview(
+            initialRating: _rating,
+            onRatingUpdate: _updateRating,
           ),
           const SizedBox(height: 20),
-          // 닫기 버튼
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
@@ -133,53 +106,31 @@ class _BottomSheetBoardGameEvaluationState
 
                 final isRatingExists = userActivityId > 0;
 
+                bool success = false;
                 if (isRatingExists) {
-                  final request = UserActivityPatchRequest(
-                    rating: _rating,
-                  );
-
-                  final success = await viewModel.updateUserActivityRating(
+                  final request = UserActivityPatchRequest(rating: _rating);
+                  success = await viewModel.updateUserActivityRating(
                     userActivityId: userActivityId,
                     request: request,
                   );
-
-                  logger.d("updateUserActivityRating update success $success");
-
-                  if (success) {
-                    ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
-                    Navigator.of(context).pop();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          AppString.notPatchRating,
-                        ),
-                      ),
-                    );
-                  }
                 } else {
                   final request = UserActivityRequest(
                     gameId: widget.gameId,
                     userId: widget.userId,
                     rating: _rating,
                   );
+                  success = await viewModel.addUserActivity(request);
+                }
 
-                  final success = await viewModel.addUserActivity(request);
-
-                  logger.d("updateUserActivityRating write success $success");
-
-                  if (success) {
-                    ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
-                    Navigator.of(context).pop(); // 성공 시 바텀시트 닫기
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          AppString.notPostRating,
-                        ),
-                      ),
-                    );
-                  }
+                if (success) {
+                  ratingBoardGameViewModel.getBoardGameDetail(widget.gameId);
+                  Navigator.of(context).pop(_rating); // 별점 반영해서 상위로 전달
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppString.notPatchRating),
+                    ),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(

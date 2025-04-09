@@ -62,15 +62,6 @@ class _BottomSheetCommonFilterState extends State<BottomSheetCommonFilter> {
           ),
           child: Column(
             children: <Widget>[
-              Container(
-                width: 40,
-                height: 6,
-                margin: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  color: Colors.grey[600],
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(

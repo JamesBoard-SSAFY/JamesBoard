@@ -57,35 +57,40 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding:
+                const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 12.0),
             child: Shimmer.fromColors(
               baseColor: shimmerBaseColor,
               highlightColor: shimmerHighlightColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 프로필 영역
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: mainWhite,
-                          shape: BoxShape.circle,
+                  // ✅ 프로필 영역
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 0), // 이미 상위 padding 존재
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: mainWhite,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        width: 100,
-                        height: 16,
-                        color: mainWhite,
-                      ),
-                    ],
+                        const SizedBox(width: 12),
+                        Container(
+                          width: 100,
+                          height: 16,
+                          color: mainWhite,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
 
-                  // 이미지 영역
+                  // ✅ 이미지 영역
                   AspectRatio(
                     aspectRatio: 1,
                     child: Container(
@@ -94,12 +99,12 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // 인디케이터 대체 (작은 박스)
+                  // ✅ 인디케이터 영역
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(3, (index) {
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
                         width: 6,
                         height: 6,
                         decoration: BoxDecoration(
@@ -109,23 +114,32 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                       );
                     }),
                   ),
+
                   const SizedBox(height: 16),
 
-                  // 게시글 설명 영역
-                  Container(
-                    width: double.infinity,
-                    height: 16,
-                    color: mainWhite,
+                  // ✅ 게시글 설명
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 0, right: 0, top: 16.0, bottom: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: mainWhite,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: mainWhite,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    height: 16,
-                    color: mainWhite,
-                  ),
-                  const SizedBox(height: 12),
 
-                  // 해시태그 영역
+                  // ✅ 해시태그 영역
                   Row(
                     children: [
                       Container(

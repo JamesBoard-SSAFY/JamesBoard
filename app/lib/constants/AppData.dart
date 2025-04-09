@@ -1,6 +1,8 @@
 import 'AppString.dart';
 
 class AppData {
+  static const scrollSpeed = 1.0;
+
   static const Map<String, List<String>> filterOptions = {
     AppString.keyCategory: [
       AppString.categoryParty,

@@ -47,6 +47,9 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   DateTime? _lastSnackBarTime;
   bool _isSubmitting = false;
 
+  final Map<String, DateTime> _snackBarLastShownTime = {};
+  final Set<String> _shownSnackBarMessages = {};
+
   static Future<(String, File)?> _cropCompressAndUploadImage(
       ImageSource source, MyPageViewModel viewModel) async {
     final ImagePicker _picker = ImagePicker();
@@ -113,9 +116,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     logger.d('archivePlayCount: ${viewModel.archivePlayCount}');
 
     if (validationResult != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(validationResult)),
-      );
+      _showSnackBarOnce(validationResult);
       setState(() {
         _isSubmitting = false;
       });
@@ -131,10 +132,13 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     );
 
     logger.d('gameId : ${viewModel.selectedGameId}');
+    logger.d('gameTitle : ${viewModel.selectedGameTitle}');
     logger.d('archiveGamePlayCount : ${viewModel.archivePlayCount}');
     logger.d('archiveImageList : ${viewModel.imageUrls}');
     logger.d('archiveContent : ${viewModel.archiveContent}');
     logger.d('archiveGamePlayTime : ${viewModel.archivePlayTime}');
+    logger.d(
+        'archiveContent 길이 : ${viewModel.archiveContent?.length.toString()}');
 
     int result;
 
@@ -167,6 +171,29 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         const SnackBar(content: Text(AppString.errorOccurred)),
       );
     }
+  }
+
+  void _showSnackBarOnce(String message) {
+    final now = DateTime.now();
+    final lastShownTime = _snackBarLastShownTime[message];
+
+    if (lastShownTime != null && now.difference(lastShownTime).inSeconds < 2) {
+      return;
+    }
+
+    _snackBarLastShownTime[message] = now;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shownSnackBarMessages.clear();
+    super.dispose();
   }
 
   @override
@@ -286,23 +313,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               icon: IconPath.addPicture,
                               onTap: () async {
                                 if (_imageFiles.length >= 9) {
-                                  final now = DateTime.now();
-
-                                  if (_lastSnackBarTime == null ||
-                                      now
-                                              .difference(_lastSnackBarTime!)
-                                              .inSeconds >=
-                                          2) {
-                                    _lastSnackBarTime = now;
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(AppString.maxImageUploadLimit),
-                                      ),
-                                    );
-                                  }
-
+                                  _showSnackBarOnce(
+                                      AppString.maxImageUploadLimit);
                                   return;
                                 }
 
@@ -311,6 +323,16 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                         ImageSource.gallery, myPageViewModel);
                                 if (result != null) {
                                   final (imageUrl, file) = result;
+
+                                  bool isDuplicate = _imageFiles.any(
+                                      (existingFile) =>
+                                          existingFile.path == file.path);
+
+                                  if (isDuplicate) {
+                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
+                                    return;
+                                  }
+
                                   setState(() {
                                     _imageFiles.add(file);
                                   });
@@ -328,23 +350,8 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                               icon: IconPath.camera,
                               onTap: () async {
                                 if (_imageFiles.length >= 9) {
-                                  final now = DateTime.now();
-
-                                  if (_lastSnackBarTime == null ||
-                                      now
-                                              .difference(_lastSnackBarTime!)
-                                              .inSeconds >=
-                                          2) {
-                                    _lastSnackBarTime = now;
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(AppString.maxImageUploadLimit),
-                                      ),
-                                    );
-                                  }
-
+                                  _showSnackBarOnce(
+                                      AppString.maxImageUploadLimit);
                                   return;
                                 }
 
@@ -353,6 +360,16 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                                         ImageSource.camera, myPageViewModel);
                                 if (result != null) {
                                   final (imageUrl, file) = result;
+
+                                  bool isDuplicate = _imageFiles.any(
+                                      (existingFile) =>
+                                          existingFile.path == file.path);
+
+                                  if (isDuplicate) {
+                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
+                                    return;
+                                  }
+
                                   setState(() {
                                     _imageFiles.add(file);
                                   });
@@ -428,11 +445,6 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             style: TextStyle(
                                 color: mainWhite,
                                 fontSize: 20,
-                                fontFamily: FontString.pretendardSemiBold)),
-                        Text('(${_descriptionController.text.length} / 255)',
-                            style: TextStyle(
-                                color: mainGrey,
-                                fontSize: 14,
                                 fontFamily: FontString.pretendardSemiBold)),
                       ],
                     ),
