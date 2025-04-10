@@ -80,18 +80,30 @@ class MissionViewModel extends ChangeNotifier {
   }
 
   void setArchivePlayContent(String content) {
-    _archiveContent = content;
+    if (content.trim().isEmpty) {
+      _archiveContent = null;
+    } else {
+      _archiveContent = content;
+    }
+
     notifyListeners();
   }
 
-  void setArchivePlayCount(int count) {
-    _archivePlayCount = count;
+  void setArchivePlayCount(int? count) {
+    if (count == null || count <= 0) {
+      _archivePlayCount = null;
+    } else {
+      _archivePlayCount = count;
+    }
     notifyListeners();
   }
 
   void setArchivePlayTime() {
-    if (_selectedGameAveragePlayTime == null || _archivePlayCount == null)
+    if (_selectedGameAveragePlayTime == null || _archivePlayCount == null) {
+      _archivePlayTime = null;
+      notifyListeners();
       return;
+    }
     _archivePlayTime = _selectedGameAveragePlayTime! * _archivePlayCount!;
     notifyListeners();
   }
@@ -108,7 +120,7 @@ class MissionViewModel extends ChangeNotifier {
   }
 
   // 유효성 검사
-  String? validationArchiveSubmission() {
+  String? validationInputs() {
     if (_selectedGameId == null) return '보드게임을 선택해주세요.';
     if (_archivePlayTime == null || _archivePlayCount! <= 0)
       return '임무 수(플레이한 횟수)를 입력해주세요.';

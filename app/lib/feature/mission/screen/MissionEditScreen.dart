@@ -99,18 +99,18 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
   void _onSubmit(MissionViewModel viewModel) async {
     if (_isSubmitting) return;
+
     setState(() {
       _isSubmitting = true;
     });
 
-    final count = int.tryParse(_countController.text);
-    if (count != null) {
-      viewModel.setArchivePlayCount(count);
-      viewModel.setArchivePlayTime();
-    }
-    viewModel.setArchivePlayContent(_descriptionController.text);
+    // final count = int.tryParse(_countController.text);
+    // viewModel.setArchivePlayCount(count);
+    // viewModel.setArchivePlayTime();
+    //
+    // viewModel.setArchivePlayContent(_descriptionController.text);
 
-    final validationResult = viewModel.validationArchiveSubmission();
+    final validationResult = viewModel.validationInputs();
     logger.d('validationResult : $validationResult');
     logger.d(
         'selectedGameAveragePlayTime: ${viewModel.selectedGameAveragePlayTime}');
@@ -172,6 +172,10 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
         const SnackBar(content: Text(AppString.errorOccurred)),
       );
     }
+
+    setState(() {
+      _isSubmitting = false;
+    });
   }
 
   void _showSnackBarOnce(String message) {
@@ -206,7 +210,15 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     _imageFiles.clear();
 
     _descriptionController.addListener(() {
-      setState(() {});
+      missionViewModel.setArchivePlayContent(_descriptionController.text);
+      missionViewModel.validationInputs();
+    });
+
+    _countController.addListener(() {
+      final count = int.tryParse(_countController.text);
+      missionViewModel.setArchivePlayCount(count);
+      missionViewModel.setArchivePlayTime();
+      missionViewModel.validationInputs();
     });
 
     if (widget.archiveId != null) {
