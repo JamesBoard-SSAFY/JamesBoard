@@ -39,11 +39,34 @@
 
 ### **AOS**
 
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Android Studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)
+
 ### **BackEnd**
+
+![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-FF4081?style=for-the-badge&logo=databricks&logoColor=white)
 
 ### **DevOps**
 
-### **Data**
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Portainer](https://img.shields.io/badge/Portainer-13BEF9?style=for-the-badge&logo=docker&logoColor=white)
+![SonarQube](https://img.shields.io/badge/SonarQube-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white)
+
+### **협업도구**
+
+![GitLab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)
+![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=mattermost&logoColor=white)
 
 <br/><br/>
 
@@ -63,7 +86,13 @@
 
 ## 📁 프로젝트 구조
 
-추후 작성
+|                                    Architecture                                    |
+| :--------------------------------------------------------------------------------: |
+| <img src="./readme_assets/jamesboard_erd.png" alt="Architecture" width="1000px" /> |
+
+|                                    ERD                                    |
+| :-----------------------------------------------------------------------: |
+| <img src="./readme_assets/jamesboard_erd.png" alt="ERD" width="1000px" /> |
 
 <br/><br/>
 
@@ -147,35 +176,56 @@
 ## ⏰ 개발 기간 및 일정
 
 ### [2/24] PJT 1주차 시작 및 팀 구성
-* Notion 생성
-* Jira 생성
-* Convention 설정 (Git, Code, Naming)
-* Code Convention 설정
-* 빅데이터 추천 서비스 기획
+
+- Notion 생성
+- Jira 생성
+- Convention 설정 (Git, Code, Naming)
+- Code Convention 설정
+- 빅데이터 추천 서비스 기획
 
 ### [~3/9] PJT 2주차
-* [3/14] 전문가 1차 미팅
-* API 명세서 작성
-* ERD 구성
-* DevOps 구성
+
+- API 명세서 작성
+- ERD 구성
+- DevOps 구성
+- 빅데이터 수집 및 전처리
+- Spring 서버 구현
+- 콘텐츠 기반 필터링 로직 구현
+- App UI/UX 디자인
+- [3/14] 전문가 1차 미팅
 
 ### [~3/16] PJT 3주차
-* [3/21] 중간 발표
+
+- APP UI/UX 개발
+- FastAPI 서버 구현
+- 하이브리드 필터링 로직 구현
+- [3/21] 중간 발표
 
 ### [~3/23] PJT 4주차
-* [3/28] 전문가 2차 미팅
+
+- Spring, FastAPI 서버 기능 개선
+- App 기능 개선
+- [3/28] 전문가 2차 미팅
 
 ### [~3/30] PJT 5주차
 
+- App Widget 개발
+- 빅데이터 로직 기능 개선
+- 콘텐츠 기반 필터링 Bug Fix
+- 하이브리드 필터링 Bug Fix
 
 ### [~4/6] PJT 6주차
 
+- 영상 포트폴리오 작성
+- AI 챗봇 시스템 구성 및 구현
+- App Bug Fix
 
 ### [~4/11] PJT 7주차
-* [4/8] 1차 QA
-* [4/9] 2차 QA
-* [4/10] 3차 QA
-* [4/11] 최종 발표
 
+- App Bug Fix
+- [4/8] 1차 QA
+- [4/9] 2차 QA
+- [4/10] 3차 QA
+- [4/11] 최종 발표
 
 <br/><br/>
