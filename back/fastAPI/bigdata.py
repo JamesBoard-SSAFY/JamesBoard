@@ -27,7 +27,7 @@ class RecommendationEngine:
         self.db = db
         self.model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
         self.embeddings = None
-        self.n_clusters = 200
+        self.n_clusters = 100
         self.batch_size = 1000
         self.reviews_df = None
         self.kmeans_model = None
@@ -39,13 +39,26 @@ class RecommendationEngine:
         self._train_clustering_model()
 
     def _load_reviews_data(self):
-        """리뷰 데이터 로드"""
+        """리뷰 데이터를 DB에서 로드하여 DataFrame으로 저장합니다."""
         try:
-            self.reviews_df = pd.read_csv('filtered_reviews_korea_patch.csv')
-            logger.info(f"Loaded {len(self.reviews_df)} reviews from CSV")
+            activities = self.db.query(
+                models.UserActivity.user_id,
+                models.UserActivity.game_id,
+                models.UserActivity.user_activity_rating.label("rating")
+            ).all()
+
+            self.reviews_df = pd.DataFrame([
+                {
+                    'user': str(a.user_id),
+                    'ID': a.game_id,
+                    'rating': float(a.rating)
+                } for a in activities
+            ])
+            logger.info(f"Loaded {len(self.reviews_df)} reviews from DB")
         except Exception as e:
-            logger.error(f"Error loading reviews data: {str(e)}")
-            self.reviews_df = None
+            logger.error(f"Error loading reviews data from DB: {str(e)}")
+            self.reviews_df = pd.DataFrame()
+
 
     def _load_items_from_db(self) -> List[Dict]:
         """데이터베이스에서 게임 데이터 로드"""
@@ -218,14 +231,11 @@ class RecommendationEngine:
                 logger.warning("No user activities found")
                 return False
 
-            user_ratings = pd.DataFrame([
-                {
-                    'user': activity.user_id,
-                    'mean_rating': float(activity.mean_rating),
-                    'review_count': activity.review_count
-                }
-                for activity in user_activities
-            ])
+            user_ratings = pd.DataFrame([{
+                'user': activity.user_id,
+                'mean_rating': float(activity.mean_rating),
+                'review_count': activity.review_count
+            } for activity in user_activities])
 
             scaler = StandardScaler()
             features = ['mean_rating', 'review_count']
@@ -238,45 +248,47 @@ class RecommendationEngine:
             )
             self.kmeans_model.fit(user_data_scaled)
 
+            self.user_clusters.clear()  # 🔥 기존 캐시 초기화
+
             for _, row in user_ratings.iterrows():
                 user_data = row[features].values.reshape(1, -1)
-                user_data_scaled = scaler.transform(user_data)
-                cluster = self.kmeans_model.predict(user_data_scaled)[0]
+                scaled = scaler.transform(user_data)
+                cluster = self.kmeans_model.predict(scaled)[0]
                 self.user_clusters[row['user']] = cluster
 
             logger.info(f"Clustering model trained successfully with {len(user_ratings)} users")
-            logger.info(f"Number of clusters: {self.n_clusters}")
-            logger.info(f"Cluster distribution: {pd.Series(list(self.user_clusters.values())).value_counts().to_dict()}")
             return True
 
         except Exception as e:
             logger.error(f"Error training clustering model: {str(e)}")
             return False
 
-    def get_user_cluster(self, user_id: int) -> Optional[int]:
-        """사용자의 클러스터 ID 조회"""
+
+    def get_user_cluster(self, user_id: int, force: bool = False) -> Optional[int]:
+        """사용자의 클러스터 ID를 반환하며, force=True 시 재계산합니다."""
         try:
-            if user_id in self.user_clusters:
+            if not force and user_id in self.user_clusters:
                 return self.user_clusters[user_id]
-            
-            user_reviews = self.reviews_df[self.reviews_df['user'] == user_id]
+
+            user_reviews = self.reviews_df[self.reviews_df['user'] == str(user_id)]
             if user_reviews.empty:
                 return None
-            
-            user_rating = user_reviews['rating'].mean()
-            
+
+            mean_rating = user_reviews['rating'].mean()
+            review_count = user_reviews.shape[0]
+
+            X = np.array([[mean_rating, review_count]])
             scaler = StandardScaler()
-            user_data = np.array([[user_rating]])
-            user_data_scaled = scaler.fit_transform(user_data)
-            
-            cluster = self.kmeans_model.predict(user_data_scaled)[0]
+            X_scaled = scaler.fit_transform(X)
+
+            cluster = self.kmeans_model.predict(X_scaled)[0]
             self.user_clusters[user_id] = cluster
-            
             return cluster
-            
+
         except Exception as e:
             logger.error(f"Error getting user cluster: {str(e)}")
             return None
+
 
     def get_user_activity_data(self, user_id: int) -> pd.DataFrame:
         """사용자 활동 데이터 조회"""
@@ -396,60 +408,53 @@ class RecommendationEngine:
     def generate_all_hybrid_recommendations(self):
         """모든 사용자에 대한 하이브리드 추천 생성"""
         try:
+            # 🔄 최신화 처리
+            self._load_reviews_data()
+            self._train_clustering_model()
+
             user_ids = self.db.query(models.UserActivity.user_id).distinct().all()
             if not user_ids:
                 return {"message": "No users found"}
-            
+
             for user_id in user_ids:
                 try:
                     user_activities = self.get_user_activity_data(user_id[0])
                     if user_activities.empty:
                         continue
-                    
+
                     favorite_game = user_activities.nlargest(1, 'rating').iloc[0]
                     favorite_game_id = favorite_game['game_id']
-                    
+
                     collaborative_recs = self.get_collaborative_recommendations(
-                        user_id[0], 
-                        user_activities,
-                        30
+                        user_id[0], user_activities, 30
                     )
-                    
+
                     content_recs = self.get_content_recommendations(favorite_game_id, 30)
-                    
+
                     hybrid_scores = defaultdict(float)
-                    
+
                     for rec in collaborative_recs:
-                        rank_score = 1.0 / rec['rank']
-                        hybrid_scores[rec['game_id']] += rank_score * 0.7
-                    
+                        hybrid_scores[rec['game_id']] += (1.0 / rec['rank']) * 0.7
+
                     for rec in content_recs:
-                        rank_score = 1.0 / rec['recommend_content_rank']
-                        hybrid_scores[rec['recommend_game_id']] += rank_score * 0.3
-                    
-                    final_rankings = sorted(
-                        hybrid_scores.items(),
-                        key=lambda x: x[1],
-                        reverse=True
-                    )[:30]
-                    
-                    recommendations = [
-                        {
-                            'user_id': user_id[0],
-                            'game_id': game_id,
-                            'recommend_rank': rank
-                        }
-                        for rank, (game_id, _) in enumerate(final_rankings, 1)
-                    ]
-                    
+                        hybrid_scores[rec['recommend_game_id']] += (1.0 / rec['recommend_content_rank']) * 0.3
+
+                    final_rankings = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)[:30]
+
+                    recommendations = [{
+                        'user_id': user_id[0],
+                        'game_id': game_id,
+                        'recommend_rank': rank
+                    } for rank, (game_id, _) in enumerate(final_rankings, 1)]
+
                     self.save_hybrid_recommendations(recommendations)
-                    
+
                 except Exception as e:
                     logger.error(f"Error generating recommendations for user {user_id[0]}: {str(e)}")
                     continue
-            
+
             return {"message": "Successfully generated hybrid recommendations"}
-            
+
         except Exception as e:
             logger.error(f"Error generating all hybrid recommendations: {str(e)}")
             return {"message": f"Error generating recommendations: {str(e)}"}
