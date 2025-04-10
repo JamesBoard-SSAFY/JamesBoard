@@ -23,8 +23,10 @@ class ItemCommonFilter extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 1),
+        padding: EdgeInsets.symmetric(vertical: 4),
         child: ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
           title: Text(
             title,
             style: TextStyle(
