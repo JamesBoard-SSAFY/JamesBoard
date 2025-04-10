@@ -163,7 +163,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
       archiveGamePlayCount: viewModel.archivePlayCount!,
       archiveImageList: viewModel.imageUrls,
       archiveContent: viewModel.archiveContent!,
-      archiveGamePlayTime: viewModel.archivePlayTime!,
+      archiveGamePlayTime: 10,
     );
 
     logger.d('gameId : ${viewModel.selectedGameId}');
@@ -251,7 +251,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     _countController.addListener(() {
       final count = int.tryParse(_countController.text);
       missionViewModel.setArchivePlayCount(count);
-      missionViewModel.setArchivePlayTime();
+      // missionViewModel.setArchivePlayTime();
       missionViewModel.validationInputs();
     });
 
@@ -272,7 +272,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
 
           final count = int.tryParse(_countController.text);
           missionViewModel.setArchivePlayCount(count);
-          missionViewModel.setArchivePlayTime();
+          // missionViewModel.setArchivePlayTime();
 
           missionViewModel.validationInputs();
         }

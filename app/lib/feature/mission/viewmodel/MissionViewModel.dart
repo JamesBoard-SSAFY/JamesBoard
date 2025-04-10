@@ -122,8 +122,7 @@ class MissionViewModel extends ChangeNotifier {
   // 유효성 검사
   String? validationInputs() {
     if (_selectedGameId == null) return '보드게임을 선택해주세요.';
-    if (_archivePlayTime == null || _archivePlayCount! <= 0)
-      return '임무 수(플레이한 횟수)를 입력해주세요.';
+    if (_archivePlayCount! <= 0) return '임무 수(플레이한 횟수)를 입력해주세요.';
     if (_imageUrls.isEmpty) return '사진을 한 장 이상 업로드 해주세요.';
     if (_archiveContent == null || _archiveContent!.isEmpty)
       return '임무 결과(문구)를 입력해주세요.';
