@@ -38,6 +38,8 @@ class _BottomSheetBoardGameEvaluationState
   double _rating = 0.0;
   bool isButtonDisabled = false;
 
+  DateTime? _lastToastTime;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +56,22 @@ class _BottomSheetBoardGameEvaluationState
     setState(() {
       _rating = rating;
     });
+  }
+
+  void _showToastOnce(String message) {
+    final now = DateTime.now();
+
+    if (_lastToastTime == null ||
+        now.difference(_lastToastTime!).inSeconds > 2) {
+      Fluttertoast.showToast(
+        msg: message,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xff6E6E6E),
+        fontSize: 14,
+        toastLength: Toast.LENGTH_SHORT,
+      );
+      _lastToastTime = now;
+    }
   }
 
   @override
@@ -100,12 +118,7 @@ class _BottomSheetBoardGameEvaluationState
                   : () async {
                       if (_rating == 0.0) {
                         logger.d("rating $_rating");
-                        Fluttertoast.showToast(
-                            msg: "0점은 입력이 될 수 없습니다.",
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: const Color(0xff6E6E6E),
-                            fontSize: 14,
-                            toastLength: Toast.LENGTH_SHORT);
+                        _showToastOnce("평가는 0.5점 이상부터 가능합니다.");
                         return;
                       }
 
