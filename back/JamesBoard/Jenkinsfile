@@ -1,0 +1,172 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = credentials('DOCKER_IMAGE')
+        DOCKER_CONTAINER = credentials('DOCKER_CONTAINER')
+        DOCKER_PORT = credentials('DOCKER_PORT')
+        DOCKER_PATH = credentials('DOCKER_PATH') // EC2 서버의 Docker 저장 경로
+
+        EC2_USER = credentials('EC2_USER')
+        EC2_IP = credentials('EC2_IP')
+        SSH_KEY = credentials('SSH_KEY')
+
+        SPRING_PROFILES_ACTIVE = 'dev'
+        DB_URL = credentials('DB_URL')
+        DB_USERNAME = credentials('DB_USERNAME')
+        DB_PASSWORD = credentials('DB_PASSWORD')
+
+        JAVA_HOME = '/opt/java/openjdk'
+        GRADLE_HOME = '/opt/gradle/gradle-8.5'
+        PATH = "${JAVA_HOME}/bin:${GRADLE_HOME}/bin:${env.PATH}"
+    }
+
+    tools {
+        jdk 'JDK 17'
+        gradle 'Gradle 8.5'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                git branch: 'develop',
+                    url: 'https://lab.ssafy.com/s12-bigdata-recom-sub1/S12P21D205.git',
+                    credentialsId: 'GitLab-PAT'
+            }
+        }
+        stage('secret download'){
+            steps{
+                withCredentials([file(credentialsId: 'application-secret', variable: 'configFile')]){
+                    script{
+                        sh '''
+                            cp $configFile $WORKSPACE/back/JamesBoard/src/main/resources/application-dev.yaml
+
+                            echo "Copy successful!"
+                            ls -l $WORKSPACE/back/JamesBoard/src/main/resources/application-dev.yaml
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                echo 'Building the application with Gradle Wrapper...'
+                dir('back/JamesBoard') {
+                    sh 'gradle clean build'
+                    sh 'ls -al $(pwd)/build/libs'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                        cd back/JamesBoard  # Gradle 프로젝트 폴더로 이동
+                        gradle sonar
+                    """
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building the Docker image...'
+                dir('back/JamesBoard') {
+                    sh 'cp build/libs/JamesBoard-0.0.1-SNAPSHOT.jar .'
+                    sh 'docker build -t ${DOCKER_IMAGE}:latest .'
+                }
+            }
+        }
+        stage('Save and Transfer Docker Image') {
+            steps {
+                echo 'Saving and transferring Docker image to EC2...'
+                sh """
+                docker save ${DOCKER_IMAGE}:latest | gzip > JamesBoard-0.0.1-SNAPSHOT.tar.gz
+                """
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'EC2-Server',
+                        transfers: [
+                            sshTransfer(
+                                sourceFiles: 'JamesBoard-0.0.1-SNAPSHOT.tar.gz'
+                            )
+                        ]
+                    )
+                ])
+            }
+        }
+        stage('Deploy to EC2') {
+            steps {
+                echo 'Deploying the application on EC2...'
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'EC2-Server',
+                        transfers: [
+                            sshTransfer(
+                                execCommand: """
+                                    mkdir -p ${DOCKER_PATH}
+                                    docker stop ${DOCKER_CONTAINER} || true
+                                    docker rm ${DOCKER_CONTAINER} || true
+                                    docker rmi ${DOCKER_IMAGE}:latest || true
+                                    docker load < ${DOCKER_PATH}/JamesBoard-0.0.1-SNAPSHOT.tar.gz
+                                    docker run -d --name ${DOCKER_CONTAINER} \
+                                      -p ${DOCKER_PORT}:${DOCKER_PORT} \
+                                      -e SPRING_PROFILES_ACTIVE=dev \
+                                      -e SERVER_PORT=${DOCKER_PORT} \
+                                      ${DOCKER_IMAGE}:latest
+                                """.stripIndent()
+                            )
+                        ]
+                    )
+                ])
+            }
+        }
+
+        stage('Notification') {
+            steps{
+                echo 'jenkins notification!'
+            }
+            post {
+                success {
+                    script {
+                        def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                        def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                        mattermostSend(color: 'good',
+                            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                            endpoint: 'https://meeting.ssafy.com/hooks/xbmq7q54d3ndxbkfgazmo3ysya',
+                            channel: 'jenkins'
+                                )
+                    }
+                }
+                failure {
+                    script {
+                        def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                        def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                        mattermostSend(color: 'danger',
+                            message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                            endpoint: 'https://meeting.ssafy.com/hooks/xbmq7q54d3ndxbkfgazmo3ysya',
+                            channel: 'jenkins'
+                                )
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
