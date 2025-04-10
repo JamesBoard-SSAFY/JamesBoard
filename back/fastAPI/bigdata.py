@@ -27,7 +27,7 @@ class RecommendationEngine:
         self.db = db
         self.model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
         self.embeddings = None
-        self.n_clusters = 100
+        self.n_clusters = 1000
         self.batch_size = 1000
         self.reviews_df = None
         self.kmeans_model = None
@@ -422,6 +422,9 @@ class RecommendationEngine:
                     if user_activities.empty:
                         continue
 
+                    # 사용자가 이미 평가한 게임 ID 목록
+                    rated_game_ids = set(user_activities['game_id'].unique())
+
                     favorite_game = user_activities.nlargest(1, 'rating').iloc[0]
                     favorite_game_id = favorite_game['game_id']
 
@@ -434,10 +437,12 @@ class RecommendationEngine:
                     hybrid_scores = defaultdict(float)
 
                     for rec in collaborative_recs:
-                        hybrid_scores[rec['game_id']] += (1.0 / rec['rank']) * 0.7
+                        if rec['game_id'] not in rated_game_ids:
+                            hybrid_scores[rec['game_id']] += (1.0 / rec['rank']) * 0.7
 
                     for rec in content_recs:
-                        hybrid_scores[rec['recommend_game_id']] += (1.0 / rec['recommend_content_rank']) * 0.3
+                        if rec['recommend_game_id'] not in rated_game_ids:
+                            hybrid_scores[rec['recommend_game_id']] += (1.0 / rec['recommend_content_rank']) * 0.3
 
                     final_rankings = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)[:30]
 
