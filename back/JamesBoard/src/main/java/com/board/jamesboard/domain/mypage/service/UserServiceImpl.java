@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
                             .gameId(game.getGameId())
                             .gameImage(game.getBigThumbnail())
                             .build())
+                    .sorted(Comparator.comparing(UserGameResponseDto::getGameId))
                     .collect(Collectors.toList());
         } catch (CustomException e) {
             throw e;
