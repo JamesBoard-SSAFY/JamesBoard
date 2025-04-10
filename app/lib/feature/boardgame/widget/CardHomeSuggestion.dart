@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/theme/Colors.dart';
+import 'package:jamesboard/util/view/KeepAliveView.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -139,26 +140,28 @@ class _CardHomeSuggestionState extends State<CardHomeSuggestion> {
                               final imageUrl = game.gameImage;
                               final id = game.gameId;
 
-                              return GestureDetector(
-                                onTap: () {
-                                  _stopAutoScroll();
-                                  widget.onImageTap(id);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 32),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
-                                      width: width,
-                                      height: height,
-                                      fit: BoxFit.cover,
-                                      fadeInDuration: Duration(
-                                        microseconds: 500,
-                                      ),
-                                      fadeOutDuration: Duration(
-                                        milliseconds: 500,
+                              return KeepAliveView(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _stopAutoScroll();
+                                    widget.onImageTap(id);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 32),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        width: width,
+                                        height: height,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: Duration(
+                                          microseconds: 500,
+                                        ),
+                                        fadeOutDuration: Duration(
+                                          milliseconds: 500,
+                                        ),
                                       ),
                                     ),
                                   ),

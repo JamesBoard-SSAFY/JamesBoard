@@ -112,7 +112,8 @@ class _ListHomeHorizontalGameState extends State<ListHomeHorizontalGame> {
                         scrollSpeedFactor: AppData.scrollSpeed),
                     addAutomaticKeepAlives: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: isLoading ? 5 : games.length,
+                    itemCount:
+                        isLoading ? 5 : (games.length > 20 ? 20 : games.length),
                     itemBuilder: (context, index) {
                       return KeepAliveView(
                         key: isLoading

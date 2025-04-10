@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jamesboard/constants/AppString.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/BoardGameViewModel.dart';
 import 'package:jamesboard/feature/boardgame/viewmodel/UserActivityViewModel.dart';
@@ -99,6 +100,12 @@ class _BottomSheetBoardGameEvaluationState
                   : () async {
                       if (_rating == 0.0) {
                         logger.d("rating $_rating");
+                        Fluttertoast.showToast(
+                            msg: "0점은 입력이 될 수 없습니다.",
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: const Color(0xff6E6E6E),
+                            fontSize: 14,
+                            toastLength: Toast.LENGTH_SHORT);
                         return;
                       }
 
