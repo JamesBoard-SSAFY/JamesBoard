@@ -235,6 +235,12 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                 ? (detail.archiveGamePlayTime ~/ detail.archiveGamePlayCount)
                 : 0,
           );
+
+          final count = int.tryParse(_countController.text);
+          missionViewModel.setArchivePlayCount(count);
+          missionViewModel.setArchivePlayTime();
+
+          missionViewModel.validationInputs();
         }
       });
     }
