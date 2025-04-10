@@ -46,9 +46,43 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
   List<File> _imageFiles = [];
   DateTime? _lastSnackBarTime;
   bool _isSubmitting = false;
+  bool _isPickingImage = false;
 
   final Map<String, DateTime> _snackBarLastShownTime = {};
   final Set<String> _shownSnackBarMessages = {};
+
+  Future<void> _pickImage(ImageSource source, MyPageViewModel viewModel) async {
+    if (_isPickingImage || _imageFiles.length >= 9) {
+      return;
+    }
+
+    _isPickingImage = true;
+
+    final result = await _cropCompressAndUploadImage(source, viewModel);
+
+    if (result != null) {
+      final (imageUrl, file) = result;
+
+      if (_imageFiles.length >= 9) {
+        _showSnackBarOnce(AppString.maxImageUploadLimit);
+        _isPickingImage = false;
+        return;
+      }
+
+      bool isDuplicate =
+          _imageFiles.any((existingFile) => existingFile.path == file.path);
+      if (isDuplicate) {
+        _showSnackBarOnce('이미 추가된 이미지입니다.');
+      } else {
+        setState(() {
+          _imageFiles.add(file);
+        });
+        context.read<MissionViewModel>().addImageUrl(imageUrl);
+      }
+    }
+
+    _isPickingImage = false;
+  }
 
   static Future<(String, File)?> _cropCompressAndUploadImage(
       ImageSource source, MyPageViewModel viewModel) async {
@@ -330,34 +364,38 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             width: MediaQuery.of(context).size.width * 0.25,
                             child: ButtonRegisterArchivePicture(
                               icon: IconPath.addPicture,
-                              onTap: () async {
-                                if (_imageFiles.length >= 9) {
-                                  _showSnackBarOnce(
-                                      AppString.maxImageUploadLimit);
-                                  return;
-                                }
-
-                                final result =
-                                    await _cropCompressAndUploadImage(
-                                        ImageSource.gallery, myPageViewModel);
-                                if (result != null) {
-                                  final (imageUrl, file) = result;
-
-                                  bool isDuplicate = _imageFiles.any(
-                                      (existingFile) =>
-                                          existingFile.path == file.path);
-
-                                  if (isDuplicate) {
-                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
-                                    return;
-                                  }
-
-                                  setState(() {
-                                    _imageFiles.add(file);
-                                  });
-                                  viewModel.addImageUrl(imageUrl);
-                                }
-                              },
+                              // onTap: () async {
+                              //   if (_imageFiles.length >= 9) {
+                              //     _showSnackBarOnce(
+                              //         AppString.maxImageUploadLimit);
+                              //     return;
+                              //   }
+                              //
+                              //   final result =
+                              //       await _cropCompressAndUploadImage(
+                              //           ImageSource.gallery, myPageViewModel);
+                              //   if (result != null) {
+                              //     final (imageUrl, file) = result;
+                              //
+                              //     bool isDuplicate = _imageFiles.any(
+                              //         (existingFile) =>
+                              //             existingFile.path == file.path);
+                              //
+                              //     if (isDuplicate) {
+                              //       _showSnackBarOnce('이미 추가된 이미지입니다.');
+                              //       return;
+                              //     }
+                              //
+                              //     setState(() {
+                              //       _imageFiles.add(file);
+                              //     });
+                              //     viewModel.addImageUrl(imageUrl);
+                              //   }
+                              // },
+                              onTap: () => _pickImage(
+                                ImageSource.gallery,
+                                myPageViewModel,
+                              ),
                             ),
                           ),
                         ),
@@ -367,34 +405,38 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
                             width: MediaQuery.of(context).size.width * 0.25,
                             child: ButtonRegisterArchivePicture(
                               icon: IconPath.camera,
-                              onTap: () async {
-                                if (_imageFiles.length >= 9) {
-                                  _showSnackBarOnce(
-                                      AppString.maxImageUploadLimit);
-                                  return;
-                                }
-
-                                final result =
-                                    await _cropCompressAndUploadImage(
-                                        ImageSource.camera, myPageViewModel);
-                                if (result != null) {
-                                  final (imageUrl, file) = result;
-
-                                  bool isDuplicate = _imageFiles.any(
-                                      (existingFile) =>
-                                          existingFile.path == file.path);
-
-                                  if (isDuplicate) {
-                                    _showSnackBarOnce('이미 추가된 이미지입니다.');
-                                    return;
-                                  }
-
-                                  setState(() {
-                                    _imageFiles.add(file);
-                                  });
-                                  viewModel.addImageUrl(imageUrl);
-                                }
-                              },
+                              // onTap: () async {
+                              //   if (_imageFiles.length >= 9) {
+                              //     _showSnackBarOnce(
+                              //         AppString.maxImageUploadLimit);
+                              //     return;
+                              //   }
+                              //
+                              //   final result =
+                              //       await _cropCompressAndUploadImage(
+                              //           ImageSource.camera, myPageViewModel);
+                              //   if (result != null) {
+                              //     final (imageUrl, file) = result;
+                              //
+                              //     bool isDuplicate = _imageFiles.any(
+                              //         (existingFile) =>
+                              //             existingFile.path == file.path);
+                              //
+                              //     if (isDuplicate) {
+                              //       _showSnackBarOnce('이미 추가된 이미지입니다.');
+                              //       return;
+                              //     }
+                              //
+                              //     setState(() {
+                              //       _imageFiles.add(file);
+                              //     });
+                              //     viewModel.addImageUrl(imageUrl);
+                              //   }
+                              // },
+                              onTap: () => _pickImage(
+                                ImageSource.camera,
+                                myPageViewModel,
+                              ),
                             ),
                           ),
                         ),
