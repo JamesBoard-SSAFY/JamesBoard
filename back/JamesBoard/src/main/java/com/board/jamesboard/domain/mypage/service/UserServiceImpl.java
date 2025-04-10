@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // 사용자 플레이 게임 목록 조회
-            List<Game> games = userActivityRepository.findDistinctGameByUserUserId(userId);
+            List<Game> games = userActivityRepository.findDistinctGameByUserUserIdOrderByLatestActivityDesc(userId);
 
             // 게임 목록 반환
             return games.stream()
