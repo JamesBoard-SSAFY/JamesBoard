@@ -211,13 +211,16 @@ class _MyPageScreenState extends State<MyPageScreen>
   // 임무 보고
   Widget _buildTabContentMissionReport() {
     final viewModel = Provider.of<MyPageViewModel>(context);
-    final isLoading = viewModel.isLoadingMissionRecord;
+    final isLoading = context.watch<MyPageViewModel>().isLoadingMissionRecord;
+    final playedGames = viewModel.playedGames;
+    final isInitialized = context.watch<MyPageViewModel>().isInitialized;
 
     return SingleChildScrollView(
       physics: CustomScrollPhysics(scrollSpeedFactor: AppData.scrollSpeed),
       child: ImageCommonMyPageGameCard(
-        images: viewModel.playedGames ?? [],
+        images: playedGames ?? [],
         isLoading: isLoading,
+        isInitialized: isInitialized,
       ),
     );
   }
