@@ -5,6 +5,7 @@ import com.board.jamesboard.db.entity.User;
 import com.board.jamesboard.db.entity.UserActivity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +24,11 @@ UserActivityRepository extends JpaRepository<UserActivity, Long> {
 
     // 해당 유저가 작성한 리뷰개수
     Long countByUserUserIdAndUserActivityRatingIsNotNull(Long userId);
+
+
+    @Query("SELECT ua.game FROM UserActivity ua WHERE ua.user.userId = :userId " +
+            "AND ua.userActivityTime IS NOT NULL AND ua.userActivityTime > 0 " +
+            "GROUP BY ua.game.gameId ORDER BY MAX(ua.createdAt) DESC")
+    List<Game> findDistinctGameByUserUserIdOrderByLatestActivityDesc(@Param("userId") Long userId);
 
 }
