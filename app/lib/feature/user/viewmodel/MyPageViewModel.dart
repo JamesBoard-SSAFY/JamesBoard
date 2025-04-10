@@ -24,6 +24,7 @@ class MyPageViewModel extends ChangeNotifier {
   MyPageGameStatsResponse? gameStats;
   String? presignedUrl;
   bool isLoading = false;
+  bool isInitialized = false;
   bool isLoadingMissionRecord = false;
 
   MyPageViewModel(
@@ -166,6 +167,7 @@ class MyPageViewModel extends ChangeNotifier {
       logger.e("flutter - getAllPlayedGames: $e");
     } finally {
       isLoadingMissionRecord = false;
+      isInitialized = true;
       Future.delayed(Duration.zero, () => notifyListeners());
     }
   }
