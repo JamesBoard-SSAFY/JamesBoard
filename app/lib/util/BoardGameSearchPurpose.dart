@@ -1,0 +1,4 @@
+enum BoardGameSearchPurpose {
+  fromHome,
+  fromMission,
+}

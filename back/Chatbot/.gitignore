@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.idea/
+.vscode/
+
+# chroma_db 차단
+chroma_db_integrated4/
+기타/
+
+app/.env
+
