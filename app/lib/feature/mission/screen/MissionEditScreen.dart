@@ -216,7 +216,7 @@ class _MissionEditScreenState extends State<MissionEditScreen> {
     final now = DateTime.now();
     final lastShownTime = _snackBarLastShownTime[message];
 
-    if (lastShownTime != null && now.difference(lastShownTime).inSeconds < 2) {
+    if (lastShownTime != null && now.difference(lastShownTime).inSeconds < 5) {
       return;
     }
 
