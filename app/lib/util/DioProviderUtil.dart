@@ -47,6 +47,48 @@ class DioProviderUtil {
       ),
     );
 
+  static final Dio chatDio = Dio(
+    BaseOptions(
+      baseUrl: 'http://j12d205.p.ssafy.io:9098/',
+      headers: {'Content-Type': 'application/json'},
+    ),
+  )..interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final accessToken = await storage.read(key: 'accessToken');
+
+          if (accessToken != null && accessToken.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $accessToken';
+          }
+          return handler.next(options);
+        },
+        onError: (e, handler) async {
+          // 401이면 accessToken이 만료.
+          if (e.response?.statusCode == 401) {
+            final refreshed = await refreshAccessToken();
+
+            if (refreshed) {
+              final newAccessToken = await storage.read(key: 'accessToken');
+              if (newAccessToken != null && newAccessToken.isNotEmpty) {
+                // 재시도할 요청 정보 복제
+                final clonedRequest = e.requestOptions;
+                clonedRequest.headers['Authorization'] =
+                    'Bearer $newAccessToken';
+
+                try {
+                  final retryResponse = await dio.fetch(clonedRequest);
+                  return handler.resolve(retryResponse);
+                } catch (err) {
+                  return handler.next(err as DioError);
+                }
+              }
+            }
+          }
+          return handler.next(e);
+        },
+      ),
+    );
+
   static Future<bool> refreshAccessToken() async {
     try {
       final refreshToken = await storage.read(key: 'refreshToken');

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import '../../feature/chatbot/screen/ChatBotScreen.dart';
 import '../../feature/user/widget/chart/ChartUserGenrePercent.dart';
 import '../CommonUtils.dart';
 
@@ -80,20 +79,6 @@ class AppDummyData {
     'assets/image/mission6.png',
     'assets/image/mission7.png',
     'assets/image/mission8.png',
-  ];
-
-  //chatbot
-  static final List<ChatMessage> messages = [
-    ChatMessage(
-      message: '요원 hyuun, Q입니다. 임무 계획 수립을 위해 다음 정보를 한 번에 전달해 주시기 바랍니다.',
-      isMe: false,
-      time: '오전 08:13',
-    ),
-    ChatMessage(
-      message: '장르, 참여 인원, 난이도, 게임당 플레이 시간 등 이 정보를 바탕으로, 최적화 보드게임 작전을 준비하겠습니다.',
-      isMe: false,
-      time: '오전 08:14',
-    ),
   ];
 
   // 이미지 URL 리스트
