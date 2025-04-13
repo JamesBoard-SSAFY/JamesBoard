@@ -1,6 +1,6 @@
 <div align="center">
   <br/>
-  <img src="./readme_asserts/jamesboard_logo.png" alt="jamesboard" width="200px" height="200px" />
+  <img src="./assets/img/jamesboard_logo.png" alt="jamesboard" width="200px" height="200px" />
   <h1> James Board</h1>
   <br/>
 </div>
@@ -76,9 +76,25 @@
 
 ## 📌 주요 기능
 
-추후 작성
 
-<br/><br/>
+|                     **Login**                      |                        **onboarding**                        |                       
+| :-----------------------------------------------------: | :---------------------------------------------------------: |
+| <img src="./assets/gif/login.gif" height="400"> | <img src="./assets/gif/onboarding.gif" height="400"> | <img src="./assets/gif/search.gif" height="400"> |
+
+<br>
+
+
+|                      **Home**                      |                      **Rating**                      |                       **Recommend**                      |
+| :--------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
+| <img src="./assets/gif/home.gif" height="400"> | <img src="./assets/gif/rating.gif" height="400"> | <img src="./assets/gif/recommend.gif" height="400"> |
+
+<br>
+
+|                      **Chatbot**                      |                      **Archive**                      |                       **MyInfo**                      |
+| :--------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
+| <img src="./assets/gif/chatbot.gif" height="400"> | <img src="./assets/gif/archive.gif" height="400"> | <img src="./assets/gif/mypage.gif" height="400"> |
+
+<br/>
 
 <div id="4"></div>
 
@@ -88,11 +104,11 @@
 
 |                                    Architecture                                    |
 | :--------------------------------------------------------------------------------: |
-| <img src="./readme_assets/jamesboard_erd.png" alt="Architecture" width="1000px" /> |
+| <img src="./assets/img/jamesboard_architecture.png" alt="Architecture" width="1000px" /> |
 
 |                                    ERD                                    |
 | :-----------------------------------------------------------------------: |
-| <img src="./readme_assets/jamesboard_erd.png" alt="ERD" width="1000px" /> |
+| <img src="./assets/img/jamesboard_erd.png" alt="ERD" width="1000px" /> |
 
 <br/><br/>
 
@@ -116,32 +132,32 @@
   <tr>
     <td align="center" width="150px">
       <a href="https://github.com/dunblx05" target="_blank">
-        <img src="./readme_asserts/d205_kdy.png" alt="김두영 프로필" />  
+        <img src="./assets/img/d205_kdy.png" alt="김두영 프로필" />  
       </a>
     </td>
     <td align="center" width="150px">
       <a href="https://github.com/kdh4718" target="_blank">
-        <img src="./readme_asserts/d205_kdh.png" alt="김동현 프로필" />
+        <img src="./assets/img/d205_kdh.png" alt="김동현 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
       <a href="https://github.com/KR-ImPlant" target="_blank">
-        <img src="./readme_asserts/d205_kms.png" alt="강민석 프로필" />
+        <img src="./assets/img/d205_kms.png" alt="강민석 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
       <a href="https://github.com/hyuun" target="_blank">
-        <img src="./readme_asserts/d205_ksh.png" alt="김성현 프로필" />
+        <img src="./assets/img/d205_ksh.png" alt="김성현 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
       <a href="https://github.com/gretea5" target="_blank">
-        <img src="./readme_asserts/d205_pjh.png" alt="박장훈 프로필" />
+        <img src="./assets/img/d205_pjh.png" alt="박장훈 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
       <a href="https://github.com/SWisdom1108" target="_blank">
-        <img src="./readme_asserts/d205_chw.png" alt="차현우 프로필" />
+        <img src="./assets/img/d205_chw.png" alt="차현우 프로필" />
       </a>
     </td>
   </tr>
@@ -150,16 +166,16 @@
         김두영<br />BE & DevOps
     </td>
     <td align="center">
-        김동현<br />AOS & Data
+        김동현<br />App & Data
     </td>
     <td align="center">
         강민석<br />BE & AI
     </td>
     <td align="center">
-        김성현<br />AOS
+        김성현<br />App
     </td>
     <td align="center">
-        박장훈<br />AOS
+        박장훈<br />App
     </td>
     <td align="center">
         차현우<br />BE & Data
