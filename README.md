@@ -3,9 +3,11 @@
   <img src="./assets/img/jamesboard_logo.png" alt="jamesboard" width="200px" height="200px" />
 </div>
 
-<h1 align="center">
+<div align="center">
+<h1>
 <strong>James Board</strong>
 </h1>
+</div>
 
 <div align="center">
   <strong>싸피 구미캠퍼스 12기 특화프로젝트</strong>
@@ -17,19 +19,19 @@
 
 <div align="center">
   <h3>
-    <a href="https://github.com/capstone-aloha/aloharoom-frontend">
+    <a href="https://www.figma.com/design/kmOyGbB7PwElB3WyFo3Pin/D205-%EC%9A%B0%EB%B0%A9%ED%83%80%EC%9B%8C%EB%9E%9C%EB%93%9C?node-id=267-3305&t=fvD86cXJHvEhayLX-1">
       🖼️ Figma
     </a>
     <span> | </span>
-    <a href="https://github.com/capstone-aloha/aloharoom-backend">
-      🪞 발표 자료
+    <a href="https://www.canva.com/design/DAGkTjsSRlg/5SheTc3yuIgJubRSkjgqow/view?utm_content=DAGkTjsSRlg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=he60b2b5439">
+      🪞 소개 자료
     </a>
     <span> | </span>
-    <a href="https://cut-prune-d8b.notion.site/API-9e0aa8a740524b0ebf45c52894c15d1c?pvs=4">
-      📜 REST API 명세서
+    <a href="https://gretea5.notion.site/Rest-API-1d7c0da1cd4680c99631ffa41ba89ee9">
+      📜 API 명세서
     </a>
     <span> | </span>
-    <a href="https://cut-prune-d8b.notion.site/f166f5ebceaf48a79354eb14372c2478?pvs=4">
+    <a href="https://gretea5.notion.site/1d7c0da1cd46805ca1a8d26b54abd6d3">
       📜 요구사항 명세서
     </a>
   </h3>
