@@ -24,24 +24,24 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 32,
       ),
       actions: [
-        // IconButton(
-        //   icon: SvgPicture.asset(
-        //     IconPath.chat, // 🔹 SVG 아이콘 적용
-        //     width: 24, // 아이콘 크기 조정
-        //     height: 24,
-        //     colorFilter:
-        //         ColorFilter.mode(mainWhite, BlendMode.srcIn), // 🔹 색상 변경
-        //   ),
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) =>
-        //             ChatBotScreen(title: AppString.chatbotAppBarTitle),
-        //       ),
-        //     );
-        //   },
-        // ),
+        IconButton(
+          icon: SvgPicture.asset(
+            IconPath.chat, // 🔹 SVG 아이콘 적용
+            width: 24, // 아이콘 크기 조정
+            height: 24,
+            colorFilter:
+                ColorFilter.mode(mainWhite, BlendMode.srcIn), // 🔹 색상 변경
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ChatBotScreen(title: AppString.chatbotAppBarTitle),
+              ),
+            );
+          },
+        ),
         IconButton(
           icon: SvgPicture.asset(
             IconPath.search, // 🔹 다른 SVG 아이콘 추가

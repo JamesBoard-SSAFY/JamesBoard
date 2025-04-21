@@ -28,6 +28,7 @@ class ChatBubbleChatBot extends StatelessWidget {
       crossAxisAlignment:
           isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
+        if (isMe) const SizedBox(height: 16), // 내 말풍선일 때만 추가 간격
         if (!isMe && showProfile) ...[
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +95,7 @@ class ChatBubbleChatBot extends StatelessWidget {
                         ),
                       Flexible(
                         child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          margin: EdgeInsets.symmetric(vertical: 4),
                           padding: const EdgeInsets.symmetric(
                               vertical: 12, horizontal: 12),
                           decoration: BoxDecoration(

@@ -31,6 +31,7 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
   String _nickname = ''; // 닉네임 상태 저장
   bool _isNicknameValid = false; // 닉네임 유효성 상태
   late String _userImage; // 프로필 이미지 상태 추가
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -127,18 +128,35 @@ class _MyPageUserEditScreenState extends State<MyPageUserEditScreen> {
                   child: ButtonCommonPrimaryBottom(
                     text: AppString.changeUserName,
                     disableWithOpacity: true,
-                    onPressed: (_isNicknameValid ||
-                            _userImage != widget.userImg)
-                        ? () async {
-                            await viewModel.editUserInfo(MyPageUserInfoRequest(
-                              userName: _nickname,
-                              userProfile: _userImage,
-                            ));
-                            if (context.mounted) {
-                              Navigator.pop(context, true);
-                            }
-                          }
-                        : null,
+                    onPressed:
+                        (_isNicknameValid || _userImage != widget.userImg) &&
+                                !_isProcessing
+                            ? () async {
+                                setState(() {
+                                  _isProcessing = true;
+                                });
+
+                                try {
+                                  await viewModel
+                                      .editUserInfo(MyPageUserInfoRequest(
+                                    userName: _nickname,
+                                    userProfile: _userImage,
+                                  ));
+
+                                  if (mounted) {
+                                    Navigator.of(context).pop(true);
+                                  }
+                                } catch (e) {
+                                  debugPrint('Failed to update user info: $e');
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      _isProcessing = false;
+                                    });
+                                  }
+                                }
+                              }
+                            : null,
                   ),
                 ),
               ],
