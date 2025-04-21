@@ -14,7 +14,7 @@
 </div>
 
 <div align="center">
-  사용자 데이터 기반 빅데이터 추천 서비스
+  사용자 맞춤형 빅데이터 추천 서비스
 </div>
 
 <div align="center">
@@ -218,18 +218,13 @@
       </a>
     </td>
     <td align="center" width="150px">
-      <a href="https://github.com/kdh4718" target="_blank">
-        <img src="./assets/img/d205_kdh.png" alt="김동현 프로필" />
-      </a>
-    </td>
-    <td align="center" width="150px">
       <a href="https://github.com/KR-ImPlant" target="_blank">
         <img src="./assets/img/d205_kms.png" alt="강민석 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
-      <a href="https://github.com/hyuun" target="_blank">
-        <img src="./assets/img/d205_ksh.png" alt="김성현 프로필" />
+      <a href="https://github.com/SWisdom1108" target="_blank">
+        <img src="./assets/img/d205_chw.png" alt="차현우 프로필" />
       </a>
     </td>
     <td align="center" width="150px">
@@ -238,8 +233,13 @@
       </a>
     </td>
     <td align="center" width="150px">
-      <a href="https://github.com/SWisdom1108" target="_blank">
-        <img src="./assets/img/d205_chw.png" alt="차현우 프로필" />
+      <a href="https://github.com/hyuun" target="_blank">
+        <img src="./assets/img/d205_ksh.png" alt="김성현 프로필" />
+      </a>
+    </td>
+    <td align="center" width="150px">
+      <a href="https://github.com/kdh4718" target="_blank">
+        <img src="./assets/img/d205_kdh.png" alt="김동현 프로필" />
       </a>
     </td>
   </tr>
@@ -248,19 +248,19 @@
         김두영<br />BE & DevOps
     </td>
     <td align="center">
-        김동현<br />App & Data
-    </td>
-    <td align="center">
         강민석<br />BE & AI
     </td>
     <td align="center">
-        김성현<br />App & UI/UX
+        차현우<br />BE & Data
     </td>
     <td align="center">
         박장훈<br />App & UI/UX
     </td>
     <td align="center">
-        차현우<br />BE & Data
+        김성현<br />App & UI/UX
+    </td>
+    <td align="center">
+        김동현<br />App & Data
     </td>
   </tr>
 </table>
